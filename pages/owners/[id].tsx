@@ -5,7 +5,7 @@ import RenderDate from '../../utils/RenderDate';
 import RenderLink from '../../utils/RenderLink';
 import LoadData from '../../components/LoadData';
 
-const OwnersPage: NextPageWithLayout = () => {
+const OwnersPageById: NextPageWithLayout = () => {
 
   const router = useRouter();
   const { id } = router.query;
@@ -51,9 +51,9 @@ const OwnersPage: NextPageWithLayout = () => {
   )
 }
 
-export default OwnersPage
+export default OwnersPageById
 
-OwnersPage.getLayout = function getLayout(page: any) {
+OwnersPageById.getLayout = function getLayout(page: any) {
   return (
     <MainLayout>
       { page }

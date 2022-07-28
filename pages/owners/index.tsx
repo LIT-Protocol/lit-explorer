@@ -10,7 +10,8 @@ import { NextPageWithLayout } from "../_app"
 const OwnersPage: NextPageWithLayout = () => {
 
   return (
-    <LoadData 
+    <>
+      <LoadData 
         debug={false}
         title="PKP Owners:"
         errorMessage="No PKP owners found."
@@ -32,6 +33,7 @@ const OwnersPage: NextPageWithLayout = () => {
           });
         }}
       />
+    </>
   )
 }
 

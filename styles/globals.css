@@ -196,3 +196,16 @@ body {
   overflow: hidden;
   border: 1px solid #E0E0E0;
 }
+
+.path{
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  color: #909193;
+  font-size: 12px;
+}
+.path img{
+  filter: opacity(.4);
+  width: 18px;
+}
