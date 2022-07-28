@@ -26,43 +26,55 @@ const OwnersPage: NextPageWithLayout = () => {
 
       setRawData(rawData)
 
-      const pkps = rawData.data.data?.result.filter((token: any) => token.contractAddress == process.env.NEXT_PUBLIC_PKP_NFT_CONTRACT);
+      const pkps = rawData.data.result.filter((tx: any) => tx.contractAddress === process.env.NEXT_PUBLIC_PKP_NFT_CONTRACT);
 
       setOwnersPKPs(pkps);
 
       // let rows : any = [];
 
-      // pkps?.forEach((pkp: any, i: number) => {
-      //   rows.push({
-      //     id: i,
-      //     contractAddress: pkp.contractAddress
-      //   });
-      // })
+      let rows = pkps?.map((pkp: any, i: number) => {
+        return {
+          id: i,
+          tokenId: pkp.tokenID,
+          date: pkp.timeStamp,
+        };
+      })
 
-      // setRows(rows);
-
+      setRows(rows);
       setLoading(false)
-    })
+    }, true)
 
   }, [id])
 
   if (isLoading) return <p>Loading...</p>
   if (!rawData) return <p>No profile data</p>
+  if (!rows) return <p>Rows not ready</p>
 
   return (
-    <>
-    <h2>Raw Data:</h2>
-    <DisplayCode code={beautify(rawData, null, 2, 100)} />
-    
-    <h2>ownersPKPs:</h2>
-    <DisplayCode code={beautify(ownersPKPs, null, 2, 100)} />
-  
-    {/* <DataGrid
-      columns={[{ field: 'contractAddress', width: 400 }]}
-      rows={rows}
-    /> */}
+    <div>
+    {/* <h2>Raw Data:</h2>
+    <DisplayCode code={beautify(rawData, null, 2, 100)} /> */}
 
-    </>
+    <h2>(Raw) Owner's PKPs:</h2>
+    <DisplayCode code={beautify(ownersPKPs, null, 2, 100)} />
+
+    <h2>Owner's PKPs:</h2>
+    <div>
+      <ul>
+        {
+          rows.map((row, i) => {
+            return (<li key={i}>
+              <div>TokenID: { row["tokenId"]  }</div>
+              <div>Date: { parseInt(row["date"])  }</div>
+            </li>)
+          })
+        }
+
+      </ul>
+
+    </div>
+
+    </div>
   )
 }
 

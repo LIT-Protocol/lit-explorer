@@ -1,10 +1,10 @@
-export const cacheFetch = (url: string, callback: Function) => {
+export const cacheFetch = (url: string, callback: Function, force = false) => {
 
     let data;
     let storage : any = localStorage.getItem(url);
     let isExpired = JSON.parse(storage)?.expire;
   
-    if ( storage && new Date().getTime() < isExpired){
+    if ( storage && new Date().getTime() < isExpired && ! force){
       console.warn(`Using cache: ${url}`);
       data = JSON.parse(storage);
       callback(data);

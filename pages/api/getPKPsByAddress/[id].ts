@@ -18,11 +18,15 @@ export default async function handler(
 //   first pkp wallet owner: 0x50e2dac5e78B5905CB09495547452cEE64426db2
 
   const baseURL = process.env.NEXT_PUBLIC_CELO_API_BASE_URL;
-  
-    // Get list of tokens owned by address.
-  const dataRes = await fetch(`${baseURL}?module=account&action=tokenlist&address=${id}`);
 
-  const data = await dataRes.json();
+//   Get token transfer events by address. Up to a maximum of 10,000 token transfer events. Also available through a GraphQL 'token_transfers' query.
+// ?module=account&action=tokentx&address={addressHash}
+
+  
+// Get list of tokens owned by address.
+  const dataRes = await fetch(`${baseURL}?module=account&action=tokentx&address=${id}`);
+
+  let data = await dataRes.json();
 
   res.status(200).json({ 
     id: id?.toString(),
