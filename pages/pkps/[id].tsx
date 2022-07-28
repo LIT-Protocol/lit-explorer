@@ -5,6 +5,12 @@ import RenderDate from '../../utils/RenderDate';
 import RenderLink from '../../utils/RenderLink';
 import LoadData from '../../components/LoadData';
 
+declare global {
+  interface Window{
+    ethereum?:any
+  }
+}
+
 const PKPsPageById: NextPageWithLayout = () => {
 
   const router = useRouter();
@@ -12,39 +18,29 @@ const PKPsPageById: NextPageWithLayout = () => {
 
   if ( ! id ) return <p>Param is not ready</p>
 
-  return (<>
-    Token ID: { id }<br/>
-  </>);
-
   return (
     
     <LoadData
       key={id.toString()}
-      debug={true}
-      title="Owners's PKPs:"
+      debug={false}
+      title="Authorised PKP Controllers:"
       errorMessage="No PKP owners found."
-      fetchPath={`/api/get-accs-by-pkp/${id}`}
+      fetchPath={`/api/get-actions-by-pkp/${id}`}
       filter={(rawData: any) => {
         console.log("on filtered: ", rawData);
-        return rawData;
+        return rawData?.data;
       } }
-      renderCols={(width: any) => {
+      renderCols={(width: number) => {
         return [
-          { headerName: "123", field: "foo"}
-          // { headerName: "PKP Token ID", field: "tokenID", minWidth: width * .5, renderCell: RenderLink},
-          // { headerName:"Acquired Date", field: "date", minWidth: width * .2, renderCell: RenderDate},
-          // { headerName:"From", field: "from", minWidth: width * .3},
+          { headerName: "Address", field: "address", width, renderCell: RenderLink}
         ];
   
       } }
       renderRows={(filteredData: any) => {
-        return filteredData;
-        return filteredData?.map((pkp: any, i: number) => {
+        return filteredData?.map((item: any, i: number) => {
           return {
             id: i + 1,
-            // tokenID: pkp.tokenID,
-            // date: pkp.timeStamp,
-            // from: pkp.from,
+            address: item,
           };
         });
       } }    

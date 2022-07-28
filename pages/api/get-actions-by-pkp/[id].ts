@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import getPubkeyRouterAndPermissionsContract from '../../../utils/blockchain/getPubkeyRouterAndPermissionsContract';
 
 type Data = {
   id?: string
@@ -12,16 +13,11 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
 
-  const { id } = req.query;
-  const baseURL = process.env.NEXT_PUBLIC_CELO_API_BASE_URL;
-  const query = `?module=account&action=tokentx&address=${id}`;
+    const { id } = req.query;
 
-  const dataRes = await fetch(`${baseURL}${query}`);
+    const contract = await getPubkeyRouterAndPermissionsContract();
 
-  let data = await dataRes.json();
+    const data = await contract.getPermittedAddresses(id);
 
-  res.status(200).json({ 
-    id: id?.toString(),
-    data,
-  })
+    res.status(200).json({ data })
 }

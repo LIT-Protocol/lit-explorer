@@ -16,16 +16,16 @@ const SideNav = () => {
 
 
             <ul className='ul'>
-                <li><Button onClick={() => router.push('/mint-pkp')} className={currentRoute === "/mint-pkp" ? "btn active" : "btn"}>Mint New PKP</Button></li>
-                <li><Button onClick={() => router.push('/create-action')} className={currentRoute === "/create-action" ? "btn active" : "btn"}>Create Action</Button></li>
+                <li><Button onClick={() => router.push('/mint-pkp')} className={currentRoute.includes("/mint-pkp") ? "btn active" : "btn"}>Mint New PKP</Button></li>
+                <li><Button onClick={() => router.push('/create-action')} className={currentRoute.includes("/create-action") ? "btn active" : "btn"}>Create Action</Button></li>
             </ul>        
 
             <Divider className='divider' textAlign="left">PAGES</Divider>
             <ul className='ul'>
-                <li><Button onClick={() => router.push('/owners')}  className={currentRoute === "/owners" ? "btn active" : "btn"}>Owners</Button></li>
-                <li><Button onClick={() => router.push('/pkps')}  className={currentRoute === "/pkps" ? "btn active" : "btn"}>PKPS</Button></li>
-                <li><Button onClick={() => router.push('/actions')}  className={currentRoute === "/actions" ? "btn active" : "btn"}>ACTIONS</Button></li>
-                <li><Button onClick={() => router.push('/contracts')}  className={currentRoute === "/contracts" ? "btn active" : "btn"}>CONTRACTS</Button></li>
+                <li><Button onClick={() => router.push('/owners')}  className={currentRoute.includes("/owners") ? "btn active" : "btn"}>Owners</Button></li>
+                <li><Button onClick={() => router.push('/pkps')}  className={currentRoute.includes("/pkps") ? "btn active" : "btn"}>PKPS</Button></li>
+                <li><Button onClick={() => router.push('/actions')}  className={currentRoute.includes("/actions") ? "btn active" : "btn"}>ACTIONS</Button></li>
+                <li><Button onClick={() => router.push('/contracts')}  className={currentRoute.includes("/contracts") ? "btn active" : "btn"}>CONTRACTS</Button></li>
             </ul> 
         </>
     );
