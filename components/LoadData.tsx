@@ -29,13 +29,13 @@ const LoadData = (props: LoadDataProps) => {
 
   useEffect(() => {
     setLoading(true);
+    console.log("LoadData:", props.fetchPath);
     cacheFetch(`${props.fetchPath}`, (rawData: any) => {
       
       // -- set raw data
       setRawData(rawData);
       
       // -- get filtered data
-    //   const filtered = rawData.data.result.map((tx: any) => tx.address);
       const filtered = props?.filter ? props.filter(rawData) : rawData;
       setFilteredData(filtered)
 
@@ -53,12 +53,13 @@ const LoadData = (props: LoadDataProps) => {
       setRows(rows);
       
       setLoading(false)
+      
 
     });
   }, [])
 
   // -- render different states
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading) return <p>Loading data...</p>
   if (!rawData) return <p>No data found</p>
 
   return (
