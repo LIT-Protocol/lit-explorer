@@ -16,8 +16,8 @@ const OwnersPage: NextPageWithLayout = () => {
     
     <LoadData
       key={id.toString()}
-      debug={true}
-      title="PKP Owners:"
+      debug={false}
+      title="Owners's PKPs:"
       errorMessage="No PKP owners found."
       fetchPath={`/api/get-pkps-by-address/${id}`}
       filter={(rawData: any) => {
@@ -31,7 +31,7 @@ const OwnersPage: NextPageWithLayout = () => {
       } }
       renderCols={(width: any) => {
         return [
-          { headerName: "Token ID", field: "tokenID", minWidth: width * .5, renderCell: RenderLink},
+          { headerName: "PKP Token ID", field: "tokenID", minWidth: width * .5, renderCell: RenderLink},
           { headerName:"Acquired Date", field: "date", minWidth: width * .2, renderCell: RenderDate},
           { headerName:"From", field: "from", minWidth: width * .3},
         ];

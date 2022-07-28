@@ -189,3 +189,10 @@ body {
 .mt-12{
   margin-top: 12px;
 }
+
+#data-area > div{
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #E0E0E0;
+}
