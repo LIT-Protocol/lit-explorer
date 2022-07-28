@@ -20,7 +20,7 @@ const [code, setCode] = useState(litActionCode);
     <>
     <h1>Create Lit Action</h1>
     <p>
-        <a target="_blank" href="https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions">
+        <a target="_blank" rel="noreferrer" href="https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions">
             Documentation
         </a>
     </p>

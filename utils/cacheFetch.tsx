@@ -1,4 +1,4 @@
-export const cacheFetch = (url: string, callback: Function, force = false) => {
+export const cacheFetch = (url: string, callback: Function, force = true) => {
 
     let data;
     let storage : any = localStorage.getItem(url);

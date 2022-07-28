@@ -1,11 +1,15 @@
-import { DataGrid } from "@mui/x-data-grid"
-import beautify from "json-beautify"
+import { DataGrid } from '@mui/x-data-grid';
+
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import DisplayCode from "../../components/DisplayCode"
 import MainLayout from "../../components/MainLayout"
 import { cacheFetch } from "../../utils/cacheFetch"
 import { NextPageWithLayout } from "../_app"
+import { Alert } from '@mui/material';
+import RenderDate from '../../utils/RenderDate';
+import RenderLink from '../../utils/RenderLink';
+import getContentWidth from '../../utils/getContentWidth';
 
 const OwnersPage: NextPageWithLayout = () => {
 
@@ -13,30 +17,52 @@ const OwnersPage: NextPageWithLayout = () => {
   const { id } = router.query;
 
   const [rawData, setRawData] = useState(null)
-  const [ownersPKPs, setOwnersPKPs] = useState(null);
+  const [filteredData, setFilteredData] = useState(null);
+  const [cols, setCols] = useState([]);
   const [rows, setRows] = useState([]);
   const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
 
+    // -- variables to wait for before running fetch
     if( ! id ) return;
 
     setLoading(true);
-    cacheFetch(`/api/getPKPsByAddress/${id}`, (rawData: any) => {
+    cacheFetch(`/api/get-pkps-by-address/${id}`, (rawData: any) => {
 
       setRawData(rawData)
 
-      const pkps = rawData.data.result.filter((tx: any) => tx.contractAddress === process.env.NEXT_PUBLIC_PKP_NFT_CONTRACT);
+      // -- extract objects that 
+      // 1. transaction's contract address is equal to PKP contract address
+      // 2. transaction's to address is equal to query id
+      const pkps = rawData.data.result.filter(
+        (tx: any) => {
+          return tx.contractAddress === process.env.NEXT_PUBLIC_PKP_NFT_CONTRACT && 
+          id.toString().toLowerCase() == tx.to.toLowerCase();
+        }
+      );
+      
+      setFilteredData(pkps);
 
-      setOwnersPKPs(pkps);
+      // -- get container width (window width - sidebar width)
+      const width = getContentWidth();
+      
+      // -- set date cols
+      let cols : any = [
+        { headerName: "Token ID", field: "tokenID", minWidth: width * .5, renderCell: RenderLink},
+        { headerName:"Acquired Date", field: "date", minWidth: width * .2, renderCell: RenderDate},
+        { headerName:"From", field: "from", minWidth: width * .3},
+      ];
 
-      // let rows : any = [];
+      setCols(cols);
 
+      // -- set data row
       let rows = pkps?.map((pkp: any, i: number) => {
         return {
-          id: i,
-          tokenId: pkp.tokenID,
+          id: i + 1,
+          tokenID: pkp.tokenID,
           date: pkp.timeStamp,
+          from: pkp.from,
         };
       })
 
@@ -48,31 +74,29 @@ const OwnersPage: NextPageWithLayout = () => {
 
   if (isLoading) return <p>Loading...</p>
   if (!rawData) return <p>No profile data</p>
-  if (!rows) return <p>Rows not ready</p>
 
   return (
     <div>
     {/* <h2>Raw Data:</h2>
-    <DisplayCode code={beautify(rawData, null, 2, 100)} /> */}
+    <DisplayCode code={rawData} />
 
-    <h2>(Raw) Owner's PKPs:</h2>
-    <DisplayCode code={beautify(ownersPKPs, null, 2, 100)} />
+    <h2>(Raw) Owner&apos;s PKPs:</h2>
+    
+    <DisplayCode code={filteredData} /> */}
 
-    <h2>Owner's PKPs:</h2>
-    <div>
-      <ul>
-        {
-          rows.map((row, i) => {
-            return (<li key={i}>
-              <div>TokenID: { row["tokenId"]  }</div>
-              <div>Date: { parseInt(row["date"])  }</div>
-            </li>)
-          })
-        }
-
-      </ul>
-
-    </div>
+    
+    {
+      cols.length > 0 && rows.length > 0 ?
+      <>
+        <h2>Owner&apos;s PKPs:</h2>
+        <div id="data-area" style={{ height: 300, width: '100%' }}>
+          <DataGrid rows={rows} columns={cols} />
+        </div>
+      </>
+      : <div className='mt-12'>
+        <Alert severity="error">{`No PKPs found in ${id}`}</Alert>
+      </div>
+    }
 
     </div>
   )

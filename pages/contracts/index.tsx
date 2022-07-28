@@ -46,7 +46,7 @@ const ContractsPage: NextPageWithLayout = () => {
                 {row.name}
               </TableCell>
               <TableCell align="right">
-                <a target="_blank" href={`https://celoscan.io/address/${row.address}`}>{row.address}</a>
+                <a target="_blank" rel="noreferrer" href={`https://celoscan.io/address/${row.address}`}>{row.address}</a>
               </TableCell>
             </TableRow>
           ))}

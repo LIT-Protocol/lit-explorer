@@ -1,23 +1,21 @@
 import MonacoEditor from '@monaco-editor/react';
+import beautify from 'json-beautify';
 
 interface DisplayCode {
     code: any,
 }
 
 const Editor = (props: DisplayCode) => {
+
+    {/* // @ts-expect-error */}
+    const beautifiedJson = beautify(props.code, null, 2, 100);
+
     return (
         <MonacoEditor
             language="json"
-            value={props.code}
+            value={beautifiedJson}
             theme="vs-dark"
             height="300px"
-            // wordWrapColumn: 40,
-        
-            // Set this to false to not auto word wrap minified files
-            // wordWrapMinified: true,
-        
-            // try "same", "indent" or "none"
-            // wrappingIndent: 'indent'
         />
     )
 }

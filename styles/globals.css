@@ -185,3 +185,7 @@ body {
   background: #6170F7 !important;
   height: 3px !important;
 }
+
+.mt-12{
+  margin-top: 12px;
+}

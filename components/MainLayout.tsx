@@ -1,16 +1,10 @@
 import SearchBar from "./SearchBar";
 import SideNav from "./SideNav";
 
-import * as isIPFS from 'is-ipfs';
 import throwError from '../utils/throwError';
 import { useRouter } from "next/router";
 import { Alert, AlertTitle } from '@mui/material'
-
-enum SearchTypes {
-    ETH_ADDRESS = "ETH_ADDRESS",
-    IPFS_ID = "IPFS_ID",
-    PKP_TOKEN_ID = "PKP_TOKEN_ID"
-}
+import pushPage from "../utils/pushPage";
 
 interface MainLayoutProps {
     children: any
@@ -21,35 +15,6 @@ const MainLayout = (props: MainLayoutProps) => {
     const router = useRouter();
 
     /**
-     * Get the search type from a string
-     * 
-     * @example
-     *   IPFS ID: QmesxxB4NgrwGW1NZBRrbPj95NJL37aZj7Jcbnw2LVQjAW
-     *   ETH Address: 0xC285BBcd9d79225E1a08699Ae355d9C52F58a6c7
-     *   Token ID: 3096635843933936779942875635488849512907
-     * 
-     * @param text 
-     * @returns { string } type
-     */
-     const getSearchType = (text: string) => {
-      
-      if( text.includes('0x') ){
-        return SearchTypes.ETH_ADDRESS;
-      }
-  
-      if( ! text.includes('0x') && (parseInt(text).toString()) !== 'NaN'){
-        return SearchTypes.PKP_TOKEN_ID;
-      }
-  
-      if( isIPFS.multihash(text) ){
-        return SearchTypes.IPFS_ID;
-      }
-      
-      return null;
-  
-    }
-  
-      /**
      * 
      * Event: when user is typing on the search bar
      * 
@@ -72,26 +37,9 @@ const MainLayout = (props: MainLayoutProps) => {
       };
   
       // -- prepare
-      const type = getSearchType(text);
-  
-      // -- validate
-      if( type === null ) return;
-  
-      // -- execute
-      if( type === SearchTypes.ETH_ADDRESS){
-        // alertMsg('Success', `Found search type ${SearchTypes.ETH_ADDRESS}`)
-        router.push(`/owners/${text}`);
-      }
-  
-      if( type === SearchTypes.PKP_TOKEN_ID){
-        // alertMsg('Success', `Found search type ${SearchTypes.PKP_TOKEN_ID}`)
-        router.push(`/pkps/${text}`);
-      }
-  
-      if( type === SearchTypes.IPFS_ID){
-        // alertMsg('Success', `Found search type ${SearchTypes.IPFS_ID}`);
-        router.push(`/actions/${text}`);
-      }
+      const id = text;
+
+      pushPage(id, router);
   
     }
 
