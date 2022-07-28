@@ -80,17 +80,17 @@ const MainLayout = (props: MainLayoutProps) => {
       // -- execute
       if( type === SearchTypes.ETH_ADDRESS){
         // alertMsg('Success', `Found search type ${SearchTypes.ETH_ADDRESS}`)
-        router.push(`owners/${text}`);
+        router.push(`/owners/${text}`);
       }
   
       if( type === SearchTypes.PKP_TOKEN_ID){
         // alertMsg('Success', `Found search type ${SearchTypes.PKP_TOKEN_ID}`)
-        router.push(`pkps/${text}`);
+        router.push(`/pkps/${text}`);
       }
   
       if( type === SearchTypes.IPFS_ID){
         // alertMsg('Success', `Found search type ${SearchTypes.IPFS_ID}`);
-        router.push(`actions/${text}`);
+        router.push(`/actions/${text}`);
       }
   
     }
