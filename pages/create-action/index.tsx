@@ -8,8 +8,10 @@ import uploadToIPFS from "../../utils/ipfs/upload";
 import { LinearProgressWithLabel } from "../../components/Progress";
 import getPubkeyRouterAndPermissionsContract from "../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 
-import { CID } from 'multiformats/cid'
 import getIPFSHash, { IPFSHash } from "../../utils/ipfs/getIpfsHash";
+
+import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
+import throwError from "../../utils/throwError";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -31,7 +33,7 @@ go();`;
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('Loading...');
   const [counter, setCounter] = useState(0);
-  const [ipfsHash, setIpfsHash] = useState();
+  const [ipfsId, setIpfsId] = useState();
 
   /**
    * When code is being edited
@@ -57,7 +59,7 @@ go();`;
     const data = await fetch(`/api/pinata/${ipfsData.path}`).then((res) => res.json());
     
     setCounter(3);
-    setIpfsHash(data.data.ipfsHash);
+    setIpfsId(data.data.ipfsHash);
     setLoading(false);
 
   }
@@ -67,42 +69,63 @@ go();`;
    */
   const callRegisterAction = async () => {
 
-    const ipfsId = 'QmUnwHVcaymJWiYGQ6uAHvebGtmZ8S1r9E6BVmJMtuK5WY';
+    // -- validate
+    if( ! ipfsId ){
+      throwError("IPFS ID not found.");
+      return;
+    }
+
+    // -- get wallet
+    const { signer } = await getWeb3Wallet();
+
+    const contract = await getPubkeyRouterAndPermissionsContract({ wallet: signer });
     
-    const contract = await getPubkeyRouterAndPermissionsContract();
-
-    // console.log("Contract:", contract);
-    // console.log("ipfsIds:", contract.ipfsIds());
-
     let ipfsHash : IPFSHash = getIPFSHash(ipfsId);
 
-    contract.registerAction(ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
+    let registerResult: any;
+
+    try{
+      registerResult = await contract.registerAction(ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
+    }catch(e: any){
+      throwError(e.message);
+    }
+
+    console.log("registerResult:", registerResult);
   }
 
   return (
     <>
     
-    {
-      loading ? <>
-        <LinearProgressWithLabel value={(counter / 3) * 100} />
-        { msg }
-      </> : ''
-    }
+    <div className="uploaded-result">
+      
+        {
+          loading ? <>
+            <LinearProgressWithLabel value={(counter / 3) * 100} />
+            { msg }
+          </> : ''
+        }
+      
+      
+        {
+          counter == 3
+          ? <>
+            <Alert severity="success">Successfully uploaded to IPFS - Please wait at least 5 minutes for the CID to be pinned</Alert>
+            <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsId} />
+            <div className="mt-12 flex">
+              <Button onClick={callRegisterAction} className="btn-2 ml-auto">Register Action</Button>
+            </div>
 
-    {
-      counter == 3
-      ? <>
-        <Alert severity="success">Successfully uploaded to - Please wait at least 5 minutes for the IPFS ID to be pinned</Alert>
-        <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsHash} />
-      </>
-      : ''
-    }
+          </>
+          : ''
+        }
+      
+    </div>
     
     <h1>Create Action</h1>
 
     {/* <HorizontalLabelPositionBelowStepper steps={[
-      'Select master blaster campaign settings',
-      'Create an ad group',
+      'Creating Lit Action',
+      'Register Action',
       'Create an ad',
     ]}/> */}
 
@@ -123,12 +146,7 @@ go();`;
 
         <div className="mt-12 flex">
           <Button onClick={upload} className="btn-2 ml-auto">Upload to IPFS</Button>
-        </div>
-
-        <div className="mt-12 flex">
-          <Button onClick={callRegisterAction} className="btn-2 ml-auto">Register Action</Button>
-        </div>
-        
+        </div>        
     </>
   )
 }

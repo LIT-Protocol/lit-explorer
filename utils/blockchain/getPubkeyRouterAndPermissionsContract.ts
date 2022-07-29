@@ -12,11 +12,21 @@ interface Props{
  */
 const getPubkeyRouterAndPermissionsContract = async (props?: Props): Promise <Contract> =>  {
     
-    const provider = new CeloProvider(process.env.NEXT_PUBLIC_CHAIN_RPC);
+    let wallet;
 
-    await provider.ready;
-
-    const wallet = props?.wallet ?? new CeloWallet(ethers.Wallet.createRandom().privateKey, provider)
+    // If wallet is provider
+    if(props?.wallet){
+        wallet = props.wallet; 
+    }
+    
+    // Randomly generate a wallet to read blockchain info
+    else{
+        const provider = new CeloProvider(process.env.NEXT_PUBLIC_CHAIN_RPC);
+    
+        await provider.ready;
+    
+        wallet =  new CeloWallet(ethers.Wallet.createRandom().privateKey, provider)
+    }
 
     const ABI = require('../../abi/pkp_router.json').result;
 

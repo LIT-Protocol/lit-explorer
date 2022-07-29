@@ -85,6 +85,10 @@ const MainLayout = (props: MainLayoutProps) => {
             
             </div>
 
+            {/* ----- Floating Objects ----- */}
+            <div className="support">
+                <a href="https://discord.com/channels/896185694857343026/1002588409153458228">Support</a>
+            </div>
         </div>
 
       )
