@@ -2,11 +2,8 @@ import { Alert } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useEffect, useState } from "react"
 import DisplayCode from "../components/DisplayCode"
-import MainLayout from "../components/MainLayout"
 import { cacheFetch } from "../utils/cacheFetch"
 import getContentWidth from "../utils/getContentWidth"
-import RenderLink from "../utils/RenderLink"
-import { NextPageWithLayout } from "../pages/_app"
 
 interface LoadDataProps{
     title: string
@@ -14,8 +11,9 @@ interface LoadDataProps{
     fetchPath: string
     debug?: boolean
     filter: Function
-    renderCols: Function,
-    renderRows: Function,
+    renderCols?: Function,
+    renderRows?: Function,
+    loadingMessage?: string
 }
 
 const LoadData = (props: LoadDataProps) => {
@@ -43,14 +41,18 @@ const LoadData = (props: LoadDataProps) => {
       const width = getContentWidth();
 
       // -- set cols
-      let cols : any = props.renderCols(width);
-
-      setColumns(cols);
+      if( props.renderCols ){
+        let cols : any = props.renderCols(width);
+  
+        setColumns(cols);
+      }
 
       // -- set rows
-      let rows : any = props.renderRows(filtered)
-
-      setRows(rows);
+      if( props.renderRows ){
+        let rows : any = props.renderRows(filtered)
+  
+        setRows(rows);
+      }
       
       setLoading(false)
       
@@ -59,7 +61,7 @@ const LoadData = (props: LoadDataProps) => {
   }, [])
 
   // -- render different states
-  if (isLoading) return <p>Loading data...</p>
+  if (isLoading) return <p>{ props?.loadingMessage ?? 'Loading data...' }</p>
   if (!rawData) return <p>No data found</p>
 
   return (

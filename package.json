@@ -17,6 +17,7 @@
     "@mui/x-data-grid": "^5.14.0",
     "date-and-time": "^2.4.1",
     "ethers": "^5.6.9",
+    "hex2dec": "^1.1.2",
     "is-ipfs": "^6.0.2",
     "json-beautify": "^1.1.1",
     "next": "12.2.3",

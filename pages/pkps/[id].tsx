@@ -20,15 +20,17 @@ const PKPsPageById: NextPageWithLayout = () => {
 
   return (
     
-    <LoadData
+    <>
+      <LoadData
       key={id.toString()}
       debug={false}
       title="Authorised PKP Controllers:"
       errorMessage="No PKP owners found."
-      fetchPath={`/api/get-actions-by-pkp/${id}`}
+      loadingMessage="Loading authorised PKP controllers..."
+      fetchPath={`/api/get-permitted-by-pkp/${id}`}
       filter={(rawData: any) => {
         console.log("on filtered: ", rawData);
-        return rawData?.data;
+        return rawData?.data?.addresses;
       } }
       renderCols={(width: number) => {
         return [
@@ -45,6 +47,34 @@ const PKPsPageById: NextPageWithLayout = () => {
         });
       } }    
       />
+
+      <LoadData
+        key={id.toString() + 2}
+        debug={false}
+        title="Authorised Actions:"
+        errorMessage="No authorised actions found."
+        loadingMessage="Loading authorised actions..."
+        fetchPath={`/api/get-permitted-by-pkp/${id}`}
+        filter={(rawData: any) => {
+          console.log("on filtered: ", rawData);
+          return rawData?.data?.actions;
+        } }
+        renderCols={(width: number) => {
+          return [
+            { headerName: "Address", field: "address", width, renderCell: RenderLink}
+          ];
+    
+        } }
+        renderRows={(filteredData: any) => {
+          return filteredData?.map((item: any, i: number) => {
+            return {
+              id: i + 1,
+              address: item,
+            };
+          });
+        } }    
+        />
+    </>
   )
 }
 

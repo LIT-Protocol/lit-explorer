@@ -17,7 +17,13 @@ export default async function handler(
 
     const contract = await getPubkeyRouterAndPermissionsContract();
 
-    const data = await contract.getPermittedAddresses(id);
+    const addresses = await contract.getPermittedAddresses(id);
+    const actions = await contract.getPermittedActions(id);
 
+    const data = {
+      addresses,
+      actions,
+    }
+    
     res.status(200).json({ data })
 }

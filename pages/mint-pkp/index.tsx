@@ -5,7 +5,7 @@ const MintPKPPage: NextPageWithLayout = () => {
 
   return (
     <>
-    Mint PKP page
+    Mint PKP page - Coming soon...
     </>
   )
 }

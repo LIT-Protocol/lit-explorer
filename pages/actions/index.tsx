@@ -5,7 +5,7 @@ const ActionsPage: NextPageWithLayout = () => {
 
   return (
     <>
-    Actions page
+    Coming soon...
     </>
   )
 }
