@@ -236,8 +236,8 @@ body {
 }
 
 .btn-2{
-  background: #7f47e8;
-  color: white;
+  background: #7f47e8 !important;
+  color: white !important;
 }
 .MuiLinearProgress-colorPrimary{
   background: white;
@@ -246,10 +246,10 @@ body {
   background-color: #7F47E8;
 }
 .btn-2:hover{
-  background: #977cc7;
+  background: #977cc7 !important;
 }
 .ml-auto{
-  margin-left: auto;
+  margin-left: auto !important;
 }
 .Mui-focused{
   color: #7F47E8 !important;
