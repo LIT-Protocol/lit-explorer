@@ -3,15 +3,16 @@ import { NextPageWithLayout } from "../_app"
 import MonacoEditor from '@monaco-editor/react';
 import { useState } from "react";
 import HorizontalLabelPositionBelowStepper from "../../components/Stepper";
-import { Alert, Button, TextField } from "@mui/material";
+import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import uploadToIPFS from "../../utils/ipfs/upload";
 import { LinearProgressWithLabel } from "../../components/Progress";
-import getPubkeyRouterAndPermissionsContract from "../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
-
-import getIPFSHash, { IPFSHash } from "../../utils/ipfs/getIpfsHash";
-
-import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
+import callRegisterAction from "../../utils/blockchain/callRegisterAction";
 import throwError from "../../utils/throwError";
+import getPKPNFTContract from "../../utils/blockchain/getPKPNFTContract";
+import getTokensByAddress from "../../utils/blockchain/getTokensByAddress";
+import callAddPermittedAction from "../../utils/blockchain/callAddPermittedAction";
+import getTxLink from "../../utils/blockchain/getTxLink";
+import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -34,6 +35,15 @@ go();`;
   const [msg, setMsg] = useState('Loading...');
   const [counter, setCounter] = useState(0);
   const [ipfsId, setIpfsId] = useState();
+
+  // --- User's tokens
+  const [userTokensTabEnabled, setUserTokensTabEnabled] = useState(false);
+  const [userTokens, setUserTokens] = useState([]);
+  const [userHasTokens, setUserHasTokens] = useState(false);
+  const [selectedToken, setSelectedToken] = useState();
+
+  // --- txs
+  const [txRegisterActionHash, setTxRegisterActionHash] = useState('');
 
   /**
    * When code is being edited
@@ -65,61 +75,146 @@ go();`;
   }
 
   /**
-   * Register Action (from router permission contract)
+   * Register Lit Action
+   * @returns 
    */
-  const callRegisterAction = async () => {
+  const register = async () => {
+
+    const debug = true;
+    
+    setUserTokensTabEnabled(true);
 
     // -- validate
-    if( ! ipfsId ){
+    if( ! ipfsId || ipfsId == ''){
       throwError("IPFS ID not found.");
       return;
     }
 
-    // -- get wallet
-    const { signer } = await getWeb3Wallet();
+    let ownerAddress: string;
 
-    const contract = await getPubkeyRouterAndPermissionsContract({ wallet: signer });
-    
-    let ipfsHash : IPFSHash = getIPFSHash(ipfsId);
-
-    let registerResult: any;
-
-    try{
-      registerResult = await contract.registerAction(ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
-    }catch(e: any){
-      throwError(e.message);
+    if( debug ){
+      setTxRegisterActionHash("FAKE-TRANSACTION-46bbccdcac66bb4d7a4891bc1c76234a9c79f3140699cd0f6117")
+      ownerAddress = '0x50e2dac5e78B5905CB09495547452cEE64426db2';
+    }else{
+      const txRegisterAction = await callRegisterAction(ipfsId);
+      console.log("txRegisterAction:", txRegisterAction);
+      const { addresses } = await getWeb3Wallet();
+      ownerAddress = addresses[0];
     }
 
-    console.log("registerResult:", registerResult);
+    let tokens: any = await getTokensByAddress(ownerAddress);
+
+    setUserTokens(tokens);
+
+    setUserHasTokens(tokens.length <= 0 ? false : true);
+
+  }
+
+  /**
+   * Add permission
+   */
+  const addPermission = async () => {
+
+    // -- validate
+    if( ! ipfsId || ipfsId == ''){
+      throwError("IPFS ID not found.");
+      return;
+    }
+
+    let permittedAction;
+
+    try{
+      permittedAction = await callAddPermittedAction(ipfsId, selectedToken);
+    }catch(e){
+      console.warn(e);
+    }
+
+    if( permittedAction ){
+      alert(permittedAction);
+    }
+
+
   }
 
   return (
     <>
-    
-    <div className="uploaded-result">
-      
-        {
-          loading ? <>
-            <LinearProgressWithLabel value={(counter / 3) * 100} />
-            { msg }
-          </> : ''
-        }
-      
-      
-        {
-          counter == 3
-          ? <>
-            <Alert severity="success">Successfully uploaded to IPFS - Please wait at least 5 minutes for the CID to be pinned</Alert>
-            <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsId} />
-            <div className="mt-12 flex">
-              <Button onClick={callRegisterAction} className="btn-2 ml-auto">Register Action</Button>
-            </div>
+    {
+      counter > 0
+      ? <div className="uploaded-result">
+          
+          {
+            loading ? <>
+              <LinearProgressWithLabel value={(counter / 3) * 100} />
+              { msg }
+            </> : ''
+          }
+        
+        
+          {
+            counter == 3
+            ? <>
+              <Alert severity="success">Successfully uploaded to IPFS - Please wait at least 5 minutes for the CID to be pinned</Alert>
+              <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsId} />
+              <div className="mt-12 flex">
+                <Button onClick={register} className="btn-2 ml-auto">Register Action</Button>
+              </div>
 
-          </>
-          : ''
-        }
-      
-    </div>
+              { 
+                txRegisterActionHash !== null || txRegisterActionHash !== ''?
+                <div className="mt-12">
+                    <div className="mt-12 flex ">
+                      <a className="align-right" target="_blank" href={getTxLink(txRegisterActionHash ?? '')}>{ txRegisterActionHash } </a>
+                    </div>
+                      
+
+                  </div> : ''
+              }
+
+              { 
+                userTokensTabEnabled ?
+                  <div className="mt-12">
+                    {
+                      userTokens.length > 0 ?
+                        <>
+                          <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Your PKP NFTs</InputLabel>
+                            <Select
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              value={selectedToken}
+                              label="Your PKP NFTs"
+                              onChange={(e: any) => setSelectedToken(e.target.value)}
+                            >
+                              {
+                                userTokens?.map((token: any, id: any)=> {
+                                  return <MenuItem key={id} value={token}>{ token }</MenuItem>
+                                })
+                              }
+                            </Select>
+                          </FormControl>
+                          
+                          <div className="mt-12 flex">
+                            <Button onClick={addPermission} className="btn-2 ml-auto">Add Permitted Action</Button>
+                          </div>
+
+                        </>
+                      : ! userHasTokens ? <Alert severity="error">No PKP found.</Alert> : 'Loading your PKPs...'
+                    }
+
+                  </div> : ''
+              }
+              
+              
+
+
+            </>
+            : ''
+          }
+        
+      </div>
+      : ''
+    }
+    
     
     <h1>Create Action</h1>
 

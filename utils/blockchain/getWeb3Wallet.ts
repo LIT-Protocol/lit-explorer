@@ -3,7 +3,8 @@ import { CELO_PARAMS } from "../constants";
 
 interface Web3WalletProps{
     wallet: any,
-    signer: any
+    signer: any,
+    addresses: any,
 }
 
 const getWeb3Wallet = async () : Promise<Web3WalletProps> => {
@@ -11,7 +12,7 @@ const getWeb3Wallet = async () : Promise<Web3WalletProps> => {
 
     if( ! web3Provider ){
         alert("Please connect to a web3 wallet like Metamask.");
-        return {wallet: null, signer: null};
+        return {wallet: null, signer: null, addresses: null};
     }
 
     await web3Provider.request({
@@ -25,7 +26,9 @@ const getWeb3Wallet = async () : Promise<Web3WalletProps> => {
 
     const signer = wallet.getSigner();
 
-    return { wallet, signer };
+    const addresses = await wallet.listAccounts();
+
+    return { wallet, signer, addresses };
 }
 
 export default getWeb3Wallet;
