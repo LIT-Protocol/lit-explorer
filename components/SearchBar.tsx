@@ -7,7 +7,7 @@ interface SearchBarProps {
 const SearchBar = (props: SearchBarProps) => {
     return (
         <div className="search-bar">
-          <Input id="search-bar" onKeyDown={props.onSearch} className="input-bright" type="search" placeholder='Search by address, token id, or CID' />
+          <Input id="search-bar" onKeyDown={props.onSearch} className="input-bright" type="search" placeholder='Search by address, pkp token id, or cid/ipfsid...' />
           <Button onClick={props.onSearch} className='btn-clear'>
             <img src='/svg/search.svg' alt="search"/>
           </Button>

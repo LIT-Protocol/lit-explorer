@@ -10,6 +10,7 @@ const Path = () => {
     const page = paths[1];
     const id = paths[2]?.replaceAll('#', '');
 
+    if( ! page ) return '';
     // return (<></>)
     return (
         <>

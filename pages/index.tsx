@@ -4,9 +4,9 @@ import type { NextPageWithLayout } from './_app';
 const Home: NextPageWithLayout = () => {
 
   return (
-    <>
-    Main Page
-    </>
+    <div className="mt-12">
+    Home page is empty, try other pages 
+    </div>
   )
 }
 

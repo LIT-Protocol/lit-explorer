@@ -159,6 +159,11 @@ body {
 
 .code-editor{
   height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 0px solid rgba(0, 0, 0, 0.125);
+  background: #1e1e1e;
+  padding: 12px;
 }
 
 #global-message{
@@ -223,4 +228,32 @@ body {
 .flex{
   display: flex;
   gap: 8px;
+}
+
+.stepper svg.Mui-active,
+.stepper svg.Mui-completed{
+  color: #8047E7 !important;
+}
+
+.btn-2{
+  background: #7f47e8;
+  color: white;
+}
+.MuiLinearProgress-colorPrimary{
+  background: white;
+}
+.MuiLinearProgress-barColorPrimary{
+  background-color: #7F47E8;
+}
+.btn-2:hover{
+  background: #977cc7;
+}
+.ml-auto{
+  margin-left: auto;
+}
+.Mui-focused{
+  color: #7F47E8 !important;
+}
+.MuiOutlinedInput-notchedOutline{
+  border-color: #7F47E8 !important;
 }
