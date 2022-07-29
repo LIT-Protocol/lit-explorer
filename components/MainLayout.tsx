@@ -5,7 +5,7 @@ import throwError from '../utils/throwError';
 import { useRouter } from "next/router";
 import { Alert, AlertTitle } from '@mui/material'
 import pushPage from "../utils/pushPage";
-import Path from "./Path";
+import NavPath from "./NavPath";
 
 interface MainLayoutProps {
     children: any
@@ -77,7 +77,7 @@ const MainLayout = (props: MainLayoutProps) => {
                 <SearchBar onSearch={onSearch} />
                 
                 <div id="main-dynamic-content">
-                    <Path/>
+                    <NavPath/>
                     { props.children }
                 </div>
             </div>

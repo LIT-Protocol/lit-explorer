@@ -22,6 +22,7 @@
     "ipfs-core": "^0.15.4",
     "is-ipfs": "^6.0.2",
     "json-beautify": "^1.1.1",
+    "multiformats": "^9.7.1",
     "next": "12.2.3",
     "next-transpile-modules": "^9.0.0",
     "nextjs-progressbar": "^0.0.14",

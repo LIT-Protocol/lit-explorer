@@ -6,8 +6,10 @@ import HorizontalLabelPositionBelowStepper from "../../components/Stepper";
 import { Alert, Button, TextField } from "@mui/material";
 import uploadToIPFS from "../../utils/ipfs/upload";
 import { LinearProgressWithLabel } from "../../components/Progress";
+import getPubkeyRouterAndPermissionsContract from "../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 
-
+import { CID } from 'multiformats/cid'
+import getIPFSHash, { IPFSHash } from "../../utils/ipfs/getIpfsHash";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -55,11 +57,28 @@ go();`;
     const data = await fetch(`/api/pinata/${ipfsData.path}`).then((res) => res.json());
     
     setCounter(3);
-    // console.log();
     setIpfsHash(data.data.ipfsHash);
     setLoading(false);
 
   }
+
+  /**
+   * Register Action (from router permission contract)
+   */
+  const callRegisterAction = async () => {
+
+    const ipfsId = 'QmUnwHVcaymJWiYGQ6uAHvebGtmZ8S1r9E6BVmJMtuK5WY';
+    
+    const contract = await getPubkeyRouterAndPermissionsContract();
+
+    // console.log("Contract:", contract);
+    // console.log("ipfsIds:", contract.ipfsIds());
+
+    let ipfsHash : IPFSHash = getIPFSHash(ipfsId);
+
+    contract.registerAction(ipfsHash.digest, ipfsHash.hashFunction, ipfsHash.size);
+  }
+
   return (
     <>
     
@@ -104,6 +123,10 @@ go();`;
 
         <div className="mt-12 flex">
           <Button onClick={upload} className="btn-2 ml-auto">Upload to IPFS</Button>
+        </div>
+
+        <div className="mt-12 flex">
+          <Button onClick={callRegisterAction} className="btn-2 ml-auto">Register Action</Button>
         </div>
         
     </>

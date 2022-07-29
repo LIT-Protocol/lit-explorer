@@ -1,18 +1,22 @@
 import { CeloProvider, CeloWallet } from "@celo-tools/celo-ethers-wrapper";
 import { Contract, ethers } from "ethers";
 
+interface Props{
+    wallet?: any 
+}
 
 /**
  * Get PubkeyRouterAndPermissions Contract
  * https://celoscan.io/address/0x5Ef8A5e3b74DE013d608740F934c14109ae12a81#readContract
  * @returns 
  */
-const getPubkeyRouterAndPermissionsContract = async (): Promise <Contract> =>  {
+const getPubkeyRouterAndPermissionsContract = async (props?: Props): Promise <Contract> =>  {
     
     const provider = new CeloProvider(process.env.NEXT_PUBLIC_CHAIN_RPC);
+
     await provider.ready;
 
-    const wallet = new CeloWallet(ethers.Wallet.createRandom().privateKey, provider)
+    const wallet = props?.wallet ?? new CeloWallet(ethers.Wallet.createRandom().privateKey, provider)
 
     const ABI = require('../../abi/pkp_router.json').result;
 

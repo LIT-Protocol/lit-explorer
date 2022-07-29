@@ -7,7 +7,6 @@ interface DisplayCode {
 
 const Editor = (props: DisplayCode) => {
 
-    {/* // @ts-expect-error */}
     const beautifiedJson = beautify(props.code, null, 2, 100);
 
     return (
