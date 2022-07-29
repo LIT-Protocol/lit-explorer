@@ -41,11 +41,14 @@ export default function handler(
     //handle results here
     console.log("SUCCESS:", result);
     
+    const baseURL = process.env.NEXT_PUBLIC_IPFS_BASE_URL ?? '';
+    
+    console.log("baseURL:", baseURL);
     const data = {
       id: result.id,
       ipfsHash: result.ipfsHash,
       name: result.name,
-      path: `https://ipfs.litgateway.com/ipfs/${result.ipfsHash}`,
+      path: `${baseURL}/${result.ipfsHash}`,
     };
 
     res.status(200).json({ data })
