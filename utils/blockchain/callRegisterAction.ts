@@ -1,4 +1,4 @@
-import getIPFSHash, { IPFSHash } from "../ipfs/getIpfsHash";
+import { getBytes32FromMultihash, getMultihashFromBytes32, IPFSHash, ipfsIdToIpfsIdHash } from "../ipfs/getIpfsHash";
 import throwError from "../throwError";
 import getPubkeyRouterAndPermissionsContract from "./getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "./getWeb3Wallet";
@@ -7,6 +7,8 @@ import getWeb3Wallet from "./getWeb3Wallet";
  * Register Action (from router permission contract)
  */
 const callRegisterAction = async (ipfsId: string) => {
+
+    console.log("[callRegisterAction]:", ipfsId);
 
     // -- validate
     if( ! ipfsId || ipfsId == ''){
@@ -19,7 +21,11 @@ const callRegisterAction = async (ipfsId: string) => {
 
     const contract = await getPubkeyRouterAndPermissionsContract({ wallet: signer });
 
-    let ipfsHash : IPFSHash = getIPFSHash(ipfsId);
+    let ipfsHash : IPFSHash = getBytes32FromMultihash(ipfsId);
+    let ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
+
+    console.log("ipfsHash:", ipfsHash);
+    console.log("ipfsMultiHash:", ipfsMultiHash);
 
     let registerResult: any;
 

@@ -1,4 +1,7 @@
 import { CID } from "multiformats";
+import bs58 from 'bs58';
+import { ethers } from "ethers";
+
 
 export interface IPFSHash {
     digest: string
@@ -6,7 +9,13 @@ export interface IPFSHash {
     size: number
 }
 
-const getIPFSHash = (ipfsId: string) => {
+/**
+ * Partition multihash string into object representing multihash
+ *
+ * @param {string} multihash A base58 encoded multihash string
+ * @returns {Multihash}
+ */
+export const getBytes32FromMultihash = (ipfsId: string) => {
     const cid = CID.parse(ipfsId);
     const hashFunction = cid.multihash.code;
     const size = cid.multihash.size;
@@ -21,4 +30,36 @@ const getIPFSHash = (ipfsId: string) => {
     return ipfsHash
 }
 
-export default getIPFSHash;
+  
+  /**
+   * Encode a multihash structure into base58 encoded multihash string
+   *
+   * @param {Multihash} multihash
+   * @returns {(string|null)} base58 encoded multihash string
+   */
+   export function getMultihashFromBytes32(multihash: any) {
+    const { digest, hashFunction, size } = multihash;
+    if (size === 0) return null;
+  
+    // cut off leading "0x"
+    let hashBytes: any = Buffer.from(digest.slice(2), "hex");
+  
+    // prepend hashFunction and digest size
+    const multihashBytes = new hashBytes.constructor(2 + hashBytes.length);
+    multihashBytes[0] = hashFunction;
+    multihashBytes[1] = size;
+    multihashBytes.set(hashBytes, 2);
+  
+    return bs58.encode(multihashBytes);
+  }
+
+  export function ipfsIdToIpfsIdHash(ipfsId: string) {
+    const multihashStruct = getBytes32FromMultihash(ipfsId);
+    // console.log("multihashStruct", multihashStruct);
+    const packed = ethers.utils.solidityPack(
+      ["bytes32", "uint8", "uint8"],
+      [multihashStruct.digest, multihashStruct.hashFunction, multihashStruct.size]
+    );
+    return ethers.utils.keccak256(packed);
+  }
+  

@@ -80,10 +80,8 @@ go();`;
    */
   const register = async () => {
 
-    const debug = true;
+    const debug = false;
     
-    setUserTokensTabEnabled(true);
-
     // -- validate
     if( ! ipfsId || ipfsId == ''){
       throwError("IPFS ID not found.");
@@ -98,10 +96,14 @@ go();`;
     }else{
       const txRegisterAction = await callRegisterAction(ipfsId);
       console.log("txRegisterAction:", txRegisterAction);
+      setTxRegisterActionHash(txRegisterAction.hash);
       const { addresses } = await getWeb3Wallet();
       ownerAddress = addresses[0];
     }
 
+    // -- treat this like a new page
+    setUserTokensTabEnabled(true);
+    
     let tokens: any = await getTokensByAddress(ownerAddress);
 
     setUserTokens(tokens);
@@ -111,7 +113,7 @@ go();`;
   }
 
   /**
-   * Add permission
+   * Add permission to action
    */
   const addPermission = async () => {
 
@@ -121,15 +123,18 @@ go();`;
       return;
     }
 
+    console.log("selectedToken:", selectedToken);
+
     let permittedAction;
 
     try{
       permittedAction = await callAddPermittedAction(ipfsId, selectedToken);
     }catch(e){
-      console.warn(e);
+      console.error(e);
     }
 
     if( permittedAction ){
+      console.log("permittedAction:", permittedAction);
       alert(permittedAction);
     }
 
@@ -163,7 +168,7 @@ go();`;
                 txRegisterActionHash !== null || txRegisterActionHash !== ''?
                 <div className="mt-12">
                     <div className="mt-12 flex ">
-                      <a className="align-right" target="_blank" href={getTxLink(txRegisterActionHash ?? '')}>{ txRegisterActionHash } </a>
+                      <a className="align-right" target="_blank" rel="noreferrer" href={getTxLink(txRegisterActionHash ?? '')}>{ txRegisterActionHash } </a>
                     </div>
                       
 
