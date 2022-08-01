@@ -285,3 +285,16 @@ body {
   padding: 12px;
   border-radius: 12px;
 }
+
+.flex-content{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.sm{
+  width: 12px;
+  height: 12px;
+}
+.sm > .MuiCircularProgress-root{
+  width: 14px !important;
+  height: 14px !important;
+}

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MainLayout from "../../components/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import MonacoEditor from '@monaco-editor/react';
+import ActionCodeStatus from "../../components/ActionCodeStatus";
 
 const ActionsPage: NextPageWithLayout = () => {
 
@@ -37,7 +38,12 @@ const ActionsPage: NextPageWithLayout = () => {
 
   return (
     <>
-    <h2>Your Lit Action Code</h2>
+    <div className="flex">
+      <h2>Your Lit Action Code</h2> 
+      <div className="flex-content">
+        <ActionCodeStatus ipfsId={id}/>
+      </div>
+    </div>
     <div className="code-editor mt-12">
       <MonacoEditor
           language="javascript"

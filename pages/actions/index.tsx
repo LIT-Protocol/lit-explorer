@@ -22,8 +22,9 @@ const ActionsPage: NextPageWithLayout = () => {
         } }
         renderCols={(width: number) => {
           return [
-            { headerName: "IPFS ID", field: "ipfsId", width: width * .5, renderCell: RenderLink},
-            { headerName: "Created at", field: "createdAt", width: width * .5},
+            { headerName: "IPFS ID", field: "ipfsId", width: width * .3, renderCell: RenderLink},
+            { headerName: "Created at", field: "createdAt", width: width * .3},
+            { headerName: "Created at", field: "createdAt", width: width * .3},
           ];
         } }
         renderRows={(filteredData: any) => {
