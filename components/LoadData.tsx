@@ -28,13 +28,18 @@ const LoadData = (props: LoadDataProps) => {
   useEffect(() => {
     setLoading(true);
     console.log("LoadData:", props.fetchPath);
-    cacheFetch(`${props.fetchPath}`, (rawData: any) => {
+    cacheFetch(`${props.fetchPath}`, async (rawData: any) => {
       
       // -- set raw data
       setRawData(rawData);
+
+      if( ! props?.filter ){
+        console.warn("No filtered data.");
+        return;
+      }
       
       // -- get filtered data
-      const filtered = props?.filter ? props.filter(rawData) : rawData;
+      const filtered = props?.filter ? await props.filter(rawData) : rawData;
       setFilteredData(filtered)
 
       // -- get container width
@@ -96,11 +101,3 @@ const LoadData = (props: LoadDataProps) => {
 }
 
 export default LoadData
-
-// LoadData.getLayout = function getLayout(page: any) {
-//   return (
-//     <MainLayout>
-//       { page }
-//     </MainLayout>
-//   )
-// }

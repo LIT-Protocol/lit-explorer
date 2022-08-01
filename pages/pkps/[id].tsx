@@ -4,6 +4,9 @@ import { NextPageWithLayout } from "../_app"
 import RenderDate from '../../utils/RenderDate';
 import RenderLink from '../../utils/RenderLink';
 import LoadData from '../../components/LoadData';
+import getPubkeyRouterAndPermissionsContract from "../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
+import { getIPFSIdFromBytes32, parseMultihashContractResponse, solidityIpfsIdToCID } from "../../utils/ipfs/ipfsHashConverter";
+import asyncForEach, { asyncForEachReturn } from "../../utils/asyncForeach";
 
 declare global {
   interface Window{
@@ -51,13 +54,15 @@ const PKPsPageById: NextPageWithLayout = () => {
       <LoadData
         key={id.toString() + 2}
         debug={false}
-        title="Authorised Actions:"
+        title="Authorised Actions stored on IPFS:"
         errorMessage="No authorised actions found."
         loadingMessage="Loading authorised actions..."
         fetchPath={`/api/get-permitted-by-pkp/${id}`}
-        filter={(rawData: any) => {
+        filter={async (rawData: any) => {
           console.log("on filtered: ", rawData);
-          return rawData?.data?.actions;
+          return await asyncForEachReturn(rawData?.data?.actions, async(solidityIpfsId: string) => {
+            return await solidityIpfsIdToCID(solidityIpfsId);
+          })
         } }
         renderCols={(width: number) => {
           return [

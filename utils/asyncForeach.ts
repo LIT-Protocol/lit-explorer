@@ -1,7 +1,17 @@
-const asyncForEach = async (array: [], callback: Function) => {
+export const asyncForEach = async (array: [], callback: Function) => {
     for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array)
     }
+    return array;
   }
 
-  export default asyncForEach;
+  export const asyncForEachReturn = async (array: [], callback: Function) => {
+
+    const list = [];
+
+    for (let index = 0; index < array.length; index++) {
+        const item = await callback(array[index], index, array)
+        list.push(item);
+    }
+    return list;
+  }
