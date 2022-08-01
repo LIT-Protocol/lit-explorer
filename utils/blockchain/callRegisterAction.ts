@@ -1,4 +1,4 @@
-import { getBytes32FromMultihash, getMultihashFromBytes32, IPFSHash, ipfsIdToIpfsIdHash } from "../ipfs/getIpfsHash";
+import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../ipfs/ipfsHashConverter";
 import throwError from "../throwError";
 import getPubkeyRouterAndPermissionsContract from "./getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "./getWeb3Wallet";
@@ -22,6 +22,7 @@ const callRegisterAction = async (ipfsId: string) => {
     const contract = await getPubkeyRouterAndPermissionsContract({ wallet: signer });
 
     let ipfsHash : IPFSHash = getBytes32FromMultihash(ipfsId);
+    
     let ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
 
     console.log("ipfsHash:", ipfsHash);

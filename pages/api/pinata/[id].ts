@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-
+import date from 'date-and-time';
 import pinataSDK from '@pinata/sdk';
 
 type Data = {
@@ -21,13 +21,17 @@ export default function handler(
 
   const pinata = pinataSDK(API, SECRET);
 
+  const now = new Date();
+
+  const createdAt = date.format(now, 'YYYY/MM/DD HH:mm:ss');
+
   let options : any = {
     pinataMetadata: {
         name: 'Lit Explorer',
-        // keyvalues: {
-        //     customKey: 'customValue',
-        //     customKey2: 'customValue2'
-        // }
+        keyvalues: {
+            created_at: createdAt,
+            // customKey2: 'customValue2'
+        }
     },
     // pinataOptions: {
     //     hostNodes: [

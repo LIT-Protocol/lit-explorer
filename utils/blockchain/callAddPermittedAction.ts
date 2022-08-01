@@ -1,4 +1,4 @@
-import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../ipfs/getIpfsHash";
+import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../ipfs/ipfsHashConverter";
 import throwError from "../throwError";
 import getPubkeyRouterAndPermissionsContract from "./getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "./getWeb3Wallet";
