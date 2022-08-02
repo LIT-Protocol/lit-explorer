@@ -1,12 +1,22 @@
 import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../ipfs/ipfsHashConverter";
 import throwError from "../throwError";
+import tryUntil from "../tryUntil";
 import getPubkeyRouterAndPermissionsContract from "./getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "./getWeb3Wallet";
 
+
+interface CallAddPermittedActionProp{
+    ipfsId: string,
+    selectedToken: string,
+    signer?: any,
+}
 /**
  * Register Action (from router permission contract)
  */
-const callAddPermittedAction = async (ipfsId: string, selectedToken: any) => {
+const callAddPermittedAction = async (props: CallAddPermittedActionProp) => {
+
+    const ipfsId = props.ipfsId;
+    const selectedToken = props.selectedToken;
 
     console.log("[callAddPermittedAction] ipfsId:", ipfsId);
     console.log("[callAddPermittedAction]selectedToken :", selectedToken);
@@ -22,33 +32,24 @@ const callAddPermittedAction = async (ipfsId: string, selectedToken: any) => {
     }
 
     // -- get wallet
-    const { signer } = await getWeb3Wallet();
+    let _signer: any;
+    let contract: any;
 
-    const contract = await getPubkeyRouterAndPermissionsContract({ wallet: signer });
-
-    let ipfsHash : IPFSHash = getBytes32FromMultihash(ipfsId);
+    if( props.signer ){
+        const { signer } = await getWeb3Wallet();
+        _signer = signer;
+        contract = await getPubkeyRouterAndPermissionsContract({ wallet: _signer });
+    }else{
+        _signer = props.signer;
+        contract = await getPubkeyRouterAndPermissionsContract({ wallet: props.signer });
+    }
 
     let ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
 
-    console.log("ipfsHash:", ipfsHash);
-    console.log("ipfsMultiHash:", ipfsMultiHash);
-
-    const actionIsRegistered = await contract.isActionRegistered(ipfsMultiHash);
-
-    console.log("actionIsRegistered:", actionIsRegistered);
-
-    if( ! actionIsRegistered) {
-        throwError(`Action ${ipfsMultiHash} is not registered.`);
-        return;
-    }
-
-    let permittedAction: any;
-
-    try{
-        permittedAction = await contract.addPermittedAction(selectedToken, ipfsMultiHash);
-    }catch(e: any){
-        throwError(e.message);
-    }
+    let permittedAction = await tryUntil({
+        onlyIf: async () => await contract.isActionRegistered(ipfsMultiHash),
+        thenRun: async () => await contract.addPermittedAction(selectedToken, ipfsMultiHash)
+    });
 
     return permittedAction;
 }

@@ -17,6 +17,7 @@ const RegisterActionPage: NextPageWithLayout = () => {
   const { id } = router.query;
 
   const [registered, setRegistered] = useState(false);
+  const [signer, setSigner] = useState();
   const [ownerAddress, setOwnerAddress] = useState('');
 
   const [status, setStatus] = useState({state: 0, msg: ''});
@@ -34,9 +35,10 @@ const RegisterActionPage: NextPageWithLayout = () => {
       if( ! id ) return;
 
       // -- get owner address
-      const { addresses } = await getWeb3Wallet();
+      const { addresses, signer } = await getWeb3Wallet();
       let ownerAddress: string = addresses[0];
       setOwnerAddress(ownerAddress);
+      setSigner(signer);
 
       // -- call 'register' smart contract
       let ipfsId: string | any = id;
@@ -109,7 +111,7 @@ const RegisterActionPage: NextPageWithLayout = () => {
 
     return (
         <>
-          <UserTokens ownerAddress={ownerAddress} ipfsId={id}/>
+          <UserTokens ownerAddress={ownerAddress} ipfsId={id} signer={signer}/>
         </>
     )
     

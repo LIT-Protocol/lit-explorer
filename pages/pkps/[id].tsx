@@ -6,7 +6,7 @@ import RenderLink from '../../utils/RenderLink';
 import LoadData from '../../components/LoadData';
 import getPubkeyRouterAndPermissionsContract from "../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import { getIPFSIdFromBytes32, parseMultihashContractResponse, solidityIpfsIdToCID } from "../../utils/ipfs/ipfsHashConverter";
-import asyncForEach, { asyncForEachReturn } from "../../utils/asyncForeach";
+import { asyncForEachReturn } from "../../utils/asyncForeach";
 
 declare global {
   interface Window{

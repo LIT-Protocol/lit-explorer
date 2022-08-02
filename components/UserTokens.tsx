@@ -1,20 +1,23 @@
 import { Alert, Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { PopulatedTransaction } from "ethers";
+import { PopulatedTransaction, Signer } from "ethers";
 import { useEffect, useState } from "react";
-import { asyncForEachReturn } from "../utils/asyncForeach";
+import { asyncForEach, asyncForEachReturn } from "../utils/asyncForeach";
 import callAddPermittedAction from "../utils/blockchain/callAddPermittedAction";
 import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import getTokensByAddress from "../utils/blockchain/getTokensByAddress";
 import { cacheFetch } from "../utils/cacheFetch";
-import { ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
+import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
 import RenderDate from "../utils/RenderDate";
 import RenderLink from "../utils/RenderLink";
 import throwError from "../utils/throwError";
+import tryUntil from "../utils/tryUntil";
 import LoadData from "./LoadData";
+import { LinearProgressWithLabel } from "./Progress";
 
 interface UserTokensProps{
     ownerAddress: string,
     ipfsId?: string | any,
+    signer?: any
 }
 
 interface SelectedToken{
@@ -32,47 +35,44 @@ interface UserTokenI{
 }
 
 const UserTokens = (props: UserTokensProps) => {
-
-
-    const [permittedTokens, setPermittedTokens] = useState<Array<UserTokenI>>();
-    const [unpermittedTokens, setUnpermittedTokens] = useState<Array<UserTokenI>>();
     
-    const [tokens, setTokens] = useState<Array<UserTokenI>>();
+    const [tokens, setTokens] = useState<Array<UserTokenI>>([]);
+    const [permittedTokens, setPermittedTokens] = useState<Array<UserTokenI>>([]);
     const [selectedToken, setSelectedToken] = useState<SelectedToken | undefined>();
+
+    const [addingPermission, setAddingPermission] = useState(false);
+    const [addingPermissionState, setAddingPermissionState] = useState(0);
 
     /**
      * Get and set a list of owner's tokens to this component's state
      */
     const getAndSetTokens = async (mockProp?:mock) => {
-        const contract = await getPubkeyRouterAndPermissionsContract();
+
+        const contract = await getPubkeyRouterAndPermissionsContract({wallet: props.signer});
 
         const ipfsHash = ipfsIdToIpfsIdHash(props.ipfsId);
 
-        console.log(ipfsIdToIpfsIdHash(props.ipfsId));
-
-        let tokens : any = await getTokensByAddress(props.ownerAddress);
+        let tokens : any = await getTokensByAddress(props.ownerAddress, props.signer);
         
         const list : Array<UserTokenI> = ! mockProp?.mock ? await asyncForEachReturn(tokens, (async (token: any) => {
-            
-            const isPermittedAction = await contract.isPermittedAction(token, ipfsHash);
 
+            // const isPermittedAction = await tryUntil({
+            //     onlyIf: async () => await contract.isActionRegistered(ipfsHash),
+            //     thenRun: async () => await contract.isPermittedAction(token, ipfsHash),
+            // });
+
+            const isPermittedAction = await contract.isPermittedAction(token, ipfsHash);
+        
             return { token, isPermittedAction };
 
         })): [
             {token: '104351356416782318547361099599174641266708022357390197911624806385736986986952', isPermittedAction: true}
         ];
 
-        console.log("list:", list);
         setTokens(list);
+        setPermittedTokens([...list].filter((item) => item.isPermittedAction));
 
-        let permittedPKPs : Array<UserTokenI> = list.filter((item: UserTokenI) => item.isPermittedAction);
-        let unPermittedPKPs : Array<UserTokenI> = list.filter((item: UserTokenI) => ! item.isPermittedAction);
-
-        console.log("permittedPKPs:", permittedPKPs);
-        console.log("unPermittedPKPs:", unPermittedPKPs);
-
-        setPermittedTokens(permittedPKPs);
-        setUnpermittedTokens(unPermittedPKPs);
+        return list;
 
     }
 
@@ -105,23 +105,36 @@ const UserTokens = (props: UserTokensProps) => {
             throwError(`${ selectedToken?.token } is already a permitted action for ${props.ownerAddress}`);
             return;
         }
+
+        const tokenId = (selectedToken as any).token;
+
+        // -- trigger loading component
+        setAddingPermission(true);
+        setAddingPermissionState(20);
         
         // -- call smart contract to add permitted action
-        const mock = false;
+        let permittedAction:any = await callAddPermittedAction({
+            ipfsId: props.ipfsId,
+            selectedToken: tokenId,
+            signer: props.signer,
+        });
 
-        let permittedAction: PopulatedTransaction = mock 
-            ? [] 
-            : await callAddPermittedAction(props.ipfsId, selectedToken?.token);
+        console.warn("Action Permitte! (TX):", permittedAction);
 
-        if(permittedAction){
-            console.log("permittedAction:", permittedAction);
-    
-            // -- update a new list of tokens (appending 'Permitted' text)
-            setTimeout(async () => {
-                await getAndSetTokens({mock});
-                alert("Added permitted action!");
-            }, 2000)
-        }
+        setAddingPermissionState(75);
+
+        const newList = [...tokens].map((item) => {
+            if(item.token == tokenId){
+                item.isPermittedAction = true;
+            }
+            return item;
+        })
+
+        setPermittedTokens(newList);
+        
+        setAddingPermissionState(100);
+        setAddingPermission(false);
+        
     }
 
     // -- (input event) on change token
@@ -135,13 +148,11 @@ const UserTokens = (props: UserTokensProps) => {
     }
 
     if(! tokens ) return <>Loading PKP tokens...</>;
-    if(! unpermittedTokens ) return <>Loading unpermitted PKPs...</>;
-    if(! permittedTokens ) return <>Loading permitted PKPs...</>;
 
     return (
         <>
             {
-                unpermittedTokens?.length <= 0 ?
+                tokens?.length <= 0 ?
                 <Alert severity="info">No more available PKPs to permit this action</Alert> :
                 <>
                     <FormControl fullWidth className="mt-24">
@@ -154,9 +165,9 @@ const UserTokens = (props: UserTokensProps) => {
                             onChange={onChangeToken}
                         >
                             {
-                                (unpermittedTokens as [])?.map((item: any, id: any)=> {
+                                (tokens as [])?.map((item: any, id: any)=> {
                                     return <MenuItem key={id} value={item}>
-                                    { item.token }
+                                    { item.token }{ item.isPermittedAction ? ': (Permitted)' : '' }
                                     </MenuItem>
                                 })
                             }
@@ -167,6 +178,14 @@ const UserTokens = (props: UserTokensProps) => {
                         <Button onClick={addPermittedAction} className="btn-2 ml-auto">Add Permitted Action</Button>
                     </div>
                 </>
+            }
+            {
+                addingPermission ? 
+                <div className="uploaded-result mt-12">
+                    <LinearProgressWithLabel value={addingPermissionState} />
+                    Adding permission...
+                </div>
+                : ''
             }
             {
                 permittedTokens?.length > 0 ?

@@ -11,7 +11,7 @@ const ActionsPage: NextPageWithLayout = () => {
     <LoadData
         debug={false}
         height={500}
-        title="Lit Actions:"
+        title="Latest Lit Actions:"
         errorMessage="No actions found."
         fetchPath={`/api/get-all-actions`}
         filter={async (rawData: any) => {

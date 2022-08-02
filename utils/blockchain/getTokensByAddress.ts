@@ -2,10 +2,9 @@ import getPKPNFTContract from "./getPKPNFTContract";
 // @ts-ignore
 import converter from 'hex2dec';
 
+const getTokensByAddress = async (ownerAddress: string, signer?: any) : Promise<Object>=> {
 
-const getTokensByAddress = async (ownerAddress: string) : Promise<Object>=> {
-
-    const contract = await getPKPNFTContract();
+    const contract = await getPKPNFTContract(signer);
     
     let tokens = [];
 
