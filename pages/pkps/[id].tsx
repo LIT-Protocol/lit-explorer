@@ -7,6 +7,7 @@ import LoadData from '../../components/LoadData';
 import getPubkeyRouterAndPermissionsContract from "../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import { getIPFSIdFromBytes32, parseMultihashContractResponse, solidityIpfsIdToCID } from "../../utils/ipfs/ipfsHashConverter";
 import { asyncForEachReturn } from "../../utils/asyncForeach";
+import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 
 declare global {
   interface Window{
@@ -60,8 +61,11 @@ const PKPsPageById: NextPageWithLayout = () => {
         fetchPath={`/api/get-permitted-by-pkp/${id}`}
         filter={async (rawData: any) => {
           console.log("on filtered: ", rawData);
+
+          const { signer } = await getWeb3Wallet();
+
           return await asyncForEachReturn(rawData?.data?.actions, async(solidityIpfsId: string) => {
-            return await solidityIpfsIdToCID(solidityIpfsId);
+            return await solidityIpfsIdToCID(solidityIpfsId, signer);
           })
         } }
         renderCols={(width: number) => {

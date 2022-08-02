@@ -90,9 +90,9 @@ export function parseMultihashContractResponse(response: any) {
  * @param { string } solidityIpfsId
  * @return { string } Qmxxx
  */
-export const solidityIpfsIdToCID = async (solidityIpfsId: string) => {
+export const solidityIpfsIdToCID = async (solidityIpfsId: string, signer?: any) => {
   
-  const contract = await getPubkeyRouterAndPermissionsContract();
+  const contract = await getPubkeyRouterAndPermissionsContract({wallet: signer});
             
   const ipfsRes = await contract.ipfsIds(solidityIpfsId);
 
