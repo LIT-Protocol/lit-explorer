@@ -8,7 +8,8 @@ import getContentWidth from "../utils/getContentWidth"
 interface LoadDataProps{
     title: string
     errorMessage: string
-    fetchPath: string
+    fetchPath?: string
+    data?: any
     debug?: boolean
     filter: Function
     renderCols?: Function,
@@ -26,11 +27,14 @@ const LoadData = (props: LoadDataProps) => {
   const [isLoading, setLoading] = useState(false)
   const [debug, setDebug] = useState(props?.debug ?? false);
 
-  useEffect(() => {
-    setLoading(true);
-    console.log("LoadData:", props.fetchPath);
-    cacheFetch(`${props.fetchPath}`, async (rawData: any) => {
-      
+
+  /**
+   * Prepare data to render
+   */
+  const preloadData = async (rawData: any) => {
+
+      console.log("[preloadData] rawData:", rawData);
+
       // -- set raw data
       setRawData(rawData);
 
@@ -38,21 +42,21 @@ const LoadData = (props: LoadDataProps) => {
         console.warn("No filtered data.");
         return;
       }
-      
+
       // -- get filtered data
       const filtered = props?.filter ? await props.filter(rawData) : rawData;
       setFilteredData(filtered)
-
+  
       // -- get container width
       const width = getContentWidth();
-
+  
       // -- set cols
       if( props.renderCols ){
         let cols : any = props.renderCols(width);
   
         setColumns(cols);
       }
-
+  
       // -- set rows
       if( props.renderRows ){
         let rows : any = props.renderRows(filtered)
@@ -61,9 +65,27 @@ const LoadData = (props: LoadDataProps) => {
       }
       
       setLoading(false)
-      
+  }
 
-    });
+  /**
+   * ---------- on mounted ----------
+   */
+  useEffect(() => {
+    setLoading(true);
+    console.log("LoadData:", props.fetchPath);
+
+    // -- if fetch path is provided
+    if( ! props.data ){
+      console.log("--- use fetch ---");
+      cacheFetch(`${props.fetchPath}`, async (rawData: any) => {
+        preloadData(rawData);
+      });
+      return;
+    }
+
+    // -- if data is provided already, so didn't have to fetch
+    preloadData(props.data);
+
   }, [])
 
   // -- render different states

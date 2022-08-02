@@ -1,4 +1,5 @@
-import { Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Alert, Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { PopulatedTransaction } from "ethers";
 import { useEffect, useState } from "react";
 import { asyncForEachReturn } from "../utils/asyncForeach";
 import callAddPermittedAction from "../utils/blockchain/callAddPermittedAction";
@@ -6,19 +7,43 @@ import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkey
 import getTokensByAddress from "../utils/blockchain/getTokensByAddress";
 import { cacheFetch } from "../utils/cacheFetch";
 import { ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
+import RenderDate from "../utils/RenderDate";
+import RenderLink from "../utils/RenderLink";
 import throwError from "../utils/throwError";
+import LoadData from "./LoadData";
 
 interface UserTokensProps{
     ownerAddress: string,
     ipfsId?: string | any,
 }
 
+interface SelectedToken{
+    token: string,
+    isPermittedAction: boolean
+}
+
+interface mock{
+    mock?: boolean;
+}
+
+interface UserTokenI{
+    token: string
+    isPermittedAction: boolean
+}
+
 const UserTokens = (props: UserTokensProps) => {
 
-    const [tokens, setTokens] = useState();
-    const [selectedToken, setSelectedToken] = useState();
+
+    const [permittedTokens, setPermittedTokens] = useState<Array<UserTokenI>>();
+    const [unpermittedTokens, setUnpermittedTokens] = useState<Array<UserTokenI>>();
     
-    const getTokens = async () => {
+    const [tokens, setTokens] = useState<Array<UserTokenI>>();
+    const [selectedToken, setSelectedToken] = useState<SelectedToken | undefined>();
+
+    /**
+     * Get and set a list of owner's tokens to this component's state
+     */
+    const getAndSetTokens = async (mockProp?:mock) => {
         const contract = await getPubkeyRouterAndPermissionsContract();
 
         const ipfsHash = ipfsIdToIpfsIdHash(props.ipfsId);
@@ -27,18 +52,28 @@ const UserTokens = (props: UserTokensProps) => {
 
         let tokens : any = await getTokensByAddress(props.ownerAddress);
         
-        const list : any = await asyncForEachReturn(tokens, (async (token: any) => {
+        const list : Array<UserTokenI> = ! mockProp?.mock ? await asyncForEachReturn(tokens, (async (token: any) => {
             
             const isPermittedAction = await contract.isPermittedAction(token, ipfsHash);
 
-            return {
-                token,
-                isPermittedAction,
-            };
-        }));
+            return { token, isPermittedAction };
+
+        })): [
+            {token: '104351356416782318547361099599174641266708022357390197911624806385736986986952', isPermittedAction: true}
+        ];
 
         console.log("list:", list);
         setTokens(list);
+
+        let permittedPKPs : Array<UserTokenI> = list.filter((item: UserTokenI) => item.isPermittedAction);
+        let unPermittedPKPs : Array<UserTokenI> = list.filter((item: UserTokenI) => ! item.isPermittedAction);
+
+        console.log("permittedPKPs:", permittedPKPs);
+        console.log("unPermittedPKPs:", unPermittedPKPs);
+
+        setPermittedTokens(permittedPKPs);
+        setUnpermittedTokens(unPermittedPKPs);
+
     }
 
     useEffect(() => {
@@ -50,36 +85,42 @@ const UserTokens = (props: UserTokensProps) => {
 
             console.log("Getting tokens");
 
-            await getTokens();
+            await getAndSetTokens();
 
         })();
         
     }, [props.ownerAddress])
 
     // -- (Action) add permission
-    const addPermission = async () => {
+    const addPermittedAction = async () => {
 
         // -- validate
-        console.log("props?.ipfsId:", props?.ipfsId);
         if( ! props?.ipfsId || props?.ipfsId == ''){
             throwError("IPFS ID not found.");
             return;
         }
-        
-        console.log("selectedToken:", selectedToken);
 
-        let permittedAction;
-
-        try{
-            permittedAction = await callAddPermittedAction(props.ipfsId, (selectedToken as any).token);
-        }catch(e){
-            console.error(e);
+        // -- validate if the current action is NOT permitted yet
+        if( selectedToken?.isPermittedAction ){
+            throwError(`${ selectedToken?.token } is already a permitted action for ${props.ownerAddress}`);
+            return;
         }
+        
+        // -- call smart contract to add permitted action
+        const mock = false;
 
-        if( permittedAction ){
+        let permittedAction: PopulatedTransaction = mock 
+            ? [] 
+            : await callAddPermittedAction(props.ipfsId, selectedToken?.token);
+
+        if(permittedAction){
             console.log("permittedAction:", permittedAction);
-            alert("Added permitted action!");
-            await getTokens();
+    
+            // -- update a new list of tokens (appending 'Permitted' text)
+            setTimeout(async () => {
+                await getAndSetTokens({mock});
+                alert("Added permitted action!");
+            }, 2000)
         }
     }
 
@@ -94,31 +135,72 @@ const UserTokens = (props: UserTokensProps) => {
     }
 
     if(! tokens ) return <>Loading PKP tokens...</>;
+    if(! unpermittedTokens ) return <>Loading unpermitted PKPs...</>;
+    if(! permittedTokens ) return <>Loading permitted PKPs...</>;
 
     return (
         <>
-            <FormControl fullWidth className="mt-24">
-                <InputLabel id="demo-simple-select-label">Your PKP NFTs</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={selectedToken}
-                    label="Your PKP NFTs"
-                    onChange={onChangeToken}
-                >
-                    {
-                        (tokens as [])?.map((item: any, id: any)=> {
-                            return <MenuItem key={id} value={item}>
-                                { item.token } { item.isPermittedAction ? '(Permitted)' : '' }
-                            </MenuItem>
-                        })
-                    }
-                </Select>
-            </FormControl>
+            {
+                unpermittedTokens?.length <= 0 ?
+                <Alert severity="info">No more available PKPs to permit this action</Alert> :
+                <>
+                    <FormControl fullWidth className="mt-24">
+                        <InputLabel id="demo-simple-select-label">Your PKP NFTs</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedToken}
+                            label="Your PKP NFTs"
+                            onChange={onChangeToken}
+                        >
+                            {
+                                (unpermittedTokens as [])?.map((item: any, id: any)=> {
+                                    return <MenuItem key={id} value={item}>
+                                    { item.token }
+                                    </MenuItem>
+                                })
+                            }
+                        </Select>
+                    </FormControl>
 
-            <div className="mt-12 flex">
-                <Button onClick={addPermission} className="btn-2 ml-auto">Add Permitted Action</Button>
-            </div>
+                    <div className="mt-12 flex">
+                        <Button onClick={addPermittedAction} className="btn-2 ml-auto">Add Permitted Action</Button>
+                    </div>
+                </>
+            }
+            {
+                permittedTokens?.length > 0 ?
+                <div className="mt-12">
+                    <LoadData
+                        key={props.ipfsId.toString()}
+                        debug={false}
+                        title="Permitted PKPs:"
+                        errorMessage="No permitted PKPs found."
+                        data={permittedTokens}
+                        filter={(rawData: Array<UserTokenI>) => {
+                            console.log("on filtered: ", rawData);
+                            return rawData;
+                        } }
+                        renderCols={(width: any) => {
+                            return [
+                            { headerName: "Permitted PKP", field: "tokenID", minWidth: width, renderCell: RenderLink},
+                            ];
+                    
+                        } }
+                        renderRows={(filteredData: any) => {
+                            return filteredData?.map((pkp: any, i: number) => {
+                            return {
+                                id: i + 1,
+                                tokenID: pkp.token,
+                            };
+                            });
+                        } }    
+                    />
+                </div>
+                : ''
+            }
+
+
 
         </>
     );

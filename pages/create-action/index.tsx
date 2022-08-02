@@ -91,11 +91,11 @@ go();`;
       return;
     }
 
-    // RouterPush.registerAction(router, ipfsId);
+    RouterPush.registerAction(router, ipfsId);
 
-    // router.push(`/actions/${ipfsId}/register`);
+    router.push(`/actions/${ipfsId}/register`);
 
-    // return;
+    return;
 
     const debug = false;
 
