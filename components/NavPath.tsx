@@ -8,6 +8,7 @@ const NavPath = () => {
 
     const page = paths[1];
     const id = paths[2]?.replaceAll('#', '');
+    const action = paths[3]?.replaceAll('#', '');
 
     if( ! page ) return <></>;
     
@@ -23,6 +24,11 @@ const NavPath = () => {
             {
                 page && id 
                 ? <div className="flex">/ <div onClick={() => router.push(`/${page}/${id}`)} className="path-link">{ id }</div> </div>
+                : '' 
+            }
+            {
+                page && id && action
+                ? <div className="flex">/ <div onClick={() => router.push(`/${page}/${id}/${action}`)} className="path-link">{ action }</div> </div>
                 : '' 
             }
         </div>

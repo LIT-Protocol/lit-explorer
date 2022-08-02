@@ -28,3 +28,26 @@ const pushPage = (id: string, router: NextRouter) => {
 }
 
 export default pushPage;
+
+export const getPage = (id: string, router: NextRouter) => {
+    
+    const type = getSearchType(id);
+
+    // -- validate
+    if( type === null ) return;
+
+    // -- execute
+    if( type === SearchTypes.ETH_ADDRESS){
+        return `/owners/${id}`;
+    }
+
+    if( type === SearchTypes.PKP_TOKEN_ID){
+        // alertMsg('Success', `Found search type ${SearchTypes.PKP_TOKEN_ID}`)
+        return `/pkps/${id}`;
+    }
+
+    if( type === SearchTypes.IPFS_ID){
+        // alertMsg('Success', `Found search type ${SearchTypes.IPFS_ID}`);
+        return `/actions/${id}`;
+    }
+}

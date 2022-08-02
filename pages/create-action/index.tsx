@@ -13,8 +13,12 @@ import getTokensByAddress from "../../utils/blockchain/getTokensByAddress";
 import callAddPermittedAction from "../../utils/blockchain/callAddPermittedAction";
 import getTxLink from "../../utils/blockchain/getTxLink";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
+import { useRouter } from "next/router";
+import { RouterPush } from "../../utils/RouterPush";
 
 const CreateAction: NextPageWithLayout = () => {
+
+  const router = useRouter();
 
   const litActionCode = `const go = async () => {
   // this is the string "Hello World" for testing
@@ -80,13 +84,20 @@ go();`;
    */
   const register = async () => {
 
-    const debug = false;
     
     // -- validate
     if( ! ipfsId || ipfsId == ''){
       throwError("IPFS ID not found.");
       return;
     }
+
+    // RouterPush.registerAction(router, ipfsId);
+
+    // router.push(`/actions/${ipfsId}/register`);
+
+    // return;
+
+    const debug = false;
 
     let ownerAddress: string;
 
@@ -124,6 +135,10 @@ go();`;
     }
 
     console.log("selectedToken:", selectedToken);
+
+    console.log("ipfsId:", ipfsId)
+    
+    return;
 
     let permittedAction;
 

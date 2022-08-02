@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import MainLayout from "../../components/MainLayout"
-import { NextPageWithLayout } from "../_app"
+import MainLayout from "../../../components/MainLayout"
+import { NextPageWithLayout } from "../../_app"
 import MonacoEditor from '@monaco-editor/react';
-import ActionCodeStatus from "../../components/ActionCodeStatus";
+import ActionCodeStatus from "../../../components/ActionCodeStatus";
 
 const ActionsPage: NextPageWithLayout = () => {
 

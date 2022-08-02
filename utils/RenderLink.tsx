@@ -1,12 +1,14 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
-import pushPage from "./pushPage";
+import pushPage, { getPage } from "./pushPage";
 
 const RenderLink = (props: GridRenderCellParams) => {
 
     const router = useRouter();
 
     const onClick = (e: any) => {
+
+        e.preventDefault();
         
         const value = e.target.innerText;
 
@@ -17,7 +19,7 @@ const RenderLink = (props: GridRenderCellParams) => {
     const { value } = props;
 
     return (
-        <a href="#" onClick={onClick}>{ value }</a>
+        <a href={`${getPage(value, router)}`} onClick={onClick}>{ value }</a>
     )
 }
 

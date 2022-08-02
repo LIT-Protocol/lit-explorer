@@ -1,3 +1,5 @@
+import { GridRenderCellParams } from "@mui/x-data-grid";
+import ActionCodeStatus from "../../components/ActionCodeStatus";
 import LoadData from "../../components/LoadData";
 import MainLayout from "../../components/MainLayout"
 import RenderLink from "../../utils/RenderLink";
@@ -8,23 +10,26 @@ const ActionsPage: NextPageWithLayout = () => {
   return (
     <LoadData
         debug={false}
+        height={500}
         title="Lit Actions:"
         errorMessage="No actions found."
         fetchPath={`/api/get-all-actions`}
-        filter={(rawData: any) => {
+        filter={async (rawData: any) => {
           console.log("on filtered: ", rawData);
           return rawData?.data?.rows?.map((row: any) => {
             return {
               ipfsId: row?.ipfs_pin_hash,
-              createdAt: row?.metadata?.keyvalues?.created_at
+              createdAt: row?.metadata?.keyvalues?.created_at,
             }
           });
         } }
         renderCols={(width: number) => {
           return [
-            { headerName: "IPFS ID", field: "ipfsId", width: width * .3, renderCell: RenderLink},
-            { headerName: "Created at", field: "createdAt", width: width * .3},
-            { headerName: "Created at", field: "createdAt", width: width * .3},
+            { headerName: "IPFS ID", field: "ipfsId", width: width * .33, renderCell: RenderLink},
+            { headerName: "Created at", field: "createdAt", width: width * .33},
+            { headerName: "Actions", field: "registered", width: width * .33, renderCell: (props: GridRenderCellParams) => {
+              return <ActionCodeStatus key={props?.value} ipfsId={props?.value}/>;
+            }},
           ];
         } }
         renderRows={(filteredData: any) => {
@@ -34,6 +39,7 @@ const ActionsPage: NextPageWithLayout = () => {
               id: i + 1,
               ipfsId: item.ipfsId,
               createdAt: item.createdAt || 'Not specified',
+              registered: item.ipfsId || 'Not specified',
             };
           });
         } }    

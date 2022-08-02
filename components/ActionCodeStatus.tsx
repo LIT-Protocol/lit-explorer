@@ -2,16 +2,23 @@ import { Chip, CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import { getBytes32FromMultihash, ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import { useRouter } from "next/router";
+import { RouterPush } from "../utils/RouterPush";
+import EditIcon from '@mui/icons-material/Edit';
 
 interface ActionCodeStatusProps {
-    ipfsId: string
+    ipfsId: string | any,
+    onEvent?: Function 
 }
 
 const ActionCodeStatus = (props: ActionCodeStatusProps) => {
 
     const [paramLoaded, setParamLoaded] = useState(false);
-    const [isRegistered, setIsRegistered] = useState();
+    const [isRegistered, setIsRegistered] = useState(null);
     // const [ipfsId, setIpfsId] = useState('' || null || {});
+
+    const router = useRouter();
 
     useEffect(() => {
 
@@ -28,21 +35,48 @@ const ActionCodeStatus = (props: ActionCodeStatusProps) => {
 
             // setIpfsId(ipfsHash);
 
+            if( props.onEvent ){
+                props.onEvent();
+            }
+
         })();
         
     }, [])
+
+    // -- (actions)
+    const register = () => {
+        RouterPush.registerAction(router, props?.ipfsId)    
+    }
+    
     // -- if param doesnt have ipfsId
     if(! props?.ipfsId) return <></>;
-    if( ! isRegistered ) return <div className="sm"><CircularProgress disableShrink /></div>
+    if( isRegistered == null ) return <><div className="sm"><CircularProgress disableShrink /></div></>
 
-    const label = isRegistered ? 'Registered' : 'Action is not registered';
-    const color = isRegistered ? 'success' : 'error';
+
+    // -- (render) registerd
+    const renderRegistered = () => {
+        return <>
+            <Chip label={'Registered'} color={'success'} />
+            <Chip onClick={ register } icon={<EditIcon />} label="Edit" />
+        </>;
+    }
+    
+    // -- not registered
+    const renderNotReigstered = () => {
+        return <>
+            <Chip onClick={ register } icon={<AppRegistrationIcon />} label="Click to register" />
+        </>;
+    }
 
     // -- all good
     return (
         <>
             <Stack direction="row" spacing={1}>
-                <Chip label={label} color={color} />
+                {
+                    isRegistered ? 
+                    renderRegistered() : 
+                    renderNotReigstered()
+                }
             </Stack>
         </>
     );

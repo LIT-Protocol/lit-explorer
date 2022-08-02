@@ -13,7 +13,8 @@ interface LoadDataProps{
     filter: Function
     renderCols?: Function,
     renderRows?: Function,
-    loadingMessage?: string
+    loadingMessage?: string,
+    height?: number
 }
 
 const LoadData = (props: LoadDataProps) => {
@@ -85,7 +86,7 @@ const LoadData = (props: LoadDataProps) => {
       columns.length > 0 && rows.length > 0 ?
       <>
         <h2>{ props.title }</h2>
-        <div id="data-area" style={{ height: 300, width: '100%' }}>
+        <div id="data-area" style={{ height: props.height ?? 300, width: '100%' }}>
           <DataGrid rows={rows} columns={columns} />
         </div>
       </>
