@@ -6,4 +6,8 @@ export class RouterPush {
         router.push(`/actions/${ipfsId}/update`);
     }
 
+    static owner = (router: NextRouter, id: string) => {
+        router.push(`/owners/${id}`);
+    }
+
 }

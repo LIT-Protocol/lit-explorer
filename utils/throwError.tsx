@@ -1,4 +1,4 @@
-const throwError = ( msg: string) => {
+const throwError = ( msg: string, throwError = false) => {
 
     const globalMessage = document.getElementById('global-message') as HTMLDivElement;
 
@@ -12,7 +12,9 @@ const throwError = ( msg: string) => {
         globalMessageContent.innerText = '';
     }, 3000)
 
-    // throw new Error(`${msg}`);
+    if(throwError){
+        throw new Error(`${msg}`);
+    }
     console.error(`${msg}`);
 }
 

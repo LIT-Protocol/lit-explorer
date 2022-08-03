@@ -2,8 +2,14 @@ import { TextField } from "@mui/material";
 import { useState } from "react";
 import MyButton from "./MyButton";
 import MyCard from "./MyCard";
+import { LinearProgressWithLabel } from "./Progress";
 
-interface FormData extends Array<MyFieldData>{}
+export interface MyFormData extends Array<MyFieldData>{}
+
+export interface MyProgress{
+    progress?: number
+    message?: string
+}
 
 interface MyFieldData {
     id: any
@@ -19,13 +25,14 @@ interface CardInputsProps{
     title?: string
     buttonText?: string
     fields?: Array<MyField>
-    onSubmit?(formData: FormData): void
+    onSubmit?(formData: MyFormData): void
+    progress?: MyProgress
 }
 
 const CardInputs = (props: CardInputsProps) => {
 
     // -- (states)
-    const [formData, setFormData] = useState<FormData>([]);
+    const [formData, setFormData] = useState<MyFormData>([]);
 
     // -- (declaration)
     const title = props.title ?? 'Mint New PKP';
@@ -45,10 +52,10 @@ const CardInputs = (props: CardInputsProps) => {
     const handleChange = (e: any, index: number) => {
         console.log("[handleChange] index:", index)
 
-        const data : FormData = [...formData];
+        const data : MyFormData = [...formData];
 
         data[index] = {
-            id: index,
+            id: fields[index]?.title,
             data: e.target.value,
         };
 
@@ -84,11 +91,31 @@ const CardInputs = (props: CardInputsProps) => {
         )
     }
 
+    // -- (render) render progress
+    const renderProgress = () => {
+
+        const progress = props?.progress?.progress ?? 0;
+
+        if(progress > 0){
+            return (
+                <>
+                    <LinearProgressWithLabel value={progress || 0} />
+                    { props.progress?.message }
+                </>
+            )
+        }else{
+            return '';
+        }
+    }
+
     return (
         <>
           <MyCard title={title}>
+            <div className="mt-12 mb-12">                
+                { renderProgress() }
+            </div>
             <div className="flex">
-              { renderFields()}
+                { renderFields()}
             </div>
             <div className="mt-12 flex">
                 <div className="ml-auto">
