@@ -14,7 +14,7 @@ import tryUntil from "../utils/tryUntil";
 import LoadData from "./LoadData";
 import { LinearProgressWithLabel } from "./Progress";
 
-interface UserTokensProps{
+interface AddPermittedActionProps{
     ownerAddress: string,
     ipfsId?: string | any,
     signer?: any
@@ -34,7 +34,7 @@ interface UserTokenI{
     isPermittedAction: boolean
 }
 
-const UserTokens = (props: UserTokensProps) => {
+const AddPermittedAction = (props: AddPermittedActionProps) => {
     
     const [tokens, setTokens] = useState<Array<UserTokenI>>([]);
     const [permittedTokens, setPermittedTokens] = useState<Array<UserTokenI>>([]);
@@ -225,4 +225,4 @@ const UserTokens = (props: UserTokensProps) => {
     );
 }
 
-export default UserTokens;
+export default AddPermittedAction;

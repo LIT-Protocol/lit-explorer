@@ -1,7 +1,7 @@
 import { Chip, CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkeyRouterAndPermissionsContract";
-import { getBytes32FromMultihash, ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
+import { ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import { useRouter } from "next/router";
 import { RouterPush } from "../utils/RouterPush";
@@ -14,9 +14,7 @@ interface ActionCodeStatusProps {
 
 const ActionCodeStatus = (props: ActionCodeStatusProps) => {
 
-    const [paramLoaded, setParamLoaded] = useState(false);
     const [isRegistered, setIsRegistered] = useState(null);
-    // const [ipfsId, setIpfsId] = useState('' || null || {});
 
     const router = useRouter();
 
@@ -32,8 +30,6 @@ const ActionCodeStatus = (props: ActionCodeStatusProps) => {
             const isRegistered = await contract.isActionRegistered(ipfsHash);
 
             setIsRegistered(isRegistered);
-
-            // setIpfsId(ipfsHash);
 
             if( props.onEvent ){
                 props.onEvent();

@@ -93,7 +93,7 @@ go();`;
 
     RouterPush.registerAction(router, ipfsId);
 
-    router.push(`/actions/${ipfsId}/register`);
+    router.push(`/actions/${ipfsId}/update`);
 
     return;
 

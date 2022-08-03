@@ -169,7 +169,7 @@ body {
 #global-message{
   position: fixed;
   width: 100%;
-  z-index: 999;
+  z-index: 9999999;
   opacity: 0.98;
   display: none;
 }
@@ -297,4 +297,26 @@ body {
 .sm > .MuiCircularProgress-root{
   width: 14px !important;
   height: 14px !important;
+}
+
+.modal-input label.MuiInputLabel-root{
+  color: rgba(231, 227, 252, 0.87) !important;
+}
+.modal-input > input{
+  color: white !important;
+}
+#outlined-size-small{
+  color: rgba(231, 227, 252, 0.87) !important;
+}
+
+.text-center{
+  text-align: center;
+}
+.modal-input .MuiOutlinedInput-notchedOutline{
+  border-color: rgba(231, 227, 252, 0.87) !important;
+}
+
+.text-tiny{
+  font-size: 10px;
+  /* color: */
 }

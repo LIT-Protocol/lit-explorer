@@ -2,13 +2,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MainLayout from "../../../../components/MainLayout";
 import { LinearProgressWithLabel } from "../../../../components/Progress";
-import UserTokens from "../../../../components/UserTokens";
 import callRegisterAction from "../../../../utils/blockchain/callRegisterAction";
 import getPubkeyRouterAndPermissionsContract from "../../../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "../../../../utils/blockchain/getWeb3Wallet";
 import { ipfsIdToIpfsIdHash } from "../../../../utils/ipfs/ipfsHashConverter";
 import throwError from "../../../../utils/throwError";
 import { NextPageWithLayout } from "../../../_app";
+import AddPermittedAction from "../../../../components/AddPermittedAction";
 
 const RegisterActionPage: NextPageWithLayout = () => {
 
@@ -111,7 +111,7 @@ const RegisterActionPage: NextPageWithLayout = () => {
 
     return (
         <>
-          <UserTokens ownerAddress={ownerAddress} ipfsId={id} signer={signer}/>
+          <AddPermittedAction ownerAddress={ownerAddress} ipfsId={id} signer={signer}/>
         </>
     )
     

@@ -16,6 +16,7 @@ interface LoadDataProps{
     renderRows?: Function,
     loadingMessage?: string,
     height?: number
+    renderStatus?: JSX.Element
 }
 
 const LoadData = (props: LoadDataProps) => {
@@ -107,7 +108,16 @@ const LoadData = (props: LoadDataProps) => {
       {
       columns.length > 0 && rows.length > 0 ?
       <>
-        <h2>{ props.title }</h2>
+        <div className="flex">
+          <h2>{ props.title }</h2>
+          {
+            props.renderStatus ? 
+            <div className="flex-content">
+            { props.renderStatus}
+            </div> : 
+            ''
+          }
+        </div>
         <div id="data-area" style={{ height: props.height ?? 300, width: '100%' }}>
           <DataGrid rows={rows} columns={columns} />
         </div>
