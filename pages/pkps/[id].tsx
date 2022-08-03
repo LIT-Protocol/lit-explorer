@@ -22,8 +22,6 @@ const PKPsPageById: NextPageWithLayout = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  if ( ! id ) return <p>Param is not ready</p>
-
   const [componentOne, setComponentOne] = useState(true);
   const [componentOneLoading, setComponentOneLoading] = useState(false);
   const [cacheAddress, setCacheAddress] = useState<string | undefined>();
@@ -63,7 +61,7 @@ const PKPsPageById: NextPageWithLayout = () => {
       {
         componentOne ? 
         <LoadData
-        key={id.toString()}
+        key={id?.toString()}
         debug={false}
         title="Authorised PKP Controllers:"
         renderStatus={renderStatus()}
@@ -100,7 +98,7 @@ const PKPsPageById: NextPageWithLayout = () => {
       }
 
       <LoadData
-        key={id.toString() + 2}
+        key={ '2' + id?.toString()}
         debug={false}
         title="Authorised Actions stored on IPFS:"
         errorMessage="No authorised actions found."
