@@ -1,4 +1,10 @@
-const alertMsg = (title: string, msg: string) => {
+interface AlertMsgProps{
+    title: string
+    message: string
+    throwError?: boolean
+}
+
+const alertMsg = (props: AlertMsgProps) => {
 
     const globalMessage = document.getElementById('global-message-success') as HTMLDivElement;
 
@@ -7,8 +13,8 @@ const alertMsg = (title: string, msg: string) => {
     const globalMessageContent = document.getElementById('global-message-success-content') as HTMLDivElement;
 
     globalMessage.style.display = 'block';
-    globalMessageTitle.innerText = title;
-    globalMessageContent.innerText = msg;
+    globalMessageTitle.innerText = props.title;
+    globalMessageContent.innerText = props.message;
 
     setTimeout(() => {
         globalMessage.style.display = 'none';
@@ -16,7 +22,9 @@ const alertMsg = (title: string, msg: string) => {
         globalMessageContent.innerText = '';
     }, 3000)
 
-    throw new Error(`${msg}`);
+    if( props?.throwError ){
+        throw new Error(`${props.message}`);
+    }
 }
 
 export default alertMsg;

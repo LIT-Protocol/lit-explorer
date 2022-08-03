@@ -13,6 +13,7 @@ import getWeb3Wallet from '../utils/blockchain/getWeb3Wallet';
 import getPubkeyRouterAndPermissionsContract from '../utils/blockchain/getPubkeyRouterAndPermissionsContract';
 import tryUntil from '../utils/tryUntil';
 import { LinearProgressWithLabel } from './Progress';
+import { Contract } from 'ethers';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -31,7 +32,7 @@ const style = {
 
 interface PKPOptionsModalProps{
   pkpId: string | any,
-  onDone: Function
+  onDone?(userAddress: string): void
 }
 
 export default function PKPOptionsModal(props: PKPOptionsModalProps) {
@@ -51,6 +52,12 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
     setAddress(e.target.value);
   }
 
+  const resetProgress = (message: string) => {
+    throwError(message);
+    setProgress(0);
+    setLoading(false);
+  }
+
   const handleClick = async () => {
 
     setLoading(true);
@@ -63,7 +70,7 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
     
     // -- validate
     if( inputType !== SearchTypes.ETH_ADDRESS){
-      throwError(`Incorrect input type. Expecting 'ETH_ADDRESS' but received ${inputType}`);
+      resetProgress(`Incorrect input type. Expecting 'ETH_ADDRESS' but received ${inputType}`);
       return;
     }
 
@@ -71,27 +78,41 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
     console.log("[handleClick] user_address:", user_address);
     console.log("[handleClick] inputType:", inputType);
 
+
     setProgress(30);
     const { signer } = await getWeb3Wallet();
 
-    setProgress(50);
-    const contract = await getPubkeyRouterAndPermissionsContract({wallet: signer});
-    let permittedAddressTx;
 
-    setProgress(70);
+    setProgress(50);
+    let contract: Contract;
     try{
-      await contract.addPermittedAddress(tokenId_uint256, user_address);
+      contract = await getPubkeyRouterAndPermissionsContract({wallet: signer});
     }catch(e: any){
-      throwError(e);
+      resetProgress(e.message);
       return;
     }
-    
+
+
+    setProgress(70);
+    let permittedAddressTx;
+    try{
+      permittedAddressTx = await contract.addPermittedAddress(tokenId_uint256, user_address);
+    }catch(e: any){
+      resetProgress(e.message);
+      return;
+    }
     console.log("[handleClick]:", permittedAddressTx);
     
+
     setProgress(90);
     const txConfirmed = await tryUntil({
       onlyIf: async () => await contract.isPermittedAddress(tokenId_uint256, user_address),
-      thenRun: async () => true
+      thenRun: async () => true,
+      onTrying: (counter: number) => {
+        console.log(`${counter} confirming transaction...`);
+        setProgress(90 + counter);
+      },
+      interval: 4500
     });
     
     

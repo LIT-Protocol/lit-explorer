@@ -3,32 +3,41 @@ import throwError from "./throwError";
 interface TryUntilProp{
     onlyIf: Function
     thenRun: Function
+    onTrying?(counter: number): Function | void
+    max?: number
+    interval?: number
 }
 
-const tryUntil = async (prop: TryUntilProp) : Promise<any> => {
+const tryUntil = async (props: TryUntilProp) : Promise<any> => {
 
     return new Promise((resolve, reject) => {
 
         let counter = 0;
-        let max = 10;
-        let milliseconds = 2000;
+        let max = props?.max ?? 10;
+        let milliseconds = props?.interval ?? 2000;
 
         const intervalId = setInterval(async () => {
 
-            const isReady = await prop?.onlyIf();
+            const isReady = await props?.onlyIf();
 
             if( isReady ){
                 clearInterval(intervalId);
-                let result = await prop?.thenRun();
+                let result = await props?.thenRun();
                 resolve(result);
             }
 
             counter = counter + 1;
 
-            console.log(`${counter} trying...`);
+            // -- (callback) when trying again
+            if(props?.onTrying){
+                props.onTrying(counter);
+            }else{
+                console.log(`${counter} trying...`);
+            }
 
+            // -- (reject) When tried more than x times
             if( counter >= max ){
-                throwError(`Failed to execute: ${prop}`);
+                throwError(`Failed to execute: ${props}`);
                 reject(counter);
                 return;
             }

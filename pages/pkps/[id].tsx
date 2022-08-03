@@ -8,6 +8,8 @@ import { asyncForEachReturn } from "../../utils/asyncForeach";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import PKPOptionsModal from "../../components/PKPOptionsModal";
 import { useState } from "react";
+import { CircularProgress } from "@mui/material";
+import alertMsg from "../../utils/alertMsg";
 
 declare global {
   interface Window{
@@ -22,20 +24,29 @@ const PKPsPageById: NextPageWithLayout = () => {
 
   if ( ! id ) return <p>Param is not ready</p>
 
-  const [oneOn, setOneOn] = useState(true);
-  const [cacheAddress, setCacheAddress] = useState();
+  const [componentOne, setComponentOne] = useState(true);
+  const [componentOneLoading, setComponentOneLoading] = useState(false);
+  const [cacheAddress, setCacheAddress] = useState<string | undefined>();
 
   // -- (render) render status
   const renderStatus = () => {
     return <PKPOptionsModal 
       pkpId={id}
-      onDone={(userAddress: any) => {
+      onDone={(userAddress: string) => {
         console.warn("ON DONE!")
+
         setCacheAddress(userAddress);
-        setOneOn(false);
+        setComponentOneLoading(true);
+        setComponentOne(false);
 
         setTimeout(() => {
-          setOneOn(true);
+          setComponentOne(true);
+          setComponentOneLoading(false);
+          alertMsg({
+            title: 'Success',
+            message: `Added permission to ${userAddress}`,
+            throwError: false,
+          });
         }, 1000)
       }} 
     />;
@@ -45,7 +56,12 @@ const PKPsPageById: NextPageWithLayout = () => {
     
     <>
       {
-        oneOn ? 
+        componentOneLoading ? <div className="md">
+          Updating authorised PKP controllers...
+        </div> : ''
+      }
+      {
+        componentOne ? 
         <LoadData
         key={id.toString()}
         debug={false}
