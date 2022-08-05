@@ -33,3 +33,16 @@ export const wei2eth = (v: number) : MultiETHFormat => {
 
     return cost;
 }
+
+// -- convert timestamp to YYYY/MM/DD format
+export const timestamp2Date = (timestamp: string) : string => {
+    
+    const date = require('date-and-time');
+
+    const format = 'YYYY/MM/DD HH:mm:ss';
+
+    let timestampFormatted : Date = new Date(parseInt(timestamp) * 1000);
+
+    return date.format(timestampFormatted, format);
+    
+}

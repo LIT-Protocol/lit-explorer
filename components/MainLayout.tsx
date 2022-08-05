@@ -4,8 +4,8 @@ import SideNav from "./SideNav";
 import throwError from '../utils/throwError';
 import { useRouter } from "next/router";
 import { Alert, AlertTitle } from '@mui/material'
-import pushPage from "../utils/pushPage";
 import NavPath from "./NavPath";
+import { AppRouter } from "../utils/AppRouter";
 
 interface MainLayoutProps {
     children: any
@@ -40,7 +40,7 @@ const MainLayout = (props: MainLayoutProps) => {
       // -- prepare
       const id = text;
 
-      pushPage(id, router);
+      router.push(AppRouter.getPage(id))
   
     }
 

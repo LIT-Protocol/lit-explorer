@@ -1,6 +1,6 @@
 import { Contract, Signer } from 'ethers';
 import { SupportedNetworks } from '../../../app_config';
-import { milliC, MultiETHFormat, MultiTimeFormat, wei2eth } from '../converter';
+import { milliC, MultiETHFormat, MultiTimeFormat, wei2eth } from '../../converter';
 import { getContract } from '../getContract';
 
 interface RateLimitContractProps{

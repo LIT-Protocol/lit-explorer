@@ -4,8 +4,8 @@ import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkey
 import { ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import { useRouter } from "next/router";
-import { RouterPush } from "../utils/RouterPush";
 import EditIcon from '@mui/icons-material/Edit';
+import { AppRouter } from "../utils/AppRouter";
 
 interface ActionCodeStatusProps {
     ipfsId: string | any,
@@ -41,7 +41,8 @@ const ActionCodeStatus = (props: ActionCodeStatusProps) => {
 
     // -- (actions)
     const register = () => {
-        RouterPush.registerAction(router, props?.ipfsId)    
+        const page = AppRouter.getPage(props?.ipfsId);
+        router.push(page); 
     }
     
     // -- if param doesnt have ipfsId

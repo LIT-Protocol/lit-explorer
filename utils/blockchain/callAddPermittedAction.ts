@@ -1,6 +1,6 @@
-import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../ipfs/ipfsHashConverter";
+import { ipfsIdToIpfsIdHash } from "../ipfs/ipfsHashConverter";
 import throwError from "../throwError";
-import tryUntil from "../tryUntil";
+import { tryUntil, TryUntilProp } from "../tryUntil";
 import getPubkeyRouterAndPermissionsContract from "./getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "./getWeb3Wallet";
 
@@ -48,7 +48,10 @@ const callAddPermittedAction = async (props: CallAddPermittedActionProp) => {
 
     let permittedAction = await tryUntil({
         onlyIf: async () => await contract.isActionRegistered(ipfsMultiHash),
-        thenRun: async () => await contract.addPermittedAction(selectedToken, ipfsMultiHash)
+        thenRun: async () => await contract.addPermittedAction(selectedToken, ipfsMultiHash),
+        onError: (props: TryUntilProp) => {
+            throwError(`Failed to execute: ${props}`);
+        },
     });
 
     return permittedAction;

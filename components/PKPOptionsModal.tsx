@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -7,13 +6,15 @@ import { Button, Chip, InputLabel, TextField } from '@mui/material';
 
 // @ts-ignore
 import converter from 'hex2dec';
-import getSearchType, { SearchTypes } from '../utils/getSearchType';
 import throwError from '../utils/throwError';
 import getWeb3Wallet from '../utils/blockchain/getWeb3Wallet';
 import getPubkeyRouterAndPermissionsContract from '../utils/blockchain/getPubkeyRouterAndPermissionsContract';
-import tryUntil from '../utils/tryUntil';
+import { tryUntil, TryUntilProp } from '../utils/tryUntil';
 import { LinearProgressWithLabel } from './Progress';
 import { Contract } from 'ethers';
+import { useState } from 'react';
+import { AppRouter } from '../utils/AppRouter';
+import { SupportedSearchTypes } from '../app_config';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -40,13 +41,13 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
   // -- prepare
   const pkpId = props.pkpId;
   
-  const [open, setOpen] = React.useState(false);
-  const [loading ,setLoading] = React.useState(false);
-  const [progress, setProgress] = React.useState(0);
+  const [open, setOpen] = useState(false);
+  const [loading ,setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [address, setAddress] = React.useState();
+  const [address, setAddress] = useState();
 
   const handleChange = (e: any) => {
     setAddress(e.target.value);
@@ -66,10 +67,10 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
     // -- prepare params for smart contract
     const tokenId_uint256 = converter.decToHex(pkpId);
     const user_address : any = address;
-    const inputType = getSearchType(user_address);
+    const inputType = AppRouter.getSearchType(user_address);
     
     // -- validate
-    if( inputType !== SearchTypes.ETH_ADDRESS){
+    if( inputType !== SupportedSearchTypes.ETH_ADDRESS){
       resetProgress(`Incorrect input type. Expecting 'ETH_ADDRESS' but received ${inputType}`);
       return;
     }
@@ -111,6 +112,9 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
       onTrying: (counter: number) => {
         console.log(`${counter} confirming transaction...`);
         setProgress(90 + counter);
+      },
+      onError: (props: TryUntilProp) => {
+        throwError(`Failed to execute: ${props}`);
       },
       interval: 4500
     });

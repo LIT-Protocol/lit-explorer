@@ -1,12 +1,12 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
-import timestampToDate from "./timestampToDate";
+import { timestamp2Date } from "./converter";
 
 const RenderDate = (props: GridRenderCellParams) => {
 
     const { value } = props;
 
     return (
-        timestampToDate(value)
+        timestamp2Date(value)
     )
 }
 

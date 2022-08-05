@@ -7,9 +7,9 @@ import throwError from "../utils/throwError";
 import { useState } from "react";
 import { newObjectState } from "../utils/clone";
 import { useRouter } from "next/router";
-import { RouterPush } from "../utils/RouterPush";
 import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkeyRouterAndPermissionsContract";
-import tryUntil from "../utils/tryUntil";
+import { tryUntil, TryUntilProp } from "../utils/tryUntil";
+import { AppRouter } from "../utils/AppRouter";
 
 const MintNewPKP: NextPageWithLayout = () => {
 
@@ -56,7 +56,8 @@ const MintNewPKP: NextPageWithLayout = () => {
   // -- (void) redirect
   const redirect = async () => {
     const { addresses } = await getWeb3Wallet();
-    RouterPush.owner(router, addresses[0]);
+    const page = AppRouter.getPage(addresses[0]);
+    router.push(page);
     return;
   }
 
@@ -110,6 +111,9 @@ const MintNewPKP: NextPageWithLayout = () => {
             progress: 75 + counter,
             message: `${counter} waiting for confirmation...`
           }))
+        },
+        onError: (props: TryUntilProp) => {
+          throwError(`Failed to execute: ${props}`);
         },
         interval: 3000,
       });

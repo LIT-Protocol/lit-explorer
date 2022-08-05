@@ -7,8 +7,8 @@ import uploadToIPFS from "../../utils/ipfs/upload";
 import { LinearProgressWithLabel } from "../../components/Progress";
 import throwError from "../../utils/throwError";
 import { useRouter } from "next/router";
-import { RouterPush } from "../../utils/RouterPush";
-import { CeloExplorer } from "../../utils/blockchain/contracts/CeloExplorer";
+import { CeloExplorer } from "../../utils/blockchain/CeloExplorer";
+import { AppRouter } from "../../utils/AppRouter";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -78,7 +78,8 @@ go();`;
       return;
     }
 
-    RouterPush.registerAction(router, ipfsId);
+    const page = AppRouter.getPage(ipfsId);
+    router.push(page);
 
     return;
 

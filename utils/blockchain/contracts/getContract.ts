@@ -1,25 +1,20 @@
 import { CeloProvider, CeloWallet } from "@celo-tools/celo-ethers-wrapper";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
-import { SupportedNetworks, SUPPORTED_CHAINS } from "../../app_config";
-
-export interface GetContractProps{
-    network: SupportedNetworks
-    signer?: Signer,
-    contractAddress: string
-}
+import { SupportedNetworks, SUPPORTED_CHAINS } from "../../../app_config";
 
 /**
  * 
  * Get the signer of the given network, otherwise automatically
  * generates a private key to create a signer
  * 
- * @param { string } network 
- * @returns 
+ * @param { SupportedNetworks } network 
+ * @return { Signer }
  */
-export const getSigner = async (network: string) : Promise<Signer> => {
+export const getSigner = async (network: SupportedNetworks) : Promise<Signer> => {
     
     let signer : Signer;
 
+    // -- (CELO MAINNET)
     if( network == SupportedNetworks.CELO_MAINNET){
 
         const provider = new CeloProvider(SupportedNetworks.CELO_MAINNET);
@@ -33,22 +28,28 @@ export const getSigner = async (network: string) : Promise<Signer> => {
         return signer;
     }
 
+    // -- (otherwise)
     throw new Error(`No signer is found in network "${network}".`);
 
 }
 
 /**
  * 
- * @param { string } network 
+ * Get the ABI code from the given API and contract address
+ * 
+ * @property { SupportedNetworks } network
+ * @property { string } contractAddress 
+ * 
+ * @return { Promise<ContractInterface } ABI
  */
 export const getABI = async ({network, contractAddress}: {
-    network: string, 
+    network: SupportedNetworks, 
     contractAddress: string
 }) : Promise<ContractInterface> => {
 
-    
     let ABI;
     
+    // -- (CELO MAINNET)
     if( network == SupportedNetworks.CELO_MAINNET){
 
         const ABI_API = SUPPORTED_CHAINS[network].ABI_API + contractAddress;
@@ -63,6 +64,7 @@ export const getABI = async ({network, contractAddress}: {
 
     }
 
+    // -- (otherwise)
     throw new Error(`No ABI code is found in network "${network}".`);
     
 }
@@ -71,10 +73,17 @@ export const getABI = async ({network, contractAddress}: {
  * 
  * Get the ABI code of a contract by network
  * 
- * @param { GetContractProps } props
+ * @property { SupportedNetworks } network
+ * @property { Signer } signer
+ * @property { string } contractAddress
+ * 
  * @return { Contract } ABI in json format
  */
-export const getContract = async (props:GetContractProps) : Promise<Contract> => {
+export const getContract = async (props: {
+    network: SupportedNetworks
+    signer?: Signer,
+    contractAddress: string
+}) : Promise<Contract> => {
 
     let signer: Signer = props?.signer ?? await getSigner(props.network);
 
