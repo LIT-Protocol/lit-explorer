@@ -1,7 +1,7 @@
 import { Alert, Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { PopulatedTransaction, Signer } from "ethers";
 import { useEffect, useState } from "react";
-import { asyncForEach, asyncForEachReturn } from "../utils/asyncForeach";
+import { asyncForEach, asyncForEachReturn } from "../utils/utils";
 import callAddPermittedAction from "../utils/blockchain/callAddPermittedAction";
 import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import getTokensByAddress from "../utils/blockchain/getTokensByAddress";

@@ -5,7 +5,7 @@ export const asyncForEach = async (array: [] | any, callback: Function) => {
     return array;
   }
 
-  export const asyncForEachReturn = async (array: [], callback: Function) => {
+  export const asyncForEachReturn = async (array: Array<any>, callback: Function) => {
 
     const list = [];
 

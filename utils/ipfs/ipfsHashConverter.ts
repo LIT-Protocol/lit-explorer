@@ -3,7 +3,6 @@ import bs58 from 'bs58';
 import { ethers } from "ethers";
 import getPubkeyRouterAndPermissionsContract from "../blockchain/getPubkeyRouterAndPermissionsContract";
 
-
 export interface IPFSHash {
     digest: string
     hashFunction: number

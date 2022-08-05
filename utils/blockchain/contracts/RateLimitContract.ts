@@ -1,12 +1,18 @@
-import { Contract, Signer } from 'ethers';
+import { Contract, ethers, Signer } from 'ethers';
 import { SupportedNetworks } from '../../../app_config';
-import { milliC, MultiETHFormat, MultiTimeFormat, wei2eth } from '../../converter';
-import { getContract } from '../getContract';
+import { asyncForEachReturn } from '../../utils';
+import { milliC, MultiDateFormat, MultiETHFormat, MultiTimeFormat, timestamp2Date, wei2eth } from '../../converter';
+import { getContract } from './getContract';
 
 interface RateLimitContractProps{
     signer?: Signer
     contractAddress: string
     network?: SupportedNetworks
+}
+
+interface RLICapacity{
+    requestsPerMillisecond: number,
+    expiresAt: MultiDateFormat
 }
 
 /**
@@ -56,23 +62,102 @@ export class ReadRateLimitContract {
         this.contract = contract;
     }
 
-    // get rate limit windows
-    rateLimitWindow = async () : Promise<MultiTimeFormat> => {
+    // ========== Global Scope ==========
+    totalSupply = async () : Promise<number> => {
+        
+        const total = await this.contract.totalIdCounter();
 
-        const rateLimitWindow = await this.contract.RLIHolderRateLimitWindowMilliseconds();
-
-        return milliC(parseInt(rateLimitWindow));
-    }
-
-    // get rate limit windows
-    getRateLimitWindow = async () : Promise<MultiTimeFormat> => {
-
-        const rateLimitWindow = await this.contract.RLIHolderRateLimitWindowMilliseconds();
-
-        return milliC(parseInt(rateLimitWindow));
+        return parseInt(total);
 
     }
+    
+    // get rate limit windows
+    // NOTE: (chris): basically i was just thinking we might want to have separate windows for free (default) vs paid (RLIHolder).
+    // like maybe for free you get 10 requests per 60 mins.  but if you pay it's over a 5 min window
+    // getRateLimitWindow = async () : Promise<MultiTimeFormat> => {
 
+    //     const rateLimitWindow = await this.contract.RLIHolderRateLimitWindowMilliseconds();
+
+    //     return milliC(parseInt(rateLimitWindow));
+
+    // }
+
+    // ========== User Scope ==========
+
+    // get the number of RLI NFTs that a owner holds
+    getTotalRLIByOwnerAddress = async (ownerAddress: string) : Promise<number> => {
+
+        // -- validate
+        if ( ! ethers.utils.isAddress(ownerAddress) ){
+            throw Error(`Given string is not a valid address ${ownerAddress}`);
+        }
+
+        const total = await this.contract.balanceOf(ownerAddress)
+
+        return parseInt(total);
+    }
+
+    // get token URI
+    getTokenURIByIndex = async (index: number) => {
+
+        const base64 = await this.contract.tokenURI(index);
+
+        const data = base64.split('data:application/json;base64,')[1];
+
+        const dataToString = Buffer.from(data, 'base64').toString('binary');
+
+        return JSON.parse(dataToString);
+
+    }
+
+    // == get owner's tokens
+    getTokensByOwnerAddress = async (ownerAddress: string) : Promise<any> => {
+
+        // -- validate
+        if ( ! ethers.utils.isAddress(ownerAddress) ){
+            throw Error(`Given string is not a valid address ${ownerAddress}`);
+        }
+
+        const total = await this.getTotalRLIByOwnerAddress(ownerAddress);
+
+        const tokens = asyncForEachReturn([...new Array(total)], async (_: undefined, i: number) => {
+            
+            const token = await this.contract.tokenOfOwnerByIndex(ownerAddress, i);
+
+            const URI = await this.getTokenURIByIndex(i);
+
+            const capacity = await this.getCapacityByIndex(i);
+            
+            return { 
+                tokenId: parseInt(token), 
+                URI,
+                capacity,
+            };
+        })
+
+        return tokens;
+
+    }
+
+    /**
+     * Get the capacity with by token index
+     * @param index 
+     */
+    getCapacityByIndex = async (index: number) : Promise<RLICapacity> => {
+        
+        const capacity = await this.contract.capacity(index);
+
+        return {
+            requestsPerMillisecond: parseInt(capacity[0]),
+            expiresAt: {
+                timestamp: parseInt(capacity[1]),
+                formatted: timestamp2Date(capacity[1]),
+            },
+        };
+
+    }
+
+    // ========== Default Cases ==========
     // -- get default rate limit window
     getDefaultRateLimitWindow = async () : Promise<MultiTimeFormat> => {
         
@@ -81,17 +166,19 @@ export class ReadRateLimitContract {
         return milliC(parseInt(rateLimitWindow));
 
     }
-
+    
     // get default rate limit window
-    getFreeRequestsPerSecond = async () : Promise<number> => {
+    getDefaultFreeRequestsPerSecond = async () : Promise<number> => {
         
         const requestsBySecond = await this.contract.freeRequestsPerRateLimitWindow();
 
         return parseInt(requestsBySecond);
     }
 
-    // get cost per additional millisecond
-    getCostPerMillisecond = async () : Promise<MultiETHFormat> => {
+    // ========== Different ways to get costs ==========
+
+    //  get the cost of additional requests per millisecond
+    costOfPerMillisecond = async () : Promise<MultiETHFormat> => {
         
         const cost = await this.contract.additionalRequestsPerMillisecondCost();
 
@@ -99,7 +186,7 @@ export class ReadRateLimitContract {
     }
 
     // -- calculate cost
-    calculateCost = async (milliseconds: number, expiresAt: number) : Promise<MultiETHFormat> => {
+    costOfMilliseconds = async (milliseconds: number, expiresAt: number) : Promise<MultiETHFormat> => {
 
         const cost = await this.contract.calculateCost(milliseconds, expiresAt);
 
@@ -107,7 +194,7 @@ export class ReadRateLimitContract {
     }
 
     // -- calculate cost by requests per second
-    calculateCostByRequestsPerSecond = async (wei: number, expiresAt: number) : Promise<MultiETHFormat>=> {
+    costOfRequestsPerSecond = async (wei: number, expiresAt: number) : Promise<MultiETHFormat>=> {
 
         const cost = await this.contract.calculateRequestsPerSecond(wei, expiresAt);
 

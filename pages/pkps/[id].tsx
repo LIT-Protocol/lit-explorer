@@ -4,7 +4,7 @@ import { NextPageWithLayout } from "../_app"
 import RenderLink from '../../utils/RenderLink';
 import LoadData from '../../components/LoadData';
 import { solidityIpfsIdToCID } from "../../utils/ipfs/ipfsHashConverter";
-import { asyncForEachReturn } from "../../utils/asyncForeach";
+import { asyncForEachReturn } from "../../utils/utils";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import PKPOptionsModal from "../../components/PKPOptionsModal";
 import { useState } from "react";

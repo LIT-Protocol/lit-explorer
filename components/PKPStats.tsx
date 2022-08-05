@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
 import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
 import MyCard from "./MyCard";
-// @ts-ignore
-import converter from 'hex2dec';
+
 import { RateLimitContract } from "../utils/blockchain/contracts/RateLimitContract";
 import { Button } from "@mui/material";
 import {APP_CONFIG, SupportedNetworks} from "../app_config";
-
-declare global {
-    interface Window{
-        decTohex?(pkpId: string):void
-    }
-  }
 
 // NOTE: Flows
 // 1. 
@@ -32,17 +25,18 @@ const PKPStats = () => {
 
     }
 
+    // -- get the list of RLIs a owner holds
+    const getList = async () => {
+        
+    }
+
     // -- (mounted)
     useEffect(() => {
-
-        // -- (test) export helper 
-        window.decTohex = converter.decToHex;
-
 
         // -- start running straight away
         (async() => {
 
-            const { signer } = await getWeb3Wallet();
+            const { signer, ownerAddress } = await getWeb3Wallet();
 
             const contract = new RateLimitContract();
 
@@ -54,23 +48,40 @@ const PKPStats = () => {
 
             setContract(contract);
 
-            const rateLimitWindow = await contract.read.rateLimitWindow();
-            console.log("[mounted] rateLimitWindow:", rateLimitWindow);
+            // -- get the list of RLIs a owner owns
+            const tokens = await contract.read.getTokensByOwnerAddress(ownerAddress)
+            console.log("[mounted] tokens:", tokens);
+
+
+            // const getTokenURIByIndex = await contract.read.getTokenURIByIndex(2);
+            // console.log("[mounted] getTokenURIByIndex:", getTokenURIByIndex);
+
+            // const rateLimitWindow = await contract.read.getRateLimitWindow();
+            // console.log("[mounted] rateLimitWindow:", rateLimitWindow);
+
+            // const additionalCost = await contract.read.costOfAdditionalRequestsPerMillisecond();
+            // console.log("[mounted] additionalCost:", additionalCost);
+
+            // const getTotalRLI = await contract.read.getTotalRLI(addresses[0]);
+            // console.log("[mounted] getTotalRLI:", getTotalRLI);
+
+            // const capacity = await contract.read.getCapacityByIndex(2);
+            // console.log("[mounted] capacity:", capacity);
             
-            const defaultRateLimitWindow = await contract.read.getDefaultRateLimitWindow();
-            console.log("[mounted] defaultRateLimitWindow:", defaultRateLimitWindow);
+            // const defaultRateLimitWindow = await contract.read.getDefaultRateLimitWindow();
+            // console.log("[mounted] defaultRateLimitWindow:", defaultRateLimitWindow);
 
-            const requestsBySecond = await contract.read.getFreeRequestsPerSecond();
-            console.log("[mounted] requestsBySecond:", requestsBySecond);
+            // const requestsBySecond = await contract.read.getDefaultFreeRequestsPerSecond();
+            // console.log("[mounted] requestsBySecond:", requestsBySecond);
             
-            const costPerMillisecond = await contract.read.getCostPerMillisecond();
-            console.log("[mounted] costPerMillisecond:", costPerMillisecond);
+            // const costPerMillisecond = await contract.read.costOfPerMillisecond();
+            // console.log("[mounted] costPerMillisecond:", costPerMillisecond);
 
-            const totalCost = await contract.read.calculateCost(1000, 1659717168);
-            console.log("[mounted] totalCost:", totalCost);
+            // const costOfMilliseconds = await contract.read.costOfMilliseconds(1000, 1659800204);
+            // console.log("[mounted] costOfMilliseconds:", costOfMilliseconds);
 
-            const totalCostByRequestsPerSecond = await contract.read.calculateCostByRequestsPerSecond(1000000000000, 1659717168);
-            console.log("[mounted] totalCostByRequestsPerSecond:", totalCostByRequestsPerSecond);
+            // const totalCostByRequestsPerSecond = await contract.read.costOfByRequestsPerSecond(1000000000000, 1659717168);
+            // console.log("[mounted] totalCostByRequestsPerSecond:", totalCostByRequestsPerSecond);
 
 
         })();

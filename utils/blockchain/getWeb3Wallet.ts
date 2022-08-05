@@ -6,6 +6,7 @@ interface Web3WalletProps{
     wallet: any,
     signer: any,
     addresses: any,
+    ownerAddress: any,
 }
 
 const getWeb3Wallet = async () : Promise<Web3WalletProps> => {
@@ -29,7 +30,9 @@ const getWeb3Wallet = async () : Promise<Web3WalletProps> => {
 
     const addresses = await wallet.listAccounts();
 
-    return { wallet, signer, addresses };
+    const ownerAddress = addresses[0];
+
+    return { wallet, signer, addresses, ownerAddress };
 }
 
 export default getWeb3Wallet;

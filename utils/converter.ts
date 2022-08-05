@@ -11,10 +11,13 @@ export interface MultiETHFormat{
     eth: number | string
 }
 
+export interface MultiDateFormat{
+    timestamp: number,
+    formatted: string
+}
+
 // -- (helper) milliseconds converter
 export const milliC = (milliseconds: number) : MultiTimeFormat => {
-
-    console.log("[milliC]:", milliseconds);
 
     return {
         milliseconds,

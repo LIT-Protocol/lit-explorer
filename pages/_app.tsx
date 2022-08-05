@@ -6,6 +6,7 @@ import { NextPage } from 'next';
 import NProgress from 'nprogress';
 import "nprogress/nprogress.css";
 import Router from 'next/router';
+import AppContext from '../components/AppContext';
 
 NProgress.configure({
   minimum: 0.3,
@@ -33,7 +34,9 @@ function MyApp({ Component, pageProps }: Props) {
   
   return getLayout(
       <>
-        <Component {...pageProps} />
+        <AppContext>
+          <Component {...pageProps} />
+        </AppContext>
       </>
   )
 }
