@@ -9,6 +9,7 @@ import { ipfsIdToIpfsIdHash } from "../../../../utils/ipfs/ipfsHashConverter";
 import throwError from "../../../../utils/throwError";
 import { NextPageWithLayout } from "../../../_app";
 import AddPermittedAction from "../../../../components/AddPermittedAction";
+import { MyProgress } from "../../../../components/CardInputs";
 
 const RegisterActionPage: NextPageWithLayout = () => {
 
@@ -20,8 +21,7 @@ const RegisterActionPage: NextPageWithLayout = () => {
   const [signer, setSigner] = useState();
   const [ownerAddress, setOwnerAddress] = useState('');
 
-  const [status, setStatus] = useState({state: 0, msg: ''});
-  const [tx, setTx] = useState();
+  const [progress, setProgress] = useState<MyProgress>({progress: 0, message: ''});
 
   useEffect(() => {
 
@@ -48,12 +48,12 @@ const RegisterActionPage: NextPageWithLayout = () => {
       const contract = await getPubkeyRouterAndPermissionsContract();
 
       if(await contract.isActionRegistered(ipfsHash)){
-        setStatus({state: 100, msg: 'Action is registered'})
+        setProgress({progress: 100, message: 'Action is registered'})
         setRegistered(true);
         return;
       }
       
-      setStatus({state: 50, msg: 'Registering action...'})
+      setProgress({progress: 50, message: 'Registering action...'})
           
       // await new Promise(resolve => setTimeout(resolve, 1000));
       let txRegisterAction;
@@ -74,7 +74,7 @@ const RegisterActionPage: NextPageWithLayout = () => {
   
           if(isReady){
             setTimeout(() => {
-              setStatus({state: 100, msg: 'Action is registered'})
+              setProgress({progress: 100, message: 'Action is registered'})
               setTimeout(() => {
                 setRegistered(true);
               }, 2000)
@@ -84,10 +84,10 @@ const RegisterActionPage: NextPageWithLayout = () => {
   
           counter = counter + 1;
   
-          setStatus({state: 75 + counter, msg: `${counter}: Waiting for blockchain confirmation...`})
+          setProgress({progress: 75 + counter, message: `${counter}: Waiting for blockchain confirmation...`})
   
           if(counter >= 10){
-            setStatus({state: -1, msg: 'Refresh this page or try again later.'})
+            setProgress({progress: -1, message: 'Refresh this page or try again later.'})
             clearInterval(intervalId);
           }
   
@@ -104,8 +104,8 @@ const RegisterActionPage: NextPageWithLayout = () => {
     // -- validate
     if(!registered) return <>
       <div className="uploaded-result">
-        <LinearProgressWithLabel value={status.state} />
-        { status.msg }
+        <LinearProgressWithLabel value={progress.progress ?? 0} />
+        { progress.message }
       </div>
     </>
 

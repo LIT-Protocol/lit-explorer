@@ -1,42 +1,7 @@
-import { Contract, ethers, Signer } from 'ethers';
+import { Contract, Signer } from 'ethers';
 import { SupportedNetworks } from '../../../app_config';
+import { milliC, MultiETHFormat, MultiTimeFormat, wei2eth } from '../converter';
 import { getContract } from '../getContract';
-
-import getRateLimitContract from '../getRateLimitContract';
-
-interface RateLimitWindow{
-    milliseconds: number,
-    seconds: number,
-    minutes: number,
-}
-
-interface Cost{
-    wei: number
-    eth: number | string
-}
-
-// -- (helper) milliseconds converter
-export const milliC = (milliseconds: number) : RateLimitWindow => {
-
-    console.log("[milliC]:", milliseconds);
-
-    return {
-        milliseconds,
-        seconds: milliseconds / 1000,
-        minutes: milliseconds / 1000 / 60,
-    }
-}
-
-// -- (helper) wei to eth converter
-export const wei2eth = (v: number) : Cost => {
-
-    let cost : Cost = {
-        wei: v,
-        eth: ethers.utils.formatEther(v),
-    }
-
-    return cost;
-}
 
 interface RateLimitContractProps{
     signer?: Signer
@@ -45,7 +10,7 @@ interface RateLimitContractProps{
 }
 
 /**
- * Entry point of accessing the smart contract functionalities
+ * (CLASS) Entry point of accessing the smart contract functionalities
  */
 export class RateLimitContract {
 
@@ -68,7 +33,6 @@ export class RateLimitContract {
      */
     connect = async (props: RateLimitContractProps): Promise<void> => {
         
-        // this.contract = await getRateLimitContract({wallet: signer});
         this.contract = await getContract({
             network: props?.network ?? SupportedNetworks.CELO_MAINNET,
             signer: props?.signer,
@@ -82,7 +46,7 @@ export class RateLimitContract {
 
 
 /**
- * (READ) All read functions on smart contract
+ * (READ CLASS) All read functions on smart contract
  */
 export class ReadRateLimitContract {
 
@@ -93,7 +57,7 @@ export class ReadRateLimitContract {
     }
 
     // get rate limit windows
-    rateLimitWindow = async () : Promise<RateLimitWindow> => {
+    rateLimitWindow = async () : Promise<MultiTimeFormat> => {
 
         const rateLimitWindow = await this.contract.RLIHolderRateLimitWindowMilliseconds();
 
@@ -101,7 +65,7 @@ export class ReadRateLimitContract {
     }
 
     // get rate limit windows
-    getRateLimitWindow = async () : Promise<RateLimitWindow> => {
+    getRateLimitWindow = async () : Promise<MultiTimeFormat> => {
 
         const rateLimitWindow = await this.contract.RLIHolderRateLimitWindowMilliseconds();
 
@@ -110,7 +74,7 @@ export class ReadRateLimitContract {
     }
 
     // -- get default rate limit window
-    getDefaultRateLimitWindow = async () : Promise<RateLimitWindow> => {
+    getDefaultRateLimitWindow = async () : Promise<MultiTimeFormat> => {
         
         const rateLimitWindow = await this.contract.defaultRateLimitWindowMilliseconds();
 
@@ -127,7 +91,7 @@ export class ReadRateLimitContract {
     }
 
     // get cost per additional millisecond
-    getCostPerMillisecond = async () : Promise<Cost> => {
+    getCostPerMillisecond = async () : Promise<MultiETHFormat> => {
         
         const cost = await this.contract.additionalRequestsPerMillisecondCost();
 
@@ -135,7 +99,7 @@ export class ReadRateLimitContract {
     }
 
     // -- calculate cost
-    calculateCost = async (milliseconds: number, expiresAt: number) : Promise<Cost> => {
+    calculateCost = async (milliseconds: number, expiresAt: number) : Promise<MultiETHFormat> => {
 
         const cost = await this.contract.calculateCost(milliseconds, expiresAt);
 
@@ -143,7 +107,7 @@ export class ReadRateLimitContract {
     }
 
     // -- calculate cost by requests per second
-    calculateCostByRequestsPerSecond = async (wei: number, expiresAt: number) : Promise<Cost>=> {
+    calculateCostByRequestsPerSecond = async (wei: number, expiresAt: number) : Promise<MultiETHFormat>=> {
 
         const cost = await this.contract.calculateRequestsPerSecond(wei, expiresAt);
 
@@ -152,7 +116,7 @@ export class ReadRateLimitContract {
 }
 
 /**
- * (READ) All write functions on smart contract
+ * (WRITE CLASS) All write functions on smart contract
  */
 export class WriteRateLimitContract{
 

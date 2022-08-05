@@ -2,19 +2,13 @@ import MainLayout from "../../components/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import MonacoEditor from '@monaco-editor/react';
 import { useState } from "react";
-import HorizontalLabelPositionBelowStepper from "../../components/Stepper";
-import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import uploadToIPFS from "../../utils/ipfs/upload";
 import { LinearProgressWithLabel } from "../../components/Progress";
-import callRegisterAction from "../../utils/blockchain/callRegisterAction";
 import throwError from "../../utils/throwError";
-import getPKPNFTContract from "../../utils/blockchain/getPKPNFTContract";
-import getTokensByAddress from "../../utils/blockchain/getTokensByAddress";
-import callAddPermittedAction from "../../utils/blockchain/callAddPermittedAction";
-import getTxLink from "../../utils/blockchain/getTxLink";
-import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import { useRouter } from "next/router";
 import { RouterPush } from "../../utils/RouterPush";
+import { CeloExplorer } from "../../utils/blockchain/contracts/CeloExplorer";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -39,12 +33,6 @@ go();`;
   const [msg, setMsg] = useState('Loading...');
   const [counter, setCounter] = useState(0);
   const [ipfsId, setIpfsId] = useState();
-
-  // --- User's tokens
-  const [userTokensTabEnabled, setUserTokensTabEnabled] = useState(false);
-  const [userTokens, setUserTokens] = useState([]);
-  const [userHasTokens, setUserHasTokens] = useState(false);
-  const [selectedToken, setSelectedToken] = useState();
 
   // --- txs
   const [txRegisterActionHash, setTxRegisterActionHash] = useState('');
@@ -84,7 +72,6 @@ go();`;
    */
   const register = async () => {
 
-    
     // -- validate
     if( ! ipfsId || ipfsId == ''){
       throwError("IPFS ID not found.");
@@ -93,66 +80,7 @@ go();`;
 
     RouterPush.registerAction(router, ipfsId);
 
-    router.push(`/actions/${ipfsId}/update`);
-
     return;
-
-    const debug = false;
-
-    let ownerAddress: string;
-
-    if( debug ){
-      setTxRegisterActionHash("FAKE-TRANSACTION-46bbccdcac66bb4d7a4891bc1c76234a9c79f3140699cd0f6117")
-      ownerAddress = '0x50e2dac5e78B5905CB09495547452cEE64426db2';
-    }else{
-      const txRegisterAction = await callRegisterAction(ipfsId);
-      console.log("txRegisterAction:", txRegisterAction);
-      setTxRegisterActionHash(txRegisterAction.hash);
-      const { addresses } = await getWeb3Wallet();
-      ownerAddress = addresses[0];
-    }
-
-    // -- treat this like a new page
-    setUserTokensTabEnabled(true);
-    
-    let tokens: any = await getTokensByAddress(ownerAddress);
-
-    setUserTokens(tokens);
-
-    setUserHasTokens(tokens.length <= 0 ? false : true);
-
-  }
-
-  /**
-   * Add permission to action
-   */
-  const addPermission = async () => {
-
-    // -- validate
-    if( ! ipfsId || ipfsId == ''){
-      throwError("IPFS ID not found.");
-      return;
-    }
-
-    console.log("selectedToken:", selectedToken);
-
-    console.log("ipfsId:", ipfsId)
-    
-    return;
-
-    let permittedAction;
-
-    try{
-      permittedAction = await callAddPermittedAction(ipfsId, selectedToken);
-    }catch(e){
-      console.error(e);
-    }
-
-    if( permittedAction ){
-      console.log("permittedAction:", permittedAction);
-      alert(permittedAction);
-    }
-
 
   }
 
@@ -183,49 +111,12 @@ go();`;
                 txRegisterActionHash !== null || txRegisterActionHash !== ''?
                 <div className="mt-12">
                     <div className="mt-12 flex ">
-                      <a className="align-right" target="_blank" rel="noreferrer" href={getTxLink(txRegisterActionHash ?? '')}>{ txRegisterActionHash } </a>
+                      <a className="align-right" target="_blank" rel="noreferrer" href={CeloExplorer.txLink(txRegisterActionHash ?? '')}>{ txRegisterActionHash } </a>
                     </div>
                       
 
                   </div> : ''
               }
-
-              { 
-                userTokensTabEnabled ?
-                  <div className="mt-12">
-                    {
-                      userTokens.length > 0 ?
-                        <>
-                          <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Your PKP NFTs</InputLabel>
-                            <Select
-                              labelId="demo-simple-select-label"
-                              id="demo-simple-select"
-                              value={selectedToken}
-                              label="Your PKP NFTs"
-                              onChange={(e: any) => setSelectedToken(e.target.value)}
-                            >
-                              {
-                                userTokens?.map((token: any, id: any)=> {
-                                  return <MenuItem key={id} value={token}>{ token }</MenuItem>
-                                })
-                              }
-                            </Select>
-                          </FormControl>
-                          
-                          <div className="mt-12 flex">
-                            <Button onClick={addPermission} className="btn-2 ml-auto">Add Permitted Action</Button>
-                          </div>
-
-                        </>
-                      : ! userHasTokens ? <Alert severity="error">No PKP found.</Alert> : 'Loading your PKPs...'
-                    }
-
-                  </div> : ''
-              }
-              
-              
-
 
             </>
             : ''
@@ -238,17 +129,6 @@ go();`;
     
     <h1>Create Action</h1>
 
-    {/* <HorizontalLabelPositionBelowStepper steps={[
-      'Creating Lit Action',
-      'Register Action',
-      'Create an ad',
-    ]}/> */}
-
-    {/* <p>
-        <a target="_blank" rel="noreferrer" href="https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions">
-            Documentation
-        </a>
-    </p> */}
         <div className="code-editor mt-12">
             <MonacoEditor
                 language="javascript"
