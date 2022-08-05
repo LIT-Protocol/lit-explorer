@@ -1,5 +1,6 @@
 import { CeloProvider, CeloWallet } from "@celo-tools/celo-ethers-wrapper";
 import { Contract, ethers } from "ethers";
+import { APP_CONFIG } from "../../app_config";
 
 /**
  * Get PKPNFT Contract
@@ -23,7 +24,7 @@ const getPKPNFTContract = async (signer?: any): Promise <Contract> =>  {
 
     const ABI = require('../../abi/pkp_nft.json').result;
 
-    const contractAddressHash = process.env.NEXT_PUBLIC_PKP_NFT_CONTRACT || '';
+    const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS || '';
 
     return new ethers.Contract(contractAddressHash, ABI, wallet);
 

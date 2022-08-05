@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { APP_CONFIG } from '../../app_config';
 
 type Data = {
   id?: string
@@ -13,7 +14,7 @@ export default async function handler(
 ) {
 
   const baseURL = process.env.NEXT_PUBLIC_CELO_API_BASE_URL;
-  const contractAddressHash = process.env.NEXT_PUBLIC_PKP_NFT_CONTRACT;
+  const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS;
   const query = `?module=token&action=getTokenHolders&contractaddress=${contractAddressHash}`;
 
   const dataRes = await fetch(`${baseURL}${query}`);

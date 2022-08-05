@@ -12,7 +12,7 @@ const MintPKPPage: NextPageWithLayout = () => {
   const mintFree = async () => {
 
     const { signer, addresses } = await getWeb3Wallet();
-    
+
     const pkpContract = await getPKPNFTContract(signer);
 
     // const freeMintSigner = await pkpContract.freeMintSigner();
@@ -66,9 +66,9 @@ const MintPKPPage: NextPageWithLayout = () => {
       <div className="mt-12">
         <MintNewPKP/>
       </div>
-      <div className="mt-12">
+      {/* <div className="mt-12">
         <Button onClick={mintFree}>Free Mint Test</Button>
-      </div>
+      </div> */}
     </>
   )
 }

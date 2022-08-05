@@ -10,6 +10,7 @@ import PKPOptionsModal from "../../components/PKPOptionsModal";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
 import alertMsg from "../../utils/alertMsg";
+import PKPStats from "../../components/PKPStats";
 
 declare global {
   interface Window{
@@ -53,7 +54,10 @@ const PKPsPageById: NextPageWithLayout = () => {
   return (
     
     <>
-      {
+
+      <PKPStats/>
+
+      {/* {
         componentOneLoading ? <div className="md">
           Updating authorised PKP controllers...
         </div> : ''
@@ -61,38 +65,38 @@ const PKPsPageById: NextPageWithLayout = () => {
       {
         componentOne ? 
         <LoadData
-        key={id?.toString()}
-        debug={false}
-        title="Authorised PKP Controllers:"
-        renderStatus={renderStatus()}
-        errorMessage="No PKP owners found."
-        loadingMessage="Loading authorised PKP controllers..."
-        fetchPath={`/api/get-permitted-by-pkp/${id}`}
-        filter={(rawData: any) => {
-          console.log("on filtered: ", rawData);
+          key={id?.toString()}
+          debug={false}
+          title="Authorised PKP Controllers:"
+          renderStatus={renderStatus()}
+          errorMessage="No PKP owners found."
+          loadingMessage="Loading authorised PKP controllers..."
+          fetchPath={`/api/get-permitted-by-pkp/${id}`}
+          filter={(rawData: any) => {
+            console.log("on filtered: ", rawData);
 
-          const list = rawData?.data?.addresses;
+            const list = rawData?.data?.addresses;
 
-          if( cacheAddress ){
-            list.push(cacheAddress);
-          }
+            if( cacheAddress ){
+              list.push(cacheAddress);
+            }
 
-          return list;
-        } }
-        renderCols={(width: number) => {
-          return [
-            { headerName: "Address", field: "address", width, renderCell: RenderLink}
-          ];
-    
-        } }
-        renderRows={(filteredData: any) => {
-          return filteredData?.map((item: any, i: number) => {
-            return {
-              id: i + 1,
-              address: item,
-            };
-          });
-        } }    
+            return list;
+          } }
+          renderCols={(width: number) => {
+            return [
+              { headerName: "Address", field: "address", width, renderCell: RenderLink}
+            ];
+      
+          } }
+          renderRows={(filteredData: any) => {
+            return filteredData?.map((item: any, i: number) => {
+              return {
+                id: i + 1,
+                address: item,
+              };
+            });
+          } }    
       /> : 
       ''
       }
@@ -127,7 +131,7 @@ const PKPsPageById: NextPageWithLayout = () => {
             };
           });
         } }    
-        />
+        /> */}
     </>
   )
 }

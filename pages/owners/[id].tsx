@@ -4,6 +4,7 @@ import { NextPageWithLayout } from "../_app"
 import RenderDate from '../../utils/RenderDate';
 import RenderLink from '../../utils/RenderLink';
 import LoadData from '../../components/LoadData';
+import { APP_CONFIG } from "../../app_config";
 
 const OwnersPageById: NextPageWithLayout = () => {
 
@@ -24,7 +25,7 @@ const OwnersPageById: NextPageWithLayout = () => {
         console.log("on filtered: ", rawData);
         return rawData.data.result.filter(
           (tx: any) => {
-            return tx.contractAddress === process.env.NEXT_PUBLIC_PKP_NFT_CONTRACT && 
+            return tx.contractAddress === APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS && 
             id.toString().toLowerCase() == tx.to.toLowerCase();
           }
         );

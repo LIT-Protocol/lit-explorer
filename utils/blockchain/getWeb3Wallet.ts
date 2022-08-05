@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { CELO_PARAMS } from "../constants";
+import { Signer } from 'ethers';
 
 interface Web3WalletProps{
     wallet: any,
@@ -17,14 +17,21 @@ const getWeb3Wallet = async () : Promise<Web3WalletProps> => {
 
     await web3Provider.request({
         method: 'wallet_addEthereumChain',
-        params: [CELO_PARAMS]
+        params: [{
+            chainId: "0xa4ec",
+            chainName: "Celo",
+            nativeCurrency: { name: "Celo", symbol: "CELO", decimals: 18 },
+            rpcUrls: ["https://forno.celo.org"],
+            blockExplorerUrls: ["https://explorer.celo.org/"],
+            iconUrls: ["future"],
+        }]
     })
 
     const wallet = new ethers.providers.Web3Provider(web3Provider);
 
     await wallet.send("eth_requestAccounts", []);
 
-    const signer = wallet.getSigner();
+    const signer : Signer = wallet.getSigner();
 
     const addresses = await wallet.listAccounts();
 

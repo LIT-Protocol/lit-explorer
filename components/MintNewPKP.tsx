@@ -3,9 +3,7 @@ import CardInputs, { MyFormData, MyProgress } from "../components/CardInputs"
 import getPKPNFTContract from "../utils/blockchain/getPKPNFTContract";
 import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
 import { Contract, ethers } from "ethers";
-import { JsonRpcSigner } from "@ethersproject/providers";
 import throwError from "../utils/throwError";
-import alertMsg from "../utils/alertMsg";
 import { useState } from "react";
 import { newObjectState } from "../utils/clone";
 import { useRouter } from "next/router";
@@ -54,27 +52,26 @@ const MintNewPKP: NextPageWithLayout = () => {
     return ethers.BigNumber.from(tokenId);
 
   }
+  
+  // -- (void) redirect
+  const redirect = async () => {
+    const { addresses } = await getWeb3Wallet();
+    RouterPush.owner(router, addresses[0]);
+    return;
+  }
 
   // -- (void) mint
-  const onSubmit = async (formData: MyFormData) => {
-
-    const progress = mintProgress?.progress ?? 0;
-
-    // when progress is 100%
-    if( progress >= 100){
-
-      const { addresses } = await getWeb3Wallet();
-      RouterPush.owner(router, addresses[0]);
-      return;
-    }
-
-
+  const mint = async (formData: MyFormData) => {
     console.log("[mint] formData:", formData)
 
     // -- prepare smart contract calls
     const { signer } = await getWeb3Wallet();
     const pkpContract = await getPKPNFTContract(signer);
     const routerContract = await getPubkeyRouterAndPermissionsContract(signer);
+
+    // const mintNext = await pkpContract.mintNext(2);
+
+    // console.log("mintNext:", mintNext);
 
     // -- prepare input 1
     const tokenId = getTokenID(formData);
@@ -130,8 +127,26 @@ const MintNewPKP: NextPageWithLayout = () => {
       throwError(e.message)
       return;
     }
-    
+  }
+  
+  /**
+   * -- (void) when submit button is clicked, decide which 
+   * action to perform based on the mint progress
+   * 
+   * @param { MyFormData } formData 
+   * @returns { void }
+   */
+  const onSubmit = async (formData: MyFormData) => {
 
+    const progress = mintProgress?.progress ?? 0;
+
+    // when progress is 100%
+    if( progress >= 100){
+      await redirect();
+      return;
+    }
+
+    await mint(formData);
   }
 
   return (
