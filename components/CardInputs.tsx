@@ -26,7 +26,8 @@ interface CardInputsProps{
     buttonText?: string
     fields?: Array<MyField>
     onSubmit?(formData: MyFormData): void
-    progress?: MyProgress
+    progress?: MyProgress,
+    fullWidth?: boolean
 }
 
 const CardInputs = (props: CardInputsProps) => {
@@ -118,9 +119,13 @@ const CardInputs = (props: CardInputsProps) => {
                 { renderFields()}
             </div>
             <div className="mt-12 flex">
-                <div className="ml-auto">
-                    <MyButton onClick={onClick}>{ buttonText }</MyButton>
-                </div>
+                {
+                    props.fullWidth ? 
+                    <MyButton onClick={onClick} fullWidth={props.fullWidth}>{ buttonText }</MyButton> :
+                    <div className='ml-auto'>
+                        <MyButton onClick={onClick} fullWidth={props.fullWidth}>{ buttonText }</MyButton>
+                    </div>
+                }
             </div>
           </MyCard>
         </>

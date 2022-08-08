@@ -1,6 +1,7 @@
 import { CeloProvider, CeloWallet } from "@celo-tools/celo-ethers-wrapper";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import { SupportedNetworks, SUPPORTED_CHAINS } from "../../../app_config";
+import { cacheFetch } from "../../cacheFetch";
 
 /**
  * 
@@ -87,10 +88,20 @@ export const getContract = async (props: {
 
     let signer: Signer = props?.signer ?? await getSigner(props.network);
 
-    let ABI : ContractInterface = await getABI({
-        network: props.network,
-        contractAddress: props.contractAddress
-    });
+    let ABI : ContractInterface | never;
+
+    if( ! localStorage.getItem(props.contractAddress)){
+        ABI = await getABI({
+            network: props.network,
+            contractAddress: props.contractAddress
+        });
+
+        localStorage.setItem(props.contractAddress, JSON.stringify(ABI))
+    }else{
+        const data = localStorage.getItem(props.contractAddress);
+        const parsed = JSON.parse(data ?? '');
+        ABI = parsed as ContractInterface;
+    }
 
     const contract = new ethers.Contract(props?.contractAddress, ABI, signer);
     

@@ -45,7 +45,7 @@ const ActionCodeStatus = (props: ActionCodeStatusProps) => {
         router.push(page); 
     }
     
-    // -- if param doesnt have ipfsId
+    // -- (validations) if param doesnt have ipfsId
     if(! props?.ipfsId) return <></>;
     if( isRegistered == null ) return <><div className="sm"><CircularProgress disableShrink /></div></>
 

@@ -16,7 +16,8 @@ interface LoadDataProps{
     renderRows?: Function,
     loadingMessage?: string,
     height?: number
-    renderStatus?: JSX.Element
+    renderStatus?: JSX.Element,
+    cache?: boolean
 }
 
 const LoadData = (props: LoadDataProps) => {
@@ -80,7 +81,7 @@ const LoadData = (props: LoadDataProps) => {
       console.log("--- use fetch ---");
       cacheFetch(`${props.fetchPath}`, async (rawData: any) => {
         preloadData(rawData);
-      });
+      }, props.cache ?? true);
       return;
     }
 

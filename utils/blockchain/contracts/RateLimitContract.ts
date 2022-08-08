@@ -1,14 +1,10 @@
-import { Contract, ethers, Signer } from 'ethers';
+import { Contract, ethers } from 'ethers';
 import { SupportedNetworks } from '../../../app_config';
 import { asyncForEachReturn } from '../../utils';
 import { milliC, MultiDateFormat, MultiETHFormat, MultiTimeFormat, timestamp2Date, wei2eth } from '../../converter';
 import { getContract } from './getContract';
-
-interface RateLimitContractProps{
-    signer?: Signer
-    contractAddress: string
-    network?: SupportedNetworks
-}
+import { Either } from 'monet';
+import { ContractProps } from './ContractI';
 
 interface RLICapacity{
     requestsPerMillisecond: number,
@@ -37,7 +33,7 @@ export class RateLimitContract {
      * @param { Signer } signer 
      * @return { void }
      */
-    connect = async (props: RateLimitContractProps): Promise<void> => {
+    connect = async (props: ContractProps): Promise<void> => {
         
         this.contract = await getContract({
             network: props?.network ?? SupportedNetworks.CELO_MAINNET,
@@ -57,9 +53,11 @@ export class RateLimitContract {
 export class ReadRateLimitContract {
 
     contract: Contract;
+    userTokens: Array<any>;
 
     constructor(contract: Contract){
         this.contract = contract;
+        this.userTokens = [];
     }
 
     // ========== Global Scope ==========
@@ -89,7 +87,7 @@ export class ReadRateLimitContract {
 
         // -- validate
         if ( ! ethers.utils.isAddress(ownerAddress) ){
-            throw Error(`Given string is not a valid address ${ownerAddress}`);
+            throw new Error(`Given string is not a valid address "${ownerAddress}"`);
         }
 
         const total = await this.contract.balanceOf(ownerAddress)
@@ -98,7 +96,7 @@ export class ReadRateLimitContract {
     }
 
     // get token URI
-    getTokenURIByIndex = async (index: number) => {
+    getTokenURIByIndex = async (index: number) : Promise<string> => {
 
         const base64 = await this.contract.tokenURI(index);
 
@@ -110,12 +108,28 @@ export class ReadRateLimitContract {
 
     }
 
+    // check if token is expired
+    isTokenExpired = async (index: number) : Promise<boolean> =>{
+        
+        const isExpired = await this.contract.isExpired(index);
+
+        return isExpired;
+
+    }
+
+    test = () : Either<Error, Promise<any>> => {
+
+        const capacity = this.getTotalRLIByOwnerAddress('1111');
+
+        return !capacity ? Either.left(new Error("Oops")) : Either.right(capacity);
+    }
+
     // == get owner's tokens
     getTokensByOwnerAddress = async (ownerAddress: string) : Promise<any> => {
 
         // -- validate
         if ( ! ethers.utils.isAddress(ownerAddress) ){
-            throw Error(`Given string is not a valid address ${ownerAddress}`);
+            throw Error(`Given string is not a valid address "${ownerAddress}"`);
         }
 
         const total = await this.getTotalRLIByOwnerAddress(ownerAddress);
@@ -127,15 +141,25 @@ export class ReadRateLimitContract {
             const URI = await this.getTokenURIByIndex(i);
 
             const capacity = await this.getCapacityByIndex(i);
+
+            const isExpired = await this.isTokenExpired(i);
             
             return { 
                 tokenId: parseInt(token), 
                 URI,
                 capacity,
+                isExpired
             };
         })
 
         return tokens;
+    }
+
+    getTokensByPKPID = async(pkpId: number) : Promise<any> => {
+
+
+
+        return pkpId;
 
     }
 
@@ -216,6 +240,26 @@ export class WriteRateLimitContract{
     // -- (write)
     mint = async () => {
 
+    }
+
+    // -- transfer
+    transfer = async ({
+        fromAddress,
+        toAddress,
+        RLITokenAddress,
+    }: {
+        fromAddress: string,
+        toAddress: string,
+        RLITokenAddress: string,
+    }) : Promise<void> => {
+        
+        const tx = await this.contract.safeTransfer(
+            fromAddress,
+            toAddress,
+            RLITokenAddress
+        );
+
+        console.log("tx:", tx);
     }
 
 }

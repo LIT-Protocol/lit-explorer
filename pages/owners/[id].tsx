@@ -13,9 +13,12 @@ const OwnersPageById: NextPageWithLayout = () => {
 
   if ( ! id ) return <p>Param is not ready</p>
 
+  // return <> { id } </>
+
   return (
     
     <LoadData
+      cache={false}
       key={id.toString()}
       debug={false}
       title="Owners's PKPs:"
@@ -25,7 +28,7 @@ const OwnersPageById: NextPageWithLayout = () => {
         console.log("on filtered: ", rawData);
         return rawData.data.result.filter(
           (tx: any) => {
-            return tx.contractAddress === APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS && 
+            return tx.contractAddress === APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS.toLowerCase() && 
             id.toString().toLowerCase() == tx.to.toLowerCase();
           }
         );

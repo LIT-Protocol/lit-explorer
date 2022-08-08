@@ -1,9 +1,21 @@
+import { GridRenderCellParams } from "@mui/x-data-grid";
 import LoadData from "../../components/LoadData";
 import MainLayout from "../../components/MainLayout"
+import { decimalTohex, pub2Addr } from "../../utils/converter";
 import RenderLink from "../../utils/RenderLink";
 import { NextPageWithLayout } from "../_app"
 
 const PKPsPage: NextPageWithLayout = () => {
+
+  const renderPubKey = (props: any) => {
+
+    const pkpId = decimalTohex(props.row.tokenId).replaceAll('0x', '');
+
+    const address = pub2Addr(pkpId);
+
+    return address;
+
+  }
 
   return (
     <>
@@ -18,7 +30,8 @@ const PKPsPage: NextPageWithLayout = () => {
         } }
         renderCols={(width: number) => {
           return [
-            { headerName: "PKP Token ID", field: "address", width, renderCell: RenderLink}
+            { headerName: "PKP Token ID", field: "tokenId", width: width * .5, renderCell: RenderLink},
+            { headerName: "Address", field: "address", width: width * .5, renderCell: renderPubKey},
           ];
         } }
         renderRows={(filteredData: any) => {
@@ -26,6 +39,7 @@ const PKPsPage: NextPageWithLayout = () => {
           return filteredData?.map((item: any, i: number) => {
             return {
               id: i + 1,
+              tokenId: item,
               address: item,
             };
           });

@@ -51,11 +51,13 @@ const PKPsPageById: NextPageWithLayout = () => {
     />;
   }
 
+  if( ! id ) return <> 'Loading PKP id...'</>;
+
   return (
     
     <>
 
-      <PKPStats/>
+      <PKPStats pkpId={id}/>
 
       {/* {
         componentOneLoading ? <div className="md">

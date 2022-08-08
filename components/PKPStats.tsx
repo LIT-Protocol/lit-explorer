@@ -5,16 +5,29 @@ import MyCard from "./MyCard";
 import { RateLimitContract } from "../utils/blockchain/contracts/RateLimitContract";
 import { Button } from "@mui/material";
 import {APP_CONFIG, SupportedNetworks} from "../app_config";
+import LoadData from "./LoadData";
+import RenderLink from "../utils/RenderLink";
+import { GridRenderCellParams } from "@mui/x-data-grid";
+import RLIListByOwner from "./Views/RLIListByOwner";
 
 // NOTE: Flows
-// 1. 
-// 1. Check if user has RLINFT
+// 1. Get the list of RLI a PKP controller holds
+// 2. Get the list of RLIs that a PKP holds
+// 3. Calculator: 
+//    - "requests per millisecond" as an input
+//    - "timepicker" as an input
+// 4. Calculator: 
+//    - "amount would love to pay" as input
+//    - "timepicker" as an input
 // TODO: requires a date picker for calculating cost for the future
 
-const PKPStats = () => {
+const PKPStats = ({pkpId} : {
+    pkpId: any
+}) => {
 
     // -- (states)
     const [contract, setContract] = useState<RateLimitContract>();
+    const [ownerAddress, setOwnerAddress] = useState<string>();
     
     // -- (void) mint RLI NFT
     const mintRLI = async () : Promise<void> => {
@@ -25,10 +38,6 @@ const PKPStats = () => {
 
     }
 
-    // -- get the list of RLIs a owner holds
-    const getList = async () => {
-        
-    }
 
     // -- (mounted)
     useEffect(() => {
@@ -37,6 +46,8 @@ const PKPStats = () => {
         (async() => {
 
             const { signer, ownerAddress } = await getWeb3Wallet();
+
+            console.log("ownerAddress:", ownerAddress);
 
             const contract = new RateLimitContract();
 
@@ -47,12 +58,27 @@ const PKPStats = () => {
             })
 
             setContract(contract);
+            setOwnerAddress(ownerAddress);
 
-            // -- get the list of RLIs a owner owns
-            const tokens = await contract.read.getTokensByOwnerAddress(ownerAddress)
-            console.log("[mounted] tokens:", tokens);
+            // -- (DONE (RLIListByOwner)) get the list of RLIs a owner owns
+            // const listOfRLIs = await contract.read.getTokensByOwnerAddress(ownerAddress)
+            // console.log("[mounted] tokens:", listOfRLIs);
 
-
+            // setListOfRByOwner(listOfRLIs);
+            
+            // -- (TODO) get the list of RLIs a PKP holds
+            // const tokens = await contract.read.getTokensByPKPID(pkpId)
+            // console.log("[mounted] tokens:", tokens);
+            
+            // -- (TODO) (Safe Transfer)
+            // const res = await contract.write.transferRLI({
+            //     fromAddress: ownerAddress,
+            //     toAddress: decimalTohex("104351356416782318547361099599174641266708022357390197911624806385736986986952"),
+            //     RLITokenAddress: ''
+            // });
+            // console.log("[mounted] res:", res);
+            
+            
             // const getTokenURIByIndex = await contract.read.getTokenURIByIndex(2);
             // console.log("[mounted] getTokenURIByIndex:", getTokenURIByIndex);
 
@@ -87,11 +113,15 @@ const PKPStats = () => {
         })();
 
     }, []);
-    
+
+    // -- validate
+    if(!contract || !ownerAddress ) return <>'Loading...'</>;
+
     return (
         <>  
             <div className="mt-24">
                 <MyCard title={"Stats"}>
+                    <RLIListByOwner contract={contract} ownerAddress={ownerAddress} />
                     <Button onClick={mintRLI} className="btn-2">Mint RLI NFT</Button>
                 </MyCard>
             </div>

@@ -1,4 +1,4 @@
-export const asyncForEach = async (array: [] | any, callback: Function) => {
+export const asyncForEach = async (array: Array<any> | any, callback: Function) => {
     for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array)
     }
@@ -15,3 +15,5 @@ export const asyncForEach = async (array: [] | any, callback: Function) => {
     }
     return list;
   }
+
+  export const wait = async (ms: number) => await new Promise(resolve => setTimeout(resolve, ms ?? 1000));
