@@ -13,6 +13,7 @@ const STYLE = {
 interface MyCardProps{
     children: any,
     title?: string,
+    className?: string
 }
 
 
@@ -28,12 +29,14 @@ const MyCard = (props : MyCardProps) => {
     
     // -- (finally) render
     return (
-        <Box sx={STYLE}>
-            { renderTitle() }
-            <div className="mt-12">
-                { props?.children }
-            </div>
-        </Box>
+        <div className={props.className}>
+            <Box sx={STYLE}>
+                { renderTitle() }
+                <div className="mt-12">
+                    { props?.children }
+                </div>
+            </Box>
+        </div>
     )
 }
 

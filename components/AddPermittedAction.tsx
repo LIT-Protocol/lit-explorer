@@ -12,6 +12,7 @@ import RenderLink from "./Views/MuiRenders/RenderLink";
 import throwError from "../utils/throwError";
 import LoadData from "./LoadData";
 import { LinearProgressWithLabel } from "./Progress";
+import { useAppContext } from "./AppContext";
 
 interface AddPermittedActionProps{
     ownerAddress: string,
@@ -34,6 +35,9 @@ interface UserTokenI{
 }
 
 const AddPermittedAction = (props: AddPermittedActionProps) => {
+
+    // -- (app context)
+    const { routerContract } = useAppContext();
     
     const [tokens, setTokens] = useState<Array<UserTokenI>>([]);
     const [permittedTokens, setPermittedTokens] = useState<Array<UserTokenI>>([]);
@@ -47,7 +51,7 @@ const AddPermittedAction = (props: AddPermittedActionProps) => {
      */
     const getAndSetTokens = async (mockProp?:mock) => {
 
-        const contract = await getPubkeyRouterAndPermissionsContract({wallet: props.signer});
+        // const contract = await getPubkeyRouterAndPermissionsContract({wallet: props.signer});
 
         const ipfsHash = ipfsIdToIpfsIdHash(props.ipfsId);
 
@@ -60,7 +64,7 @@ const AddPermittedAction = (props: AddPermittedActionProps) => {
             //     thenRun: async () => await contract.isPermittedAction(token, ipfsHash),
             // });
 
-            const isPermittedAction = await contract.isPermittedAction(token, ipfsHash);
+            const isPermittedAction = await routerContract.read.isPermittedAction(token, ipfsHash);
         
             return { token, isPermittedAction };
 
@@ -75,6 +79,7 @@ const AddPermittedAction = (props: AddPermittedActionProps) => {
 
     }
 
+    // -- (mounted)
     useEffect(() => {
 
         // -- validate
@@ -112,13 +117,24 @@ const AddPermittedAction = (props: AddPermittedActionProps) => {
         setAddingPermissionState(20);
         
         // -- call smart contract to add permitted action
-        let permittedAction:any = await callAddPermittedAction({
-            ipfsId: props.ipfsId,
-            selectedToken: tokenId,
-            signer: props.signer,
-        });
+        // let permittedAction:any = await callAddPermittedAction({
+        //     ipfsId: props.ipfsId,
+        //     selectedToken: tokenId,
+        //     signer: props.signer,
+        // });
 
-        console.warn("Action Permitte! (TX):", permittedAction);
+        let permittedAction : any;
+
+        try{ 
+            permittedAction = await routerContract.write.addPermittedAction(
+                props.ipfsId,
+                tokenId,
+            )
+        }catch(e){
+            throw new Error(`Failed to add permitted action "${props.ipfsId}" to token id "${tokenId}"`);
+        }
+
+        console.warn("Action Permitted! (TX):", permittedAction);
 
         setAddingPermissionState(75);
 

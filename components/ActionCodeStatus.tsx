@@ -6,6 +6,7 @@ import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import { useRouter } from "next/router";
 import EditIcon from '@mui/icons-material/Edit';
 import { AppRouter } from "../utils/AppRouter";
+import { useAppContext } from "./AppContext";
 
 interface ActionCodeStatusProps {
     ipfsId: string | any,
@@ -13,6 +14,9 @@ interface ActionCodeStatusProps {
 }
 
 const ActionCodeStatus = (props: ActionCodeStatusProps) => {
+
+    // -- (app context) 
+    // const  {routerContract } = useAppContext();
 
     const [isRegistered, setIsRegistered] = useState(null);
 
@@ -41,7 +45,9 @@ const ActionCodeStatus = (props: ActionCodeStatusProps) => {
 
     // -- (actions)
     const register = () => {
-        const page = AppRouter.getPage(props?.ipfsId);
+        const page = AppRouter.getPage(props?.ipfsId) + '/update';
+
+        console.log("Page:", page)
         router.push(page); 
     }
     

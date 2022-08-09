@@ -5,6 +5,7 @@ import pinataSDK, { PinataMetadataFilter, pinList } from '@pinata/sdk';
 
 // @ts-ignore
 import converter from 'hex2dec';
+import { APP_CONFIG } from '../../app_config';
 
 // https://github.com/PinataCloud/Pinata-SDK
 // interface PinataFilterI extends pinList{
@@ -34,10 +35,9 @@ export default async function handler(
 
   const pinata = pinataSDK(API, SECRET);
 
-
   let filters: any = {
     metadata: {
-      name: 'Lit Explorer'
+      name: APP_CONFIG.IPFS_PIN_NAME
     }
   }
 

@@ -16,6 +16,8 @@ import { useState } from 'react';
 import { AppRouter } from '../../utils/AppRouter';
 import { SupportedSearchTypes } from '../../app_config';
 import { RLIContract } from '../../utils/blockchain/contracts/RLIContract';
+import { useAppContext } from '../AppContext';
+import { wait } from '../../utils/utils';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -33,18 +35,19 @@ const style = {
 };
 
 interface RLITransferModal{
-  contract: RLIContract,
   RLI: string | any,
   ownerAddress: string,
-  onDone?(userAddress: string): void
+  onDone?(data: any): void
 }
 
 export default function RLITransferModal(props: RLITransferModal) {
 
+  // -- (app context)
+  const { rliContract } = useAppContext();
+
   // -- prepare
   const RLI_ID = props.RLI;
   const ownerAddress = props.ownerAddress;
-  const contract = props.contract;
   
   const [open, setOpen] = useState(false);
   const [loading ,setLoading] = useState(false);
@@ -59,33 +62,69 @@ export default function RLITransferModal(props: RLITransferModal) {
     setAddress(e.target.value);
   }
 
-  const resetProgress = (message: string) => {
-    // throwError(message);
-    // setProgress(0);
-    // setLoading(false);
+  const resetProgress = () => {
+    setLoading(false);
+    setProgress(0);
   }
 
   const handleClick = async () => {
 
+    setLoading(true);
+    setProgress(50);
+
     // -- prepare
-    const tokenId = RLI_ID.id;
+    const tokenId = RLI_ID.row.tokenID;
     const recipientAddress = address;
     
     // -- validate
     if( ! recipientAddress ){
+      resetProgress();
       throwError("Recipient address cannot be empty");
       return;
     }
 
     console.log(`[handleClick]: sending RLI Token ID "${tokenId}" to "${recipientAddress}" from "${ownerAddress}"`);
+    
+    let transferTx;
+    
+    try{
+      transferTx = await rliContract.write.transfer({
+        fromAddress: ownerAddress,
+        toAddress: recipientAddress,
+        RLITokenAddress: tokenId,
+      });
+    }catch(e: any){
+      resetProgress();
+      throwError(`Failed to trasnfer token "${tokenId}" from "${ownerAddress}" to "${recipientAddress}" `);
+      return;
+    }
 
-    const transferTx = await contract.write.transfer({
-      fromAddress: ownerAddress,
-      toAddress: recipientAddress,
-      RLITokenAddress: tokenId,
-    });
+    setProgress(75);
+    console.log("transferTx:", transferTx);
 
-    console.log("transferTx:", transferTx)
+    // -- confirm is routed
+    const isTransferred = await tryUntil({
+      onlyIf: async () => await rliContract.read.ownerOf(tokenId) === recipientAddress,
+      thenRun: async () => true,
+      onTrying: (counter: number) => {
+        setProgress(75 + counter)
+      },
+      onError: (props: TryUntilProp) => {
+        throwError(`Failed to execute: ${props}`);
+      },
+      interval: 3000,
+    })
+
+    console.log("isTransferred:", isTransferred)
+    setProgress(100);
+
+    await wait(2000);
+
+    if(props.onDone){
+      handleClose();
+      setLoading(false);
+      props.onDone(transferTx);
+    }
 
   }
 
@@ -107,7 +146,7 @@ export default function RLITransferModal(props: RLITransferModal) {
             <div className="text-center">Transfer</div>
           </Typography>
           <Typography id="modal-modal-title" component="h2">
-            <div className="text-center text-tiny">RLI Token ID: {RLI_ID.id}</div>
+            <div className="text-center text-tiny">RLI Token ID: {RLI_ID.row.tokenID}</div>
           </Typography>
 
           <Typography id="modal-modal-title" component="h2">
@@ -135,8 +174,8 @@ export default function RLITransferModal(props: RLITransferModal) {
               onChange={handleChange}
             />
             <Button onClick={handleClick} className="btn-2 ml-auto">Send</Button>
-          </div>
-
+          </div>          
+          
         </Box>
       </Modal>
     </div>

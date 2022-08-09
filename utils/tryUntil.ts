@@ -47,7 +47,7 @@ export const tryUntil = async (props: TryUntilProp) : Promise<any> => {
 
             // -- (reject case) When tried more than x times
             if( counter >= max ){
-                
+                clearInterval(intervalId);
                 if(props?.onError){
                     props.onError(props);
                 }

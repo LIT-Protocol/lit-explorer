@@ -4,11 +4,13 @@ import MonacoEditor from '@monaco-editor/react';
 import { useState } from "react";
 import { Alert, Button, TextField } from "@mui/material";
 import uploadToIPFS from "../../utils/ipfs/upload";
-import { LinearProgressWithLabel } from "../../components/Progress";
 import throwError from "../../utils/throwError";
 import { useRouter } from "next/router";
-import { CeloExplorer } from "../../utils/blockchain/CeloExplorer";
 import { AppRouter } from "../../utils/AppRouter";
+import MyProgress from "../../components/UI/MyProgress";
+import MyCard from "../../components/MyCard";
+import { APP_CONFIG } from "../../app_config";
+import { tryUntil } from "../../utils/tryUntil";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -28,49 +30,70 @@ const CreateAction: NextPageWithLayout = () => {
 
 go();`;
 
+  // -- (state)
   const [code, setCode] = useState(litActionCode);
-  const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('Loading...');
-  const [counter, setCounter] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [ipfsId, setIpfsId] = useState();
-
-  // --- txs
-  const [txRegisterActionHash, setTxRegisterActionHash] = useState('');
+  const [completed, setCompleted] = useState(false);
 
   /**
    * When code is being edited
    * @param code 
    */
   const onEdit = (code: any) => {
-    console.log(code);
     setCode(code);
   }
 
   /**
-   * Upload the code to IPFS 
+   * (event) Upload the code to IPFS 
    */
-  const upload = async () => {
+  const handleUpload = async () => {
     
-    setCounter(1);
-    setLoading(true);
+    setProgress(20);
     setMsg('Uploading to IPFS...');
     const ipfsData = await uploadToIPFS(code);
+    console.log("ipfsData:", ipfsData)
     
-    setCounter(2);
-    setMsg('Pinning data...');
+    setProgress(40);
+    setMsg('requesting data to be pinned...');
     const data = await fetch(`/api/pinata/${ipfsData.path}`).then((res) => res.json());
-    
-    setCounter(3);
+    console.log("data:", data);
+
+    setProgress(60);
+    setMsg('data uploaded! waiting for it to be pinned...');
     setIpfsId(data.data.ipfsHash);
-    setLoading(false);
+
+    setCompleted(true);
+
+    const isPinned = await tryUntil({
+      onlyIf: async () => (await fetch(`${APP_CONFIG.IPFS_PATH}/${data.data.ipfsHash}`)).status !== 404,
+      thenRun: async () => true,
+      onTrying: (counter: number) => {
+        setProgress(60 + counter);
+        setMsg(`${counter} Your code is available to register but not ready to be viewed yet..`);
+      },
+      onError: (_: any) => {
+        throwError("Failed to check the pinning status, maybe check again in 5 mins");
+        return;
+      },
+      max: 20,
+      interval: 6000,
+    })
+
+    
+    console.log("isPinned:", isPinned);
+    
+    setMsg('Done!');
+    setProgress(100);
 
   }
 
   /**
-   * Register Lit Action
+   * (event) Register Lit Action
    * @returns 
    */
-  const register = async () => {
+  const handleRegister = async () => {
 
     // -- validate
     if( ! ipfsId || ipfsId == ''){
@@ -85,50 +108,55 @@ go();`;
 
   }
 
-  return (
-    <>
-    {
-      counter > 0
-      ? <div className="uploaded-result">
-          
-          {
-            loading ? <>
-              <LinearProgressWithLabel value={(counter / 3) * 100} />
-              { msg }
-            </> : ''
-          }
-        
-        
-          {
-            counter == 3
-            ? <>
-              <Alert severity="success">Successfully uploaded to IPFS - Please wait at least 5 minutes for the CID to be pinned</Alert>
-              <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsId} />
-              <div className="mt-12 flex">
-                <Button onClick={register} className="btn-2 ml-auto">Register Action</Button>
-              </div>
+  /**
+   * (render) render progress UI
+   */
+  const renderProgress = () => {
 
-              { 
-                txRegisterActionHash !== null || txRegisterActionHash !== ''?
-                <div className="mt-12">
-                    <div className="mt-12 flex ">
-                      <a className="align-right" target="_blank" rel="noreferrer" href={CeloExplorer.txLink(txRegisterActionHash ?? '')}>{ txRegisterActionHash } </a>
-                    </div>
-                      
+    // -- validate
+    if(progress <= 0 || progress >= 100) return <></>
 
-                  </div> : ''
-              }
+    // -- finally
+    return (
+      <>
+        <MyProgress value={progress} message={msg} />
+      </>
+    )
 
-            </>
-            : ''
-          }
-        
-      </div>
-      : ''
-    }
-    
-    
-    <h1>Create Action</h1>
+  }
+
+  /**
+   * (render) render post upload
+   */
+  const renderPostUpload = () => {
+
+    // -- validate
+    if ( ! completed) return <></>
+
+    // -- finally
+    return (
+      <MyCard className="mt-12">
+        {
+          progress >= 100 ? 
+          <Alert severity="success">Successfully uploaded to IPFS!</Alert> : 
+          ''
+        }
+        <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsId} />
+        <div className="mt-12 flex">
+          <Button onClick={handleRegister} className="btn-2 ml-auto">Register Action</Button>
+        </div>
+      </MyCard>
+    )
+  }
+
+  /**
+   * (render) render content
+   */
+  const renderContent = () => {
+
+    return (
+      <>
+        <h1>Create Action</h1>
 
         <div className="code-editor mt-12">
             <MonacoEditor
@@ -141,8 +169,20 @@ go();`;
         </div>
 
         <div className="mt-12 flex">
-          <Button onClick={upload} className="btn-2 ml-auto">Upload to IPFS</Button>
-        </div>        
+          <Button onClick={handleUpload} className="btn-2 ml-auto">Upload to IPFS</Button>
+        </div>  
+      </>
+    )
+
+  }
+
+  // (validations)
+
+  return (
+    <>
+      { renderProgress() }
+      { renderPostUpload() }
+      { renderContent() }      
     </>
   )
 }

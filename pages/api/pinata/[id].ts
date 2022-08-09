@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import date from 'date-and-time';
 import pinataSDK from '@pinata/sdk';
+import { APP_CONFIG } from '../../../app_config';
 
 type Data = {
   data?: any
@@ -27,7 +28,7 @@ export default function handler(
 
   let options : any = {
     pinataMetadata: {
-        name: 'Lit Explorer',
+        name: APP_CONFIG.IPFS_PIN_NAME,
         keyvalues: {
             created_at: createdAt,
             // customKey2: 'customValue2'

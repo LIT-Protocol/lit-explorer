@@ -117,6 +117,14 @@ export class ReadRLIContract {
 
     }
 
+    // owner of RLI
+    ownerOf = async (tokenId: number) => {
+        
+        const ownerOf = this.contract.ownerOf(tokenId)
+
+        return ownerOf;
+    }
+
     test = () : Either<Error, Promise<any>> => {
 
         const capacity = this.getTotalRLIByOwnerAddress('1111');
@@ -272,15 +280,24 @@ export class WriteRLIContract{
         fromAddress: string,
         toAddress: string,
         RLITokenAddress: string,
-    }) : Promise<void> => {
+    }) : Promise<any> => {
         
-        const tx = await this.contract.safeTransfer(
+        const tx = await this.contract.transfer(
             fromAddress,
             toAddress,
             RLITokenAddress
         );
 
         console.log("tx:", tx);
+
+        // const res = await tx.wait();
+
+        // return {
+        //     tx,
+        //     events: res.events
+        // }
+
+        return tx;
     }
 
 }

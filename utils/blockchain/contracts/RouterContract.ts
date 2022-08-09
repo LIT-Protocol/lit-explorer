@@ -3,6 +3,8 @@ import { ContractProps } from "./ContractI";
 import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
 import { getContract } from './getContract';
 import { decimalTohex } from "../../converter";
+import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../../ipfs/ipfsHashConverter";
+import { tryUntil } from "../../tryUntil";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -91,6 +93,13 @@ export class ReadRouterContract{
         return bool
     }
 
+    isPermittedAction = async (tokenId: any, ipfsHash: any) : Promise<boolean> => {
+
+        const bool = await this.contract.isPermittedAction(tokenId, ipfsHash);
+        
+        return bool
+    }
+
 }
 
 /**
@@ -117,6 +126,23 @@ export class WriteRouterContract{
             tx,
             events: res.events,
         }
+    }
+
+    addPermittedAction = async (ipfsId: any, pkpId: any) => {
+
+        console.log("ipfsId:", ipfsId);
+        console.log("pkpId:", pkpId);
+        
+        const pkpId_hex = decimalTohex(pkpId);
+        console.log("pkpId_hex:", pkpId_hex);
+        
+        const ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
+        console.log("ipfsMultiHash:", ipfsMultiHash);
+
+        let permittedAction = await this.contract.addPermittedAction(pkpId, ipfsMultiHash)
+
+        return permittedAction;
+
     }
 
 

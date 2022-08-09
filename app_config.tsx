@@ -4,6 +4,8 @@ export const APP_CONFIG = {
     RATE_LIMIT_CONTRACT_ADDRESS: "0x7FdcF78D2961186a2015Da41104F241531be299f",
     ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
     ECDSA_KEY: 2,
+    IPFS_PIN_NAME: 'Lit Explorer v0.0.1',
+    IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
 }
 
 /** ========== SUPPORTED NETWORKS ========== */

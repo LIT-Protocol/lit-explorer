@@ -3,6 +3,7 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import { heyShorty } from "../../utils/converter";
+import { wait } from "../../utils/utils";
 import LoadData from "../LoadData";
 import RLITransferModal from "../Modals/RLITransferModal";
 
@@ -14,42 +15,67 @@ const RLIsByOwner = ({
     ownerAddress: string
 }) => {
 
+    // -- (state)
     const [list, setList] = useState();
-
+    const [updating, setUpdating] = useState(false);
+    const [cache, setCache] = useState(true)
 
     useEffect(() => {
 
         (async () => {
-            let list = await contract.read.getTokensByOwnerAddress(ownerAddress)
-            console.log("[mounted] tokens:", list);
-
-            setList(list);
+            setList( await updateTokens());
         })();
 
-    }, [])
+    }, [ownerAddress])
+
+    // -- (void) update tokens
+    const updateTokens = async () => {
+        let list = await contract.read.getTokensByOwnerAddress(ownerAddress)
+        console.log("[updateTokens] tokens:", list);
+
+        return list;
+    }
+
+    // -- (event) when transfer is done
+    const onTransferCompleted = async (data: any) => {
+        
+        console.log("[onTransferCompleted]:", data);
+
+        setUpdating(true);
+        setList( await updateTokens());
+        setCache(false);
+        await wait(1000);
+        setUpdating(false);
+        await wait(1000);
+        setCache(true);
+
+    }
 
     // -- (render) owners Rate Limit NFTs form actions
     const renderOwnersRLIsFromActions = (RLI: any) => {
         return <>
             <RLITransferModal
-                contract={contract}
                 RLI={RLI}
                 ownerAddress={ownerAddress}
+                onDone={onTransferCompleted}
             />
         </>
 
     }
 
+    // -- (validations)
     if( ! list ) return <>Loading a list of RLI NFTs from { ownerAddress }...</>
-    
+    if ( updating ) return <>Updating...</>
+
     return (
         <>
             {/* ------ List of RLIs owner owns ----- */}
             <LoadData
-                key={"List of RLIs owner owns"}
+                key={"RLI NFTs by owner"}
                 debug={false}
+                cache={cache}
                 title={`Rate Limit NFTs (${heyShorty(ownerAddress)})`}
-                errorMessage="Failed to get the list of RLIs you hold"
+                errorMessage="No Rate Limit NFTs found."
                 data={list}
                 filter={(rawData: Array<any>) => {
                     console.log("on filtered: ", rawData);

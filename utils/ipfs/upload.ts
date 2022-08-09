@@ -32,7 +32,7 @@ interface IPFSData {
   
       const data : IPFSData = {
           path: path,
-          url: `https://ipfs.io/ipfs/${path}`,
+          url: `https://ipfs.litgateway.com/ipfs/${path}`,
       };
   
       console.log("[uploadToIPFS] data: ", data);
