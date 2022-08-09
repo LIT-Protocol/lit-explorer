@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
 import MyCard from "./MyCard";
-
-import { RateLimitContract } from "../utils/blockchain/contracts/RateLimitContract";
+import { RLIContract } from "../utils/blockchain/contracts/RLIContract";
 import { Button } from "@mui/material";
 import {APP_CONFIG, SupportedNetworks} from "../app_config";
-import LoadData from "./LoadData";
-import RenderLink from "../utils/RenderLink";
-import { GridRenderCellParams } from "@mui/x-data-grid";
 import RLIListByOwner from "./Views/RLIListByOwner";
+import { useAppContext } from "./AppContext";
+import RLICalculator from "./Views/RLICalculator";
+import { MultiETHFormat } from "../utils/converter";
+import { wait } from "../utils/utils";
 
 // NOTE: Flows
 // 1. Get the list of RLI a PKP controller holds
@@ -25,17 +25,31 @@ const PKPStats = ({pkpId} : {
     pkpId: any
 }) => {
 
+    // -- (app context)
+    const { rliContract } = useAppContext();
+
     // -- (states)
-    const [contract, setContract] = useState<RateLimitContract>();
+    const [contract, setContract] = useState<RLIContract>();
     const [ownerAddress, setOwnerAddress] = useState<string>();
+    const [enabledRLIListByOwner, setEnabledRLIListByOwner] = useState(false);
     
     // -- (void) mint RLI NFT
-    const mintRLI = async () : Promise<void> => {
+    // const mintRLI = async () : Promise<void> => {
         
-        console.log("[mintRLI]");
+    //     console.log("[mintRLI]");
 
-        // const mint = await contract.
+    //     // const mint = await contract.
+    //     rliContract.write.mint();
 
+    // }
+
+    // -- (event) on calculate
+    const onMint = async (cost: MultiETHFormat, tx: any) => {
+        setEnabledRLIListByOwner(false);
+        console.log("[onMint] cost:", cost)
+        console.log("[onMint] tx:", tx)
+        await wait(1000);
+        setEnabledRLIListByOwner(true);
     }
 
 
@@ -49,7 +63,7 @@ const PKPStats = ({pkpId} : {
 
             console.log("ownerAddress:", ownerAddress);
 
-            const contract = new RateLimitContract();
+            const contract = new RLIContract();
 
             await contract.connect({
                 network: SupportedNetworks.CELO_MAINNET,
@@ -59,6 +73,7 @@ const PKPStats = ({pkpId} : {
 
             setContract(contract);
             setOwnerAddress(ownerAddress);
+            setEnabledRLIListByOwner(true);
 
             // -- (DONE (RLIListByOwner)) get the list of RLIs a owner owns
             // const listOfRLIs = await contract.read.getTokensByOwnerAddress(ownerAddress)
@@ -121,8 +136,13 @@ const PKPStats = ({pkpId} : {
         <>  
             <div className="mt-24">
                 <MyCard title={"Stats"}>
-                    <RLIListByOwner contract={contract} ownerAddress={ownerAddress} />
-                    <Button onClick={mintRLI} className="btn-2">Mint RLI NFT</Button>
+                    <RLICalculator onMint={onMint}/>
+
+                    {
+                        enabledRLIListByOwner ? 
+                        <RLIListByOwner contract={contract} ownerAddress={ownerAddress} /> : 
+                        ''
+                    }
                 </MyCard>
             </div>
         </>

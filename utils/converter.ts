@@ -34,7 +34,8 @@ export const wei2eth = (v: number) : MultiETHFormat => {
 
     let cost : MultiETHFormat = {
         wei: v,
-        eth: ethers.utils.formatEther(v),
+        // eth: ethers.utils.formatEther(v),
+        eth: ethers.utils.formatUnits(v),
         arg: ethers.BigNumber.from(v),
     }
 

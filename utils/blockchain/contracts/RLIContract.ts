@@ -1,4 +1,4 @@
-import { Contract, ethers } from 'ethers';
+import { BigNumber, Contract, ethers } from 'ethers';
 import { SupportedNetworks } from '../../../app_config';
 import { asyncForEachReturn } from '../../utils';
 import { milliC, MultiDateFormat, MultiETHFormat, MultiTimeFormat, timestamp2Date, wei2eth } from '../../converter';
@@ -14,16 +14,16 @@ interface RLICapacity{
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
  */
-export class RateLimitContract {
+export class RLIContract {
 
     contract: Contract;
-    read: ReadRateLimitContract;
-    write: WriteRateLimitContract;
+    read: ReadRLIContract;
+    write: WriteRLIContract;
 
     constructor(){
         this.contract = ({} as Contract);
-        this.read = ({} as ReadRateLimitContract)
-        this.write = ({} as WriteRateLimitContract);
+        this.read = ({} as ReadRLIContract)
+        this.write = ({} as WriteRLIContract);
     }
 
     /**
@@ -41,8 +41,8 @@ export class RateLimitContract {
             contractAddress: props.contractAddress
         });
 
-        this.read = new ReadRateLimitContract(this.contract);
-        this.write = new WriteRateLimitContract(this.contract);
+        this.read = new ReadRLIContract(this.contract);
+        this.write = new WriteRLIContract(this.contract);
     }
 }
 
@@ -50,7 +50,7 @@ export class RateLimitContract {
 /**
  * (READ CLASS) All read functions on smart contract
  */
-export class ReadRateLimitContract {
+export class ReadRLIContract {
 
     contract: Contract;
     userTokens: Array<any>;
@@ -202,7 +202,7 @@ export class ReadRateLimitContract {
     // ========== Different ways to get costs ==========
 
     //  get the cost of additional requests per millisecond
-    costOfPerMillisecond = async () : Promise<MultiETHFormat> => {
+    costPerMillisecond = async () : Promise<MultiETHFormat> => {
         
         const cost = await this.contract.additionalRequestsPerMillisecondCost();
 
@@ -210,17 +210,17 @@ export class ReadRateLimitContract {
     }
 
     // -- calculate cost
-    costOfMilliseconds = async (milliseconds: number, expiresAt: number) : Promise<MultiETHFormat> => {
+    costOfRequestsPerSecond = async (requestsPerMillisecond: number, expiresAt: number) : Promise<MultiETHFormat> => {
 
-        const cost = await this.contract.calculateCost(milliseconds, expiresAt);
+        const cost = await this.contract.calculateCost(requestsPerMillisecond, expiresAt);
 
-        return wei2eth(parseInt(cost));
+        return wei2eth(cost)
     }
 
     // -- calculate cost by requests per second
-    costOfRequestsPerSecond = async (wei: number, expiresAt: number) : Promise<MultiETHFormat>=> {
+    costOfMilliseconds = async (requests: number, expiresAt: number) : Promise<MultiETHFormat>=> {
 
-        const cost = await this.contract.calculateRequestsPerSecond(wei, expiresAt);
+        const cost = await this.contract.calculateRequestsPerSecond(requests, expiresAt);
 
         return wei2eth(parseInt(cost));
     }
@@ -229,7 +229,7 @@ export class ReadRateLimitContract {
 /**
  * (WRITE CLASS) All write functions on smart contract
  */
-export class WriteRateLimitContract{
+export class WriteRLIContract{
 
     contract: Contract;
 
@@ -238,7 +238,18 @@ export class WriteRateLimitContract{
     }
 
     // -- (write)
-    mint = async () => {
+    mint = async ({mintCost, timestamp}: {
+        mintCost: {
+            value: any
+        },
+        timestamp: number
+    }) => {
+        
+        const tx = await this.contract.mint(timestamp, mintCost);
+
+        await tx.wait();
+
+        return tx;
 
     }
 

@@ -15,7 +15,7 @@ import { Contract, ethers } from 'ethers';
 import { useState } from 'react';
 import { AppRouter } from '../../utils/AppRouter';
 import { SupportedSearchTypes } from '../../app_config';
-import { RateLimitContract } from '../../utils/blockchain/contracts/RateLimitContract';
+import { RLIContract } from '../../utils/blockchain/contracts/RLIContract';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -76,7 +76,7 @@ export default function RLITransferModal(props: RLITransferModal) {
       throwError("Recipient address cannot be empty");
       return;
     }
-    
+
     console.log(`[handleClick]: sending RLI Token ID "${tokenId}" to "${recipientAddress}" from "${ownerAddress}"`);
 
     const transferTx = await contract.write.transfer({

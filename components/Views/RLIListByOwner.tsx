@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { RateLimitContract } from "../../utils/blockchain/contracts/RateLimitContract";
+import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import LoadData from "../LoadData";
 import RLITransferModal from "../Modals/RLITransferModal";
 
@@ -9,7 +9,7 @@ const RLIListByOwner = ({
     contract,
     ownerAddress,
 }: {
-    contract: RateLimitContract,
+    contract: RLIContract,
     ownerAddress: string
 }) => {
 
@@ -48,7 +48,7 @@ const RLIListByOwner = ({
                 key={"List of RLIs owner owns"}
                 debug={false}
                 title={`Your Rate Limits NFTs (as a PKP controller)`}
-                errorMessage="Failed to get a list of RLIs you hold"
+                errorMessage="Failed to get the list of RLIs you hold"
                 data={list}
                 filter={(rawData: Array<any>) => {
                     console.log("on filtered: ", rawData);

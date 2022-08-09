@@ -5,7 +5,7 @@ import converter from 'hex2dec';
 import { wei2eth } from "../utils/converter";
 import { PKPContract } from "../utils/blockchain/contracts/PKPContract";
 import { RouterContract } from "../utils/blockchain/contracts/RouterContract";
-import { RateLimitContract } from "../utils/blockchain/contracts/RateLimitContract";
+import { RLIContract } from "../utils/blockchain/contracts/RLIContract";
 import { APP_CONFIG, SupportedNetworks } from "../app_config";
 import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
 
@@ -20,13 +20,13 @@ declare global {
 interface SharedStates{
     pkpContract: PKPContract,
     routerContract: RouterContract,
-    rliContract: RateLimitContract,
+    rliContract: RLIContract,
 }
 
 let defaultSharedStates : SharedStates = {
     pkpContract: ({} as PKPContract),
     routerContract: ({} as RouterContract),
-    rliContract: ({} as RateLimitContract),
+    rliContract: ({} as RLIContract),
 }
 
 const AppContext = createContext(defaultSharedStates);
@@ -35,7 +35,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
     
     const [pkpContract, setPkpContract] = useState<PKPContract>();
     const [routerContract, setRouterContract] = useState<RouterContract>();
-    const [rliContract, setRliContract] = useState<RateLimitContract>();
+    const [rliContract, setRliContract] = useState<RLIContract>();
 
     const [loaded, setLoaded] = useState(false);
 
@@ -49,7 +49,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
         const _pkpContract = new PKPContract();
         const _routerContract = new RouterContract();
-        const _rliContract = new RateLimitContract();
+        const _rliContract = new RLIContract();
 
         await _pkpContract.connect({
             network: SupportedNetworks.CELO_MAINNET,
@@ -100,7 +100,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
     let sharedStates = {
         pkpContract: pkpContract as PKPContract,
         routerContract: routerContract as RouterContract,
-        rliContract: rliContract as RateLimitContract
+        rliContract: rliContract as RLIContract
     }
 
     if ( ! loaded ) return <>Loading context...</>;
