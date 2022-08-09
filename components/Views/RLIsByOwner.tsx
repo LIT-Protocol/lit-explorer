@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
+import { heyShorty } from "../../utils/converter";
 import LoadData from "../LoadData";
 import RLITransferModal from "../Modals/RLITransferModal";
 
@@ -39,7 +40,7 @@ const RLIsByOwner = ({
 
     }
 
-    if( ! list ) return <>Loading a list of RLI NFTs that you hold...</>
+    if( ! list ) return <>Loading a list of RLI NFTs from { ownerAddress }...</>
     
     return (
         <>
@@ -47,7 +48,7 @@ const RLIsByOwner = ({
             <LoadData
                 key={"List of RLIs owner owns"}
                 debug={false}
-                title={`Your Rate Limits NFTs (as a PKP controller)`}
+                title={`Rate Limit NFTs (${heyShorty(ownerAddress)})`}
                 errorMessage="Failed to get the list of RLIs you hold"
                 data={list}
                 filter={(rawData: Array<any>) => {

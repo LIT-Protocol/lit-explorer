@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import {APP_CONFIG, SupportedNetworks} from "../app_config";
 import RLIListByOwner from "./Views/RLIsByOwner";
 import { useAppContext } from "./AppContext";
-import RLICalculator from "./Views/RLICalculator";
+import RLIMint from "./Views/RLIMint";
 import { MultiETHFormat } from "../utils/converter";
 import { wait } from "../utils/utils";
 
@@ -35,9 +35,9 @@ const PKPStats = ({pkpId} : {
     const [enabledRLIListByOwner, setEnabledRLIListByOwner] = useState(false);
     
     // -- (void) mint RLI NFT
-    // const mintRLI = async () : Promise<void> => {
+    // const RLIMint = async () : Promise<void> => {
         
-    //     console.log("[mintRLI]");
+    //     console.log("[RLIMint]");
 
     //     // const mint = await contract.
     //     rliContract.write.mint();
@@ -137,7 +137,7 @@ const PKPStats = ({pkpId} : {
         <>  
             <div className="mt-24">
                 <MyCard title={"Stats"}>
-                    <RLICalculator onMint={onMint}/>
+                    <RLIMint onMint={onMint}/>
 
                     {
                         enabledRLIListByOwner ? 

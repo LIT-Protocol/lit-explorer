@@ -2,19 +2,18 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, Chip, InputLabel, TextField } from '@mui/material';
+import { Button, Chip, TextField } from '@mui/material';
 
 // @ts-ignore
 import converter from 'hex2dec';
 import throwError from '../utils/throwError';
-import getWeb3Wallet from '../utils/blockchain/getWeb3Wallet';
-import getPubkeyRouterAndPermissionsContract from '../utils/blockchain/getPubkeyRouterAndPermissionsContract';
 import { tryUntil, TryUntilProp } from '../utils/tryUntil';
 import { LinearProgressWithLabel } from './Progress';
-import { Contract } from 'ethers';
 import { useState } from 'react';
 import { AppRouter } from '../utils/AppRouter';
 import { SupportedSearchTypes } from '../app_config';
+import { useAppContext } from './AppContext';
+import { wait } from '../utils/utils';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -38,6 +37,9 @@ interface PKPOptionsModalProps{
 
 export default function PKPOptionsModal(props: PKPOptionsModalProps) {
 
+  // -- (app context)
+  const { routerContract } = useAppContext();
+
   // -- prepare
   const pkpId = props.pkpId;
   
@@ -59,13 +61,16 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
     setLoading(false);
   }
 
+  // -- (event) handle click
   const handleClick = async () => {
 
     setLoading(true);
+  
 
     setProgress(20);
+
     // -- prepare params for smart contract
-    const tokenId_uint256 = converter.decToHex(pkpId);
+    const pkpId_hex = converter.decToHex(pkpId);
     const user_address : any = address;
     const inputType = AppRouter.getSearchType(user_address);
     
@@ -75,39 +80,18 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
       return;
     }
 
-    console.log("[handleClick] tokenId_uint256:", tokenId_uint256);
+    console.log("[handleClick] pkpId_hex:", pkpId_hex);
     console.log("[handleClick] user_address:", user_address);
     console.log("[handleClick] inputType:", inputType);
-
-
-    setProgress(30);
-    const { signer } = await getWeb3Wallet();
-
-
-    setProgress(50);
-    let contract: Contract;
-    try{
-      contract = await getPubkeyRouterAndPermissionsContract({wallet: signer});
-    }catch(e: any){
-      resetProgress(e.message);
-      return;
-    }
-
-
+    
     setProgress(70);
-    let permittedAddressTx;
-    try{
-      permittedAddressTx = await contract.addPermittedAddress(tokenId_uint256, user_address);
-    }catch(e: any){
-      resetProgress(e.message);
-      return;
-    }
+    const permittedAddressTx = await routerContract.write.addPermittedAddress(pkpId, user_address);
+
     console.log("[handleClick]:", permittedAddressTx);
     
-
     setProgress(90);
     const txConfirmed = await tryUntil({
-      onlyIf: async () => await contract.isPermittedAddress(tokenId_uint256, user_address),
+      onlyIf: async () => await routerContract.read.isPermittedAddress(pkpId, user_address),
       thenRun: async () => true,
       onTrying: (counter: number) => {
         console.log(`${counter} confirming transaction...`);
@@ -130,6 +114,7 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
       if (props?.onDone){
         props.onDone(user_address);
       }
+
     }, 2000)
 
   }

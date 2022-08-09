@@ -247,13 +247,23 @@ export class WriteRLIContract{
         
         const tx = await this.contract.mint(timestamp, mintCost);
 
-        await tx.wait();
+        const res = await tx.wait();
 
-        return tx;
+        const tokenIdFromEvent = res.events[0].topics[3];
+
+        return { tx, tokenId: tokenIdFromEvent};
 
     }
 
-    // -- transfer
+    /**
+     * Transfer RLI token from one address to another
+     * 
+     * @property { string } fromAddress
+     * @property { string } toAddress
+     * @property  { stsring } RLITokenAddress
+     * 
+     * @return { <Promise<void> } void
+     */
     transfer = async ({
         fromAddress,
         toAddress,

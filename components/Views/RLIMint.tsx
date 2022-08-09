@@ -7,7 +7,7 @@ import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";
 import { wait } from "../../utils/utils";
 
-const RLICalculator = ({
+const RLIMint = ({
     onMint
 }: {
     onMint?(cost: MultiETHFormat, tx: any): void
@@ -106,4 +106,4 @@ const RLICalculator = ({
         </div>
     )
 }
-export default RLICalculator;
+export default RLIMint;

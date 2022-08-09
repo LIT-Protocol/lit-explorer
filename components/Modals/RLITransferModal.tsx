@@ -33,7 +33,7 @@ const style = {
 };
 
 interface RLITransferModal{
-  contract: RateLimitContract,
+  contract: RLIContract,
   RLI: string | any,
   ownerAddress: string,
   onDone?(userAddress: string): void

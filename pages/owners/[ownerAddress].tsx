@@ -2,18 +2,28 @@ import { useRouter } from "next/router"
 import MainLayout from "../../components/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";
+import { useAppContext } from "../../components/AppContext";
+import RLIsByOwner from "../../components/Views/RLIsByOwner";
 
 const OwnersPageById: NextPageWithLayout = () => {
 
+  // -- (app context)
+  const { rliContract } = useAppContext();
+
   const router = useRouter();
   const { ownerAddress } = router.query;
+
+  let _ownerAddress : string = (ownerAddress as string);
 
   // -- validate
   if ( ! ownerAddress ) return <p>Param is not ready</p>
 
   // -- final render
   return (
-    <PKPsByOwnerAddress ownerAddress={ownerAddress} />
+    <>
+      <PKPsByOwnerAddress ownerAddress={_ownerAddress} />
+      <RLIsByOwner contract={rliContract} ownerAddress={_ownerAddress} />
+    </>
   )
 }
 

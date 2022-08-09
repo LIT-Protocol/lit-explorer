@@ -13,12 +13,16 @@ import { cacheFetch } from "../../cacheFetch";
  */
 export const getSigner = async (network: SupportedNetworks) : Promise<Signer> => {
     
+    console.log("[getSigner] network:", network);
+
     let signer : Signer;
 
     // -- (CELO MAINNET)
     if( network == SupportedNetworks.CELO_MAINNET){
 
-        const provider = new CeloProvider(SupportedNetworks.CELO_MAINNET);
+        const rpc = SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].params.rpcUrls[0];
+
+        const provider = new CeloProvider(rpc);
 
         await provider.ready;
 
@@ -87,21 +91,32 @@ export const getContract = async (props: {
 }) : Promise<Contract> => {
 
     let signer: Signer = props?.signer ?? await getSigner(props.network);
-
+    
     let ABI : ContractInterface | never;
 
-    if( ! localStorage.getItem(props.contractAddress)){
+    // TODO: refactor this to facilitate both node/browser envs
+    if (typeof window === 'undefined'){
         ABI = await getABI({
             network: props.network,
             contractAddress: props.contractAddress
         });
-
-        localStorage.setItem(props.contractAddress, JSON.stringify(ABI))
     }else{
-        const data = localStorage.getItem(props.contractAddress);
-        const parsed = JSON.parse(data ?? '');
-        ABI = parsed as ContractInterface;
+
+        if( ! localStorage.getItem(props.contractAddress)){
+            ABI = await getABI({
+                network: props.network,
+                contractAddress: props.contractAddress
+            });
+    
+            localStorage.setItem(props.contractAddress, JSON.stringify(ABI))
+        }else{
+            const data = localStorage.getItem(props.contractAddress);
+            const parsed = JSON.parse(data ?? '');
+            ABI = parsed as ContractInterface;
+        }
     }
+
+
 
     const contract = new ethers.Contract(props?.contractAddress, ABI, signer);
     

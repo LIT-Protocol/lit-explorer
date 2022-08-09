@@ -1,10 +1,12 @@
 import { APP_CONFIG } from "../../app_config";
+import { heyShorty } from "../../utils/converter";
+import { appendEvenWidths } from "../../utils/mui/mui";
 import LoadData from "../LoadData";
 import RenderDate from "./MuiRenders/RenderDate";
 import RenderLink from "./MuiRenders/RenderLink";
 
 const PKPsByOwnerAddress = ({ownerAddress} : {
-    ownerAddress: string | any
+    ownerAddress: string
 }) => {
     
     return (
@@ -12,8 +14,9 @@ const PKPsByOwnerAddress = ({ownerAddress} : {
             cache={false}
             key={ownerAddress.toString()}
             debug={false}
-            title="Owners's PKPs:"
+            title={`PKP NFTs (${heyShorty(ownerAddress)})`}
             errorMessage="No PKP owners found."
+            loadingMessage={`Loading a list of PKP NFTs...`}
             fetchPath={`/api/get-pkps-by-address/${ownerAddress}`}
             filter={(rawData: any) => {
                 console.log("on filtered: ", rawData);
@@ -25,11 +28,11 @@ const PKPsByOwnerAddress = ({ownerAddress} : {
                 );
             } }
             renderCols={(width: any) => {
-                return [
-                    { headerName: "PKP Token ID", field: "tokenID", minWidth: width * .5, renderCell: RenderLink},
-                    { headerName:"Acquired Date", field: "date", minWidth: width * .2, renderCell: RenderDate},
-                    { headerName:"From", field: "from", minWidth: width * .3},
-                ];
+                return appendEvenWidths([
+                    { headerName: "PKP Token ID", field: "tokenID", renderCell: RenderLink},
+                    { headerName:"Acquired Date", field: "date",  renderCell: RenderDate},
+                    { headerName:"From", field: "from"},
+                ], width);
         
             } }
             renderRows={(filteredData: any) => {

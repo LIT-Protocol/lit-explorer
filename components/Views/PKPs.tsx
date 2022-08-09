@@ -1,14 +1,10 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { appendEvenWidths } from "../../utils/mui/mui";
-import { useAppContext } from "../AppContext";
 import LoadData from "../LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPubKey from "./MuiRenders/RenderPubKey";
 
 const PKPs = () => {
-
-    // -- (app context)
-    const { routerContract } = useAppContext();
 
     return (
         <LoadData

@@ -94,10 +94,20 @@ export const pub2Addr = (pubKey: string) => {
 
 }
 
-export const decimalTohex = (value: string) => {
+export const decimalTohex = (value: any) => {
     return converter.decToHex(value);
 }
   
-  export const hexToDecimal = (value: string) =>{
+export const hexToDecimal = (value: string) =>{
     return converter.hexToDec(value);
-  }
+}
+
+export const heyShorty = (addr: string) => {
+
+    if( ! addr ){
+        console.warn("heyShorty() -> addr cannot be empty.");
+        return null;
+    }
+
+    return addr.substring(0, 5) + '...' + addr.substring(addr.length - 4, addr.length);
+}

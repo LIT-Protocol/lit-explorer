@@ -19,7 +19,9 @@ const RenderLink = (props: GridRenderCellParams) => {
     const { value } = props;
 
     return (
-        <a href={`${AppRouter.getPage(value)}`} onClick={onClick}>{ value }</a>
+        <div className="flex ">
+            <a className="flex-content" href={`${AppRouter.getPage(value)}`} onClick={onClick}>{ value }</a>
+        </div>
     )
 }
 

@@ -346,3 +346,15 @@ body {
 .my-fields{
   width: 100%;
 }
+.copy{
+  font-size: 10px;
+  height: 24px;
+  display: flex;
+  width: 24px;
+}
+.copy svg {
+  width: 12px;
+  padding-left: 13px;
+  margin: auto;
+  /* padding-left: 4px; */
+}

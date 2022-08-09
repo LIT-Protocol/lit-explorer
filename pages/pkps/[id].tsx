@@ -11,6 +11,7 @@ import { useState } from "react";
 import { CircularProgress } from "@mui/material";
 import alertMsg from "../../utils/alertMsg";
 import PKPStats from "../../components/PKPStats";
+import PKPPermittedControllers from "../../components/Views/PKPPermittedControllers";
 
 declare global {
   interface Window{
@@ -57,14 +58,17 @@ const PKPsPageById: NextPageWithLayout = () => {
     
     <>
 
-      <PKPStats pkpId={id}/>
+      {/* <PKPStats pkpId={id}/> */}
 
-      {/* {
+      <PKPPermittedControllers pkpId={id}/>
+
+
+      {
         componentOneLoading ? <div className="md">
           Updating authorised PKP controllers...
         </div> : ''
       }
-      {
+      {/* {
         componentOne ? 
         <LoadData
           key={id?.toString()}
@@ -101,9 +105,9 @@ const PKPsPageById: NextPageWithLayout = () => {
           } }    
       /> : 
       ''
-      }
+      } */}
 
-      <LoadData
+      {/* <LoadData
         key={ '2' + id?.toString()}
         debug={false}
         title="Authorised Actions stored on IPFS:"

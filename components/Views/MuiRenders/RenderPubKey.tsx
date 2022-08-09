@@ -5,7 +5,7 @@ import { AppRouter } from "../../../utils/AppRouter";
 import { pub2Addr } from "../../../utils/converter";
 import { useAppContext } from "../../AppContext";
 
-const PubKey = ({
+export const PubKey = ({
     pkpId,
 } : {
     pkpId: number

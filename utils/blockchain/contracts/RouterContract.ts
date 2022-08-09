@@ -1,7 +1,8 @@
 import { Contract } from "ethers";
 import { ContractProps } from "./ContractI";
-import { SupportedNetworks } from '../../../app_config';
+import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
 import { getContract } from './getContract';
+import { decimalTohex } from "../../converter";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -25,12 +26,12 @@ export class RouterContract{
      * @param { Signer } signer 
      * @return { void }
      */
-     connect = async (props: ContractProps): Promise<void> => {
+     connect = async (props?: ContractProps): Promise<void> => {
         
         this.contract = await getContract({
             network: props?.network ?? SupportedNetworks.CELO_MAINNET,
             signer: props?.signer,
-            contractAddress: props.contractAddress
+            contractAddress: props?.contractAddress ?? APP_CONFIG.ROUTER_CONTRACT_ADDRESS
         });
 
         this.read = new ReadRouterContract(this.contract);
@@ -65,6 +66,31 @@ export class ReadRouterContract{
     
     }
 
+    getPermittedAddresses = async (id: any) => {
+
+        const addresses = await this.contract.getPermittedAddresses(id);
+
+        return addresses;
+
+    }
+
+    getPermittedActions = async (id: any) => {
+
+        const actions = await this.contract.getPermittedActions(id);
+
+        return actions;
+
+    }
+
+    isPermittedAddress = async (pkpId: number, address: string) : Promise<boolean> => {
+
+        const pkpId_hex = decimalTohex(pkpId);
+
+        const bool = await this.contract.isPermittedAddress(pkpId_hex, address);
+        
+        return bool
+    }
+
 }
 
 /**
@@ -76,6 +102,21 @@ export class WriteRouterContract{
     
     constructor(contract: Contract){
         this.contract = contract;
+    }
+
+
+    addPermittedAddress = async (pkpId: number, address: string) => {
+
+        const pkpId_hex = decimalTohex(pkpId);
+
+        const tx = await this.contract.addPermittedAddress(pkpId_hex, address);
+
+        const res = await tx.wait();
+
+        return {
+            tx,
+            events: res.events,
+        }
     }
 
 
