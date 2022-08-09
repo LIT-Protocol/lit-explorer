@@ -59,7 +59,8 @@ export const timestamp2Date = (timestamp: string) : string => {
 export const pub2Addr = (pubKey: string) => {
 
     // const _pubKey = '025f37d20e5b18909361e0ead7ed17c69b417bee70746c9e9c2bcb1394d921d4ae';
-    const _pubKey = '03798a539c18f8209bddb6d79d72a954aad6ce8e24faef231637ed1a8278b419fb';
+    // const _pubKey = '03798a539c18f8209bddb6d79d72a954aad6ce8e24faef231637ed1a8278b419fb';
+    const _pubKey = pubKey.replaceAll('0x', '');
 
     const EC = require('elliptic').ec;
     const keccak256 = require('js-sha3').keccak256;

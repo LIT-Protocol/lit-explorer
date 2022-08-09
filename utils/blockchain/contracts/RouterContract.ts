@@ -57,6 +57,14 @@ export class ReadRouterContract{
         return isRouted;
     }
 
+    getFullPubKey = async (tokenId: any) : Promise<any> => {
+
+        const pubKey = await this.contract.getFullPubkey(tokenId);
+
+        return pubKey;
+    
+    }
+
 }
 
 /**

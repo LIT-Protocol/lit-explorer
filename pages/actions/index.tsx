@@ -2,7 +2,7 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import ActionCodeStatus from "../../components/ActionCodeStatus";
 import LoadData from "../../components/LoadData";
 import MainLayout from "../../components/MainLayout"
-import RenderLink from "../../utils/RenderLink";
+import RenderLink from "../../components/Views/MuiRenders/RenderLink";
 import { NextPageWithLayout } from "../_app"
 
 const ActionsPage: NextPageWithLayout = () => {

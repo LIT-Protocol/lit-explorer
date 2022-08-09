@@ -1,6 +1,6 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
-import { AppRouter } from "./AppRouter";
+import { AppRouter } from "../../../utils/AppRouter";
 
 const RenderLink = (props: GridRenderCellParams) => {
 

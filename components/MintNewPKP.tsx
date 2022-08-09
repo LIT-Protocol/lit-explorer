@@ -1,5 +1,5 @@
 import { NextPageWithLayout } from "../pages/_app"
-import CardInputs, { MyFormData, MyProgress } from "../components/CardInputs"
+import CardInputs, { MyFormData, MyProgress } from "./UI/CardInputs"
 // import getPKPNFTContract from "../utils/blockchain/getPKPNFTContract";
 import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
 // import { Contract, ethers } from "ethers";

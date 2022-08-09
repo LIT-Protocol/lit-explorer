@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 // @ts-ignore
 import converter from 'hex2dec';
-import { wei2eth } from "../utils/converter";
+import { pub2Addr, wei2eth } from "../utils/converter";
 import { PKPContract } from "../utils/blockchain/contracts/PKPContract";
 import { RouterContract } from "../utils/blockchain/contracts/RouterContract";
 import { RLIContract } from "../utils/blockchain/contracts/RLIContract";
@@ -13,7 +13,8 @@ declare global {
     interface Window{
         dec2hex?(pkpId: string):void,
         hex2dec?(pkpId: string):void,
-        wei2eth?(v:number):void
+        wei2eth?(v:number):void,
+        pub2addr?(v:any):void,
     }
 }
 
@@ -87,6 +88,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             window.dec2hex = converter.decToHex;
             window.hex2dec = converter.hexToDec
             window.wei2eth = wei2eth;
+            window.pub2addr = pub2Addr
 
             /**
              * Setup all contracts so that is available on all components

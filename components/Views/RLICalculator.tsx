@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import throwError from "../../utils/throwError";
 import { useAppContext } from "../AppContext";
-import CardInputs, { MyFieldType, MyProgress } from "../CardInputs";
+import CardInputs, { MyFieldType, MyProgress } from "../UI/CardInputs";
 import moment from "moment";
 import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import MainLayout from "../../components/MainLayout"
 import { NextPageWithLayout } from "../_app"
-import RenderLink from '../../utils/RenderLink';
+import RenderLink from '../../components/Views/MuiRenders/RenderLink';
 import LoadData from '../../components/LoadData';
 import { solidityIpfsIdToCID } from "../../utils/ipfs/ipfsHashConverter";
 import { asyncForEachReturn } from "../../utils/utils";

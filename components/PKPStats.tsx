@@ -4,22 +4,23 @@ import MyCard from "./MyCard";
 import { RLIContract } from "../utils/blockchain/contracts/RLIContract";
 import { Button } from "@mui/material";
 import {APP_CONFIG, SupportedNetworks} from "../app_config";
-import RLIListByOwner from "./Views/RLIListByOwner";
+import RLIListByOwner from "./Views/RLIsByOwner";
 import { useAppContext } from "./AppContext";
 import RLICalculator from "./Views/RLICalculator";
 import { MultiETHFormat } from "../utils/converter";
 import { wait } from "../utils/utils";
 
 // NOTE: Flows
-// 1. Get the list of RLI a PKP controller holds
+// [x] Get the list of RLI a PKP controller holds
 // 2. Get the list of RLIs that a PKP holds
-// 3. Calculator: 
+// 3. [x] Calculator: 
 //    - "requests per millisecond" as an input
 //    - "timepicker" as an input
 // 4. Calculator: 
 //    - "amount would love to pay" as input
 //    - "timepicker" as an input
-// TODO: requires a date picker for calculating cost for the future
+// 5. Transfer 
+// [x]requires a date picker for calculating cost for the future
 
 const PKPStats = ({pkpId} : {
     pkpId: any

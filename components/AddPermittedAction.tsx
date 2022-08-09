@@ -7,8 +7,8 @@ import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkey
 import getTokensByAddress from "../utils/blockchain/getTokensByAddress";
 import { cacheFetch } from "../utils/cacheFetch";
 import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
-import RenderDate from "../utils/RenderDate";
-import RenderLink from "../utils/RenderLink";
+import RenderDate from "./Views/MuiRenders/RenderDate";
+import RenderLink from "./Views/MuiRenders/RenderLink";
 import throwError from "../utils/throwError";
 import LoadData from "./LoadData";
 import { LinearProgressWithLabel } from "./Progress";

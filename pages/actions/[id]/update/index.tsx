@@ -9,7 +9,7 @@ import { ipfsIdToIpfsIdHash } from "../../../../utils/ipfs/ipfsHashConverter";
 import throwError from "../../../../utils/throwError";
 import { NextPageWithLayout } from "../../../_app";
 import AddPermittedAction from "../../../../components/AddPermittedAction";
-import { MyProgress } from "../../../../components/CardInputs";
+import { MyProgress } from "../../../../components/UI/CardInputs";
 
 const RegisterActionPage: NextPageWithLayout = () => {
 

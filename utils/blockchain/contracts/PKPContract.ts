@@ -77,9 +77,6 @@ export class WritePKPContract{
         value: any
     }) => {
 
-        const ECDSA_KEY = 2;
-
-        // -- Use this instead after fix
         const tx = await this.contract.mintNext(APP_CONFIG.ECDSA_KEY, mintCost);
 
         const res = await tx.wait();
@@ -87,53 +84,6 @@ export class WritePKPContract{
         const tokenIdFromEvent = res.events[0].topics[3];
 
         return { tx, tokenId: tokenIdFromEvent};
-
-        const totalUnminted = parseInt(await this.contract.getUnmintedRoutedTokenIdCount(ECDSA_KEY));
-
-        console.log("totalUnminted:", totalUnminted);
-        
-        const getTokenIdToBeMinted = async () : Promise<BigNumber | undefined> => {
-
-            let tokenId;
-
-            for(let i = totalUnminted - 1; i >= 0 ; i--){
-
-                if(i <= 0){
-                    throw new Error("Cannot find available token id to be minted.");
-                }
-
-                const tokenIdToBeMinted = await this.contract.unmintedRoutedTokenIds(
-                    ECDSA_KEY,
-                    i,
-                );
-
-                // -- found until the one has no owner
-                try{
-                    await this.contract.ownerOf(tokenIdToBeMinted);
-                }catch(e){
-                    console.log(`Found!: ${tokenIdToBeMinted}`);
-                    
-                    const hex = decimalTohex(tokenIdToBeMinted.toString());
-                    console.log(`Hex form: ${hex}`);
-
-                    tokenId = ethers.BigNumber.from(hex);
-
-                    break;
-                }
-            }
-
-            return tokenId;
-
-        }
-        
-        const tokenId = await getTokenIdToBeMinted();
-
-        console.log("TokenID:", tokenId);
-
-        const mintTx = await this.contract.mint(tokenId, mintCost);
-
-        return {tokenId, mintTx};
-
 
     }
 }

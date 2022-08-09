@@ -5,7 +5,7 @@ import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import LoadData from "../LoadData";
 import RLITransferModal from "../Modals/RLITransferModal";
 
-const RLIListByOwner = ({
+const RLIsByOwner = ({
     contract,
     ownerAddress,
 }: {
@@ -56,11 +56,11 @@ const RLIListByOwner = ({
                 } }
                 renderCols={(width: any) => {
                     return [
-                    { headerName: "Token ID", field: "tokenID", minWidth: width * .10},
-                    { headerName: "Requests/second", field: "requestsPerSecond", minWidth: width * .20},
-                    { headerName: "Expires", field: "expires", minWidth: width * .20},
-                    { headerName: "Expired at", field: "expired", minWidth: width * .10},
-                    { headerName: "Actions", field: "actions", minWidth: width * .20, renderCell: (RLI: any) => renderOwnersRLIsFromActions(RLI)},
+                        { headerName: "Token ID", field: "tokenID", minWidth: width * .10},
+                        { headerName: "Requests/second", field: "requestsPerSecond", minWidth: width * .20},
+                        { headerName: "Expires", field: "expires", minWidth: width * .20},
+                        { headerName: "Expired at", field: "expired", minWidth: width * .10},
+                        { headerName: "Actions", field: "actions", minWidth: width * .20, renderCell: (RLI: any) => renderOwnersRLIsFromActions(RLI)},
                     ];
             
                 } }
@@ -80,4 +80,4 @@ const RLIListByOwner = ({
         </>
     )
 }
-export default RLIListByOwner;
+export default RLIsByOwner;
