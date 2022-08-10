@@ -25,7 +25,9 @@ const Actions = () => {
             } }
             renderCols={(width: number) => {
                 return appendEvenWidths([
-                    { headerName: "IPFS ID", field: "ipfsId", renderCell: RenderLink},
+                    { headerName: "IPFS ID", field: "ipfsId", renderCell: (props: any) => {
+                        return RenderLink(props, {short: true, copy: true})
+                    }},
                     { headerName: "Created at", field: "createdAt"},
                     { headerName: "Actions", field: "registered", renderCell: (props: GridRenderCellParams) => {
                         return <ActionCodeOptions key={props?.value} ipfsId={props?.value}/>;
