@@ -69,8 +69,15 @@ const AddPermittedActionForm = ({ipfsId} : {
         console.log("[onSubmit]: input<_pkpId>:", _pkpId);
         console.log("[onSubmit]: input<_ipfsId>:", _ipfsId);
         
-        const tx = await routerContract.write.addPermittedAction(_pkpId, _ipfsId);        
-        console.log("[onSubmit]: output<tx>:", tx);
+        let tx: any;
+        try{
+            await routerContract.write.addPermittedAction(_pkpId, _ipfsId);        
+            console.log("[onSubmit]: output<tx>:", tx);
+        }catch(e: any){
+            throwError(e.message);
+            setProgress({message: ``, progress: 0});
+            return;
+        }
         
         setProgress({message: `Waiting for confirmation...`, progress: 75})
         const res = await tx.wait();
@@ -79,6 +86,7 @@ const AddPermittedActionForm = ({ipfsId} : {
         setProgress({message: `Done!`, progress: 100})
         setRefresh(prev => prev + 1);
         
+        await wait(2000);
         setProgress({message: ``, progress: 0})
         
     }
@@ -99,25 +107,48 @@ const AddPermittedActionForm = ({ipfsId} : {
     }
 
     // -- (render)
+    const renderButton = () => {
+
+        const _progress = progress?.progress || 0;
+
+        if( _progress > 0) return <></>;
+
+        return (
+            <div className="mt-12 flex">
+                <MyButton onClick={onSubmit} className="ml-auto">Permit action</MyButton>
+            </div>            
+        )
+
+    }
+
+    // -- (render) the selection form
+    const renderForm = () => {
+        
+        const _progress = progress?.progress || 0;
+
+        if (_progress > 0) return <></>
+
+        return (
+            <UnpermittedPKPsSelectionForm
+                title="Select your PKP"
+                onSelect={onSelectPKP}
+                refresh={refresh}
+                ipfsId={ipfsId}
+            />
+        )
+
+    }
+
+    // -- (render)
     const renderUnpermittedPKPsSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard 
-                    title="Add Permitted action to your PKP!"
-                >
+                <MyCard title="Add Permitted action to your PKP!">
                     { renderProgress() }
 
-                    <UnpermittedPKPsSelectionForm
-                        title="Select your PKP"
-                        onSelect={onSelectPKP}
-                        refresh={refresh}
-                        ipfsId={ipfsId}
-                    />
+                    { renderForm() }
 
-                    <div className="mt-12 flex">
-                        <MyButton onClick={onSubmit} className="ml-auto">Permit action</MyButton>
-                    </div>
-
+                    { renderButton() }
                 </MyCard>
             </div>
         )
