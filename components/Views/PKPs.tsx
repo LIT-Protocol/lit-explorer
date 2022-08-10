@@ -1,5 +1,6 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { appendEvenWidths } from "../../utils/mui/mui";
+import Copy from "../UI/Copy";
 import LoadData from "../ViewModals/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPubKey from "./MuiRenders/RenderPubKey";
@@ -18,12 +19,15 @@ const PKPs = () => {
                 return rawData?.data?.tokens;
             } }
             renderCols={(width: number) => {
-                return appendEvenWidths([
-                    { headerName: "PKP Token ID", field: "tokenId", width: width * .5, renderCell: RenderLink},
-                    { headerName: "Address", field: "address", width: width * .5, renderCell: (props: GridRenderCellParams) => {
+                return [
+                    { headerName: "PKP Token ID", field: "tokenId", width: width * .4, renderCell: RenderLink},
+                    { headerName: "Address", field: "address", width: width * .4, renderCell: (props: GridRenderCellParams) => {
                         return RenderPubKey(props);
                     }},
-                ], width)
+                    { headerName: "", field: "copy", width: width * .2, renderCell: (props: GridRenderCellParams) => {
+                        return <><Copy value={props.row.tokenId}/></>;
+                    }},
+                ];
             } }
             renderRows={(filteredData: any) => {
             return filteredData?.map((item: any, i: number) => {
@@ -31,6 +35,7 @@ const PKPs = () => {
                     id: i + 1,
                     tokenId: item,
                     address: item,
+                    copy: item,
                 };
             });
             } }    

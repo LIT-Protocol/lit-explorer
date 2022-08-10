@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AppRouter } from "../../../utils/AppRouter";
 import { pub2Addr } from "../../../utils/converter";
 import { useAppContext } from "../../Contexts/AppContext";
+import Copy from "../../UI/Copy";
 
 export const PubKey = ({
     pkpId,
@@ -64,7 +65,7 @@ const RenderPubKey = (props: GridRenderCellParams) => {
     const pkpId = props.row.tokenId;
 
     return (
-       <PubKey pkpId={pkpId}/>
+        <PubKey pkpId={pkpId}/>
     )
 }
 
