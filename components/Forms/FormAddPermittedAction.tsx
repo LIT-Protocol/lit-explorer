@@ -157,7 +157,7 @@ const [progress, setProgress] = useState<MyProgressI>();
     const renderPKPSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard title="Add Permitted action to your PKP">
+                <MyCard title="Add permitted action to your PKP">
                     { renderProgress() }
 
                     { renderForm() }

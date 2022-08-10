@@ -1,4 +1,6 @@
+import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
+import { heyShorty } from "../../utils/converter";
 import throwError from "../../utils/throwError";
 import { wait } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
@@ -6,7 +8,7 @@ import { MyProgressI } from "../UI/CardInputs";
 import MyButton from "../UI/MyButton";
 import MyCard from "../UI/MyCard";
 import MyProgress from "../UI/MyProgress";
-import SelectionUnpermittedPKPs from "./SelectionUnpermittedPKPs";
+import SelectionPermittedPKPs from "./SelectionPermittedPKPs";
 
 const FormAddPermittedAddress = ({
     ipfsId,
@@ -23,6 +25,7 @@ const FormAddPermittedAddress = ({
     const [isActionRegistered, setIsActionRegisterd] = useState(false);
     const [selectedPKPId, setSelectedPKPId] = useState();
     const [childRefresh, setChildRefresh] = useState(0);
+    const [inputAddress, setInputAddress] = useState();
     
 const [progress, setProgress] = useState<MyProgressI>();
     // -- (mounted)
@@ -57,6 +60,7 @@ const [progress, setProgress] = useState<MyProgressI>();
         // -- prepare input data
         const _pkpId = selectedPKPId;
         const _ipfsId = ipfsId;
+        const _ownerAddress = inputAddress;
         
         // -- validate
         if( ! _pkpId ){
@@ -69,15 +73,23 @@ const [progress, setProgress] = useState<MyProgressI>();
             return;
         }
         
+        if ( ! _ownerAddress ){
+            throwError("_ownerAddress cannot be empty!");
+            return;
+        }
+
+        
+        
         // -- execute
-        setProgress({message: `Permitting action to ${_pkpId}...`, progress: 50})
+        setProgress({message: `Permitting PKP "${heyShorty(_pkpId)}" to ${heyShorty(_ownerAddress)}...`, progress: 50})
         console.log("[onSubmit]: input<_pkpId>:", _pkpId);
         console.log("[onSubmit]: input<_ipfsId>:", _ipfsId);
-        
+        console.log("[onSubmit]: input<_ownerAddress>:", _ownerAddress);
+
         let tx: any;
         
         try{
-            tx = await routerContract.write.addPermittedAction(_pkpId, _ipfsId);
+            tx = await routerContract.write.addPermittedAddress(_pkpId, _ownerAddress);
             console.log("[onSubmit]: output<tx>:", tx);
 
             setProgress({message: `Waiting for confirmation...`, progress: 75})
@@ -100,6 +112,16 @@ const [progress, setProgress] = useState<MyProgressI>();
             setProgress({message: ``, progress: 0});
         }
         
+    }
+
+    // -- (event) handle change
+    const handleChange = (e: any) => {
+
+        const value = e.target.value;
+
+        console.log("[handleChange]: input<value>", value);
+
+        setInputAddress(value);
     }
 
     // -- (render)
@@ -140,15 +162,28 @@ const [progress, setProgress] = useState<MyProgressI>();
         if (_progress > 0) return <></>
 
         return (
-            <SelectionUnpermittedPKPs
-                title="Select your PKP"
-                onSelect={onSelectPKP}
-                refresh={childRefresh}
-                ipfsId={ipfsId}
-                onDefaultToken={(defaultToken: any) => {
-                    setSelectedPKPId(defaultToken)
-                }}
-            />
+            <>
+            <div className="mt-12">
+                <SelectionPermittedPKPs
+                    title="Select your PKP"
+                    onSelect={onSelectPKP}
+                    refresh={childRefresh}
+                    ipfsId={ipfsId}
+                    onDefaultToken={(defaultToken: any) => {
+                        setSelectedPKPId(defaultToken)
+                    }}
+                />
+            </div>
+            <div className='flex mt-24'>
+                <TextField
+                    label="Permitted Address (eg. 0x3B5...99A1)"
+                    defaultValue=""
+                    size="small"
+                    fullWidth={true}
+                    onChange={handleChange}
+                />
+            </div>
+            </>
         )
 
     }
@@ -157,7 +192,7 @@ const [progress, setProgress] = useState<MyProgressI>();
     const renderPKPSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard title="Add Permitted action to your PKP">
+                <MyCard title="Add permitted Address">
                     { renderProgress() }
 
                     { renderForm() }

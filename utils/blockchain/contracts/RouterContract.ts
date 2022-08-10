@@ -133,6 +133,7 @@ export class ReadRouterContract{
 
         return bool;
     }
+    
 
 }
 
@@ -148,18 +149,26 @@ export class WriteRouterContract{
     }
 
 
-    addPermittedAddress = async (pkpId: number, address: string) => {
+    /**
+     * TODO: add transaction type
+     * Add permitted action to a given PKP id & ipfsId
+     * 
+     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
+     * @param { string } ownerAddress @param { string } ownerAddress  0x3B5dD2605.....22aDC499A1
+     * 
+     * @return { object } transaction 
+     */
+     addPermittedAddress = async (pkpId: string, ownerAddress: string) : Promise<any> => {
 
-        const pkpId_hex = decimalTohex(pkpId);
+        console.log("[addPermittedAddress] input<pkpId>:", pkpId);
+        console.log("[addPermittedAddress] input<ownerAddress>:", ownerAddress);
+        
+        
+        const tx = await this.contract.addPermittedAddress(pkpId, ownerAddress);
+        
+        console.log("[addPermittedAddress] output<tx>:", tx);
 
-        const tx = await this.contract.addPermittedAddress(pkpId_hex, address);
-
-        const res = await tx.wait();
-
-        return {
-            tx,
-            events: res.events,
-        }
+        return tx;
     }
 
     /**

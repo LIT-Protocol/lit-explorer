@@ -158,7 +158,7 @@ const FormRevokePermittedAction = ({
     const renderPKPSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard title="Revoke Permitted action from your PKP">
+                <MyCard title="Revoke permitted action from your PKP">
                     { renderProgress() }
 
                     { renderForm() }
