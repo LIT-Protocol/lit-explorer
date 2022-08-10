@@ -11,8 +11,14 @@ import MyCard from "../../../components/UI/MyCard";
 import { wait } from "../../../utils/utils";
 import { CircularProgress } from "@mui/material";
 import FormAddPermittedAddress from "../../../components/Forms/FormAddPermittedAddress";
+import { useAppContext } from "../../../components/Contexts/AppContext";
+import getWeb3Wallet from "../../../utils/blockchain/getWeb3Wallet";
+import MyButton from "../../../components/UI/MyButton";
 
 const ActionsPage: NextPageWithLayout = () => {
+
+  // -- (app context)
+  const { pkpContract } = useAppContext();
 
   // -- (router)
   const router = useRouter();
@@ -23,6 +29,7 @@ const ActionsPage: NextPageWithLayout = () => {
   // -- (state)
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [hasPKPs, setHasPKPs] = useState(false);
 
   // -- (mounted)
   useEffect(() => {
@@ -36,9 +43,24 @@ const ActionsPage: NextPageWithLayout = () => {
 
       setCode(code);
 
+      // -- check user has PKP
+      await checkifUserHasPKPs();
+
+
     })();
 
   }, [ipfsId])
+
+  // -- (void) check has PKP
+  const checkifUserHasPKPs = async () => {
+
+    const { ownerAddress } = await getWeb3Wallet();
+    
+    const tokens = await pkpContract.read.getTokensByAddress(ownerAddress);
+
+    setHasPKPs(tokens.length > 0);
+    
+  }
 
   // -- (render) header
   const renderHeader = () => {
@@ -87,13 +109,37 @@ const ActionsPage: NextPageWithLayout = () => {
         <CircularProgress disableShrink />
       )
     }
+
+    // -- (render) only render this when user has PKPs
+    const _renderHasPKPs = () => {
+      return (
+        <>
+          {
+            loading ?
+            _renderLoading() :
+            _renderContent()
+          }
+        </>
+      )
+    }
+
+    // -- (render) else render when user has no PKPs
+    const _renderNoPKPsFound = () => {
+      return (
+        <>
+          Click here to 
+          <MyButton onClick={() => { router.push('/mint-pkp'); }}>mint</MyButton> 
+          one!
+        </>
+      )
+    }
     
     return (
-      <MyCard title="Settings" className="mt-24">
+      <MyCard title={hasPKPs ? 'Settings' : 'Oops.. It seems like you don\'t have any PKPs..'} className="mt-24">
         {
-          loading ?
-          _renderLoading() :
-          _renderContent()
+          hasPKPs ?
+          _renderHasPKPs() :
+          _renderNoPKPsFound()
         }
       </MyCard>
     )

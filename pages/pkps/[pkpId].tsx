@@ -2,12 +2,16 @@ import { useRouter } from "next/router"
 import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import RenderLink from '../../components/Views/MuiRenders/RenderLink';
-import LoadData from '../../components/ViewModals/LoadData';
-import { solidityIpfsIdToCID } from "../../utils/ipfs/ipfsHashConverter";
+import LoadData from '../../components/ViewModels/LoadData';
+import { parseMultihashContractResponse, solidityIpfsIdToCID } from "../../utils/ipfs/ipfsHashConverter";
 import { asyncForEachReturn } from "../../utils/utils";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import PKPStats from "../../components/Views/PKPStats";
 import PKPPermittedControllers from "../../components/Views/PKPPermittedControllers";
+import RenderAction from "../../components/Views/MuiRenders/RenderAction";
+import MyCard from "../../components/UI/MyCard";
+import PubKeyByPKPId from "../../components/Views/Parts/PubKeyByPKPId";
+import ETHAddressByPKPId from "../../components/Views/Parts/ETHAddressByPKPId";
 
 declare global {
   interface Window{
@@ -18,37 +22,37 @@ declare global {
 const PKPsPageById: NextPageWithLayout = () => {
 
   const router = useRouter();
-  const { id } = router.query;
+  const { pkpId } = router.query;
 
-  if( ! id ) return <> Loading PKP id...</>
+  if( ! pkpId ) return <> Loading PKP id...</>
 
   return (
     
     <>
 
-      <PKPStats pkpId={id}/>
+      <MyCard>
+        <PubKeyByPKPId pkpId={pkpId}/>
+        <ETHAddressByPKPId pkpId={pkpId}/>
+      </MyCard>
 
-      <PKPPermittedControllers pkpId={id}/>
+      <PKPStats pkpId={pkpId}/>
+      
+      <PKPPermittedControllers pkpId={pkpId}/>
 
       <LoadData
-        key={ '2' + id?.toString()}
+        key={ '2' + pkpId?.toString()}
         debug={false}
         title="Authorised Actions stored on IPFS:"
         errorMessage="No authorised actions found."
         loadingMessage="Loading authorised actions..."
-        fetchPath={`/api/get-permitted-by-pkp/${id}`}
+        fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
         filter={async (rawData: any) => {
           console.log("on filtered: ", rawData);
-
-          const { signer } = await getWeb3Wallet();
-
-          return await asyncForEachReturn(rawData?.data?.actions, async(solidityIpfsId: string) => {
-            return await solidityIpfsIdToCID(solidityIpfsId, signer);
-          })
+          return rawData?.data?.actions;
         } }
         renderCols={(width: number) => {
           return [
-            { headerName: "Address", field: "address", width, renderCell: RenderLink}
+            { headerName: "action", field: "action", width, renderCell: RenderAction}
           ];
     
         } }
@@ -56,7 +60,7 @@ const PKPsPageById: NextPageWithLayout = () => {
           return filteredData?.map((item: any, i: number) => {
             return {
               id: i + 1,
-              address: item,
+              action: item,
             };
           });
         } }    

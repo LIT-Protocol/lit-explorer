@@ -23,7 +23,7 @@ const MyCard = (props : MyCardProps) => {
         <div className={props.className}>
             <Box sx={WHITE_CARD}>
                 { renderTitle() }
-                <div className="mt-12">
+                <div className={props.title ? 'mt-12' : ''}>
                     { props?.children }
                 </div>
             </Box>

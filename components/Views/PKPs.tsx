@@ -1,10 +1,10 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { appendEvenWidths } from "../../utils/mui/mui";
 import Copy from "../UI/Copy";
-import LoadData from "../ViewModals/LoadData";
+import LoadData from "../ViewModels/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
-import RenderToPubKey from "./MuiRenders/RenderToPubKey";
+import RenderPKPToPubKey from "./MuiRenders/RenderPKPToPubKey";
 
 const PKPs = () => {
 
@@ -28,7 +28,7 @@ const PKPs = () => {
                         return RenderPKPToAddress(props, {short: true, copy: true});
                     }},
                     { headerName: "Public Key", field: "copy", renderCell: (props: GridRenderCellParams) => {
-                        return RenderToPubKey(props, {short: true, copy: true});
+                        return RenderPKPToPubKey(props, {short: true, copy: true});
                     }},
                 ], width);
             } }

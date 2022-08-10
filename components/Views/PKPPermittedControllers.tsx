@@ -3,7 +3,7 @@ import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import { appendEvenWidths } from "../../utils/mui/mui";
 import { wait } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
-import LoadData from "../ViewModals/LoadData";
+import LoadData from "../ViewModels/LoadData";
 import PKPOptionsModal from "../Modals/PKPOptionsModal";
 import RenderLink from "./MuiRenders/RenderLink";
 

@@ -361,3 +361,6 @@ body {
   margin: auto;
   /* padding-left: 4px; */
 }
+.text-sm{
+  font-size: 0.75em;
+}

@@ -1,5 +1,5 @@
 import { appendEvenWidths } from "../../utils/mui/mui";
-import LoadData from "../ViewModals/LoadData";
+import LoadData from "../ViewModels/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 
 const PKPOwners = () => {
