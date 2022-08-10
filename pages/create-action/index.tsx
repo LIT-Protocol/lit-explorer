@@ -34,7 +34,7 @@ go();`;
   const [code, setCode] = useState(litActionCode);
   const [msg, setMsg] = useState('Loading...');
   const [progress, setProgress] = useState(0);
-  const [ipfsId, setIpfsId] = useState();
+  const [ipfsId, setIpfsId] = useState<string | any>();
   const [completed, setCompleted] = useState(false);
 
   /**
@@ -56,22 +56,21 @@ go();`;
     console.log("ipfsData:", ipfsData)
     
     setProgress(40);
-    setMsg('requesting data to be pinned...');
+    setMsg('Requesting data to be pinned...');
     const data = await fetch(`/api/pinata/${ipfsData.path}`).then((res) => res.json());
     console.log("data:", data);
 
     setProgress(60);
-    setMsg('data uploaded! waiting for it to be pinned...');
+    setMsg('Data uploaded! waiting for it to be pinned...');
     setIpfsId(data.data.ipfsHash);
-
-    setCompleted(true);
 
     const isPinned = await tryUntil({
       onlyIf: async () => (await fetch(`${APP_CONFIG.IPFS_PATH}/${data.data.ipfsHash}`)).status !== 404,
       thenRun: async () => true,
       onTrying: (counter: number) => {
+        setCompleted(true);
         setProgress(60 + counter);
-        setMsg(`${counter} Your code is available to register but not ready to be viewed yet..`);
+        setMsg(`Still waiting... but your code is available to register! just not ready to be viewed at the moment...`);
       },
       onError: (_: any) => {
         throwError("Failed to check the pinning status, maybe check again in 5 mins");
@@ -101,7 +100,7 @@ go();`;
       return;
     }
 
-    const page = AppRouter.getPage(ipfsId);
+    const page = AppRouter.getPage(ipfsId) + '/update';
     router.push(page);
 
     return;
@@ -130,20 +129,39 @@ go();`;
    */
   const renderPostUpload = () => {
 
+    // (inner event) handleViewCode
+    const _handleViewCode = () => {
+      const page = AppRouter.getPage(ipfsId);
+      router.push(page);
+    }
+
+    // (inner render) render status
+    const _renderStatus = () => {
+      if (progress < 100) return '';
+      return <Alert severity="success">Successfully uploaded to IPFS!</Alert>;
+    }
+
+    // (inner render) render view code button
+    const _renderViewCodeButton = () => {
+      if (progress < 100) return '';
+      return <Button onClick={_handleViewCode} className="btn-2 ml-auto">View code</Button>
+    }
+
     // -- validate
-    if ( ! completed) return <></>
+    if ( ! completed ) return <></>
 
     // -- finally
     return (
       <MyCard className="mt-12">
-        {
-          progress >= 100 ? 
-          <Alert severity="success">Successfully uploaded to IPFS!</Alert> : 
-          ''
-        }
+        
+        { _renderStatus() }
+        
         <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsId} />
         <div className="mt-12 flex">
-          <Button onClick={handleRegister} className="btn-2 ml-auto">Register Action</Button>
+          <div className="ml-auto flex">
+            { _renderViewCodeButton() }
+            <Button onClick={handleRegister} className="btn-2 ml-auto">Register Action</Button>
+          </div>
         </div>
       </MyCard>
     )

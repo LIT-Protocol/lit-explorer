@@ -10,7 +10,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export interface MyFormData extends Array<MyFieldData>{}
 
-export interface MyProgress{
+export interface MyProgressI{
     progress?: number
     message?: string
 }
@@ -36,7 +36,7 @@ interface CardInputsProps{
     buttonText?: string
     fields?: Array<MyField>
     onSubmit?(formData: MyFormData): void
-    progress?: MyProgress,
+    progress?: MyProgressI,
     fullWidth?: boolean
 }
 

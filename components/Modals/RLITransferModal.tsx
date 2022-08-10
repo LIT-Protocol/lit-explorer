@@ -4,18 +4,10 @@ import Modal from '@mui/material/Modal';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, Chip, InputLabel, TextField } from '@mui/material';
 
-// @ts-ignore
-import converter from 'hex2dec';
 import throwError from '../../utils/throwError';
-import getWeb3Wallet from '../../utils/blockchain/getWeb3Wallet';
-import getPubkeyRouterAndPermissionsContract from '../../utils/blockchain/getPubkeyRouterAndPermissionsContract';
 import { tryUntil, TryUntilProp } from '../../utils/tryUntil';
 import { LinearProgressWithLabel } from '../Progress';
-import { Contract, ethers } from 'ethers';
 import { useState } from 'react';
-import { AppRouter } from '../../utils/AppRouter';
-import { SupportedSearchTypes } from '../../app_config';
-import { RLIContract } from '../../utils/blockchain/contracts/RLIContract';
 import { useAppContext } from '../AppContext';
 import { wait } from '../../utils/utils';
 

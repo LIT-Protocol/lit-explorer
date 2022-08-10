@@ -100,6 +100,26 @@ export class ReadRouterContract{
         return bool
     }
 
+
+    /**
+     * 
+     * Check if an action is registered
+     * 
+     * @param { string } ipfsId QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW 
+     * @returns 
+     */
+    isActionRegistered = async (ipfsId: string) : Promise<boolean> => {
+        console.log("[isActionRegistered] input (ipfsid):", ipfsId);
+        
+        const ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
+        console.log("[isActionRegistered] converted (ipfsMultiHash):", ipfsMultiHash);
+        
+        const bool = await this.contract.isActionRegistered(ipfsMultiHash);
+        console.log("[isActionRegistered] output (bool):", bool);
+
+        return bool;
+    }
+
 }
 
 /**
@@ -142,6 +162,32 @@ export class WriteRouterContract{
         let permittedAction = await this.contract.addPermittedAction(pkpId, ipfsMultiHash)
 
         return permittedAction;
+
+    }
+
+    /**
+     * 
+     * Register action by converting the IPFS ID (QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW)
+     * to 3 parts:
+     *  1. digiest: 0xa31...eeb
+     *  2. hashFunction: 18
+     *  3. size: 32
+     * 
+     * @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     */
+    registerAction = async (ipfsId: string) : Promise<any> => {
+        console.log("[registerAction] input ipfsId:", ipfsId);
+        
+        let byte32 : IPFSHash = getBytes32FromMultihash(ipfsId);
+        console.log("[registerAction] convert byte32:", byte32);
+
+        const tx = await this.contract.registerAction(
+            byte32.digest,
+            byte32.hashFunction,
+            byte32.size,
+        )
+                
+        return tx;
 
     }
 

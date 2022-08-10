@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import throwError from "../../utils/throwError";
 import { useAppContext } from "../AppContext";
-import CardInputs, { MyFieldType, MyProgress } from "../UI/CardInputs";
+import CardInputs, { MyFieldType, MyProgressI } from "../UI/CardInputs";
 import moment from "moment";
 import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";
@@ -16,7 +16,7 @@ const RLIMint = ({
     // (app context)
     const { rliContract } = useAppContext();
 
-    const [ progress, setProgress] = useState<MyProgress>({progress: 0, message: ''});
+    const [ progress, setProgress] = useState<MyProgressI>({progress: 0, message: ''});
 
     // (event) handle click
     const handleClick = async (res: any) : Promise<void> => {

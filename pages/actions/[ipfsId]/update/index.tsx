@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import MainLayout from "../../../../components/MainLayout";
-import { LinearProgressWithLabel } from "../../../../components/Progress";
 import callRegisterAction from "../../../../utils/blockchain/callRegisterAction";
 import getPubkeyRouterAndPermissionsContract from "../../../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "../../../../utils/blockchain/getWeb3Wallet";
@@ -9,7 +8,8 @@ import { ipfsIdToIpfsIdHash } from "../../../../utils/ipfs/ipfsHashConverter";
 import throwError from "../../../../utils/throwError";
 import { NextPageWithLayout } from "../../../_app";
 import AddPermittedAction from "../../../../components/AddPermittedAction";
-import { MyProgress } from "../../../../components/UI/CardInputs";
+import MyProgress from "../../../../components/UI/MyProgress";
+import { MyProgressI } from "../../../../components/UI/CardInputs";
 
 const RegisterActionPage: NextPageWithLayout = () => {
 
@@ -21,13 +21,9 @@ const RegisterActionPage: NextPageWithLayout = () => {
   const [signer, setSigner] = useState();
   const [ownerAddress, setOwnerAddress] = useState('');
 
-  const [progress, setProgress] = useState<MyProgress>({progress: 0, message: ''});
+  const [progress, setProgress] = useState<MyProgressI>({progress: 0, message: ''});
 
   useEffect(() => {
-
-    const test = () => {
-      return false;
-    }
 
     (async() => {
 
@@ -102,12 +98,7 @@ const RegisterActionPage: NextPageWithLayout = () => {
   }, [id]);
 
     // -- validate
-    if(!registered) return <>
-      <div className="uploaded-result">
-        <LinearProgressWithLabel value={progress.progress ?? 0} />
-        { progress.message }
-      </div>
-    </>
+    if( !registered ) return <MyProgress value={progress.progress ?? 0} message={progress.message ?? ''} />
 
     return (
         <>

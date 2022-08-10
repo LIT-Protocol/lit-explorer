@@ -1,5 +1,5 @@
 import { NextPageWithLayout } from "../pages/_app"
-import CardInputs, { MyFormData, MyProgress } from "./UI/CardInputs"
+import CardInputs, { MyFormData, MyProgressI } from "./UI/CardInputs"
 // import getPKPNFTContract from "../utils/blockchain/getPKPNFTContract";
 import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
 // import { Contract, ethers } from "ethers";
@@ -27,7 +27,7 @@ const MintNewPKP: NextPageWithLayout = () => {
   const router = useRouter();
 
   // -- states
-  const [mintProgress, setMintProgress] = useState<MyProgress>({progress: 0, message: ''})
+  const [mintProgress, setMintProgress] = useState<MyProgressI>({progress: 0, message: ''})
   const [mintButtonText, setMintButtonText] = useState('Mint');
   const [mintedPKPId, setMintedPKPId] = useState<any>();
 

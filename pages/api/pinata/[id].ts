@@ -49,6 +49,7 @@ export default function handler(
     const baseURL = process.env.NEXT_PUBLIC_IPFS_BASE_URL ?? '';
     
     console.log("baseURL:", baseURL);
+    
     const data = {
       id: result.id,
       ipfsHash: result.ipfsHash,
