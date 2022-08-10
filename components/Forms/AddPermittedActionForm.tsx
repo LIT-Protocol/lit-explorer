@@ -70,24 +70,26 @@ const AddPermittedActionForm = ({ipfsId} : {
         console.log("[onSubmit]: input<_ipfsId>:", _ipfsId);
         
         let tx: any;
+        
         try{
-            await routerContract.write.addPermittedAction(_pkpId, _ipfsId);        
+            tx = await routerContract.write.addPermittedAction(_pkpId, _ipfsId);
             console.log("[onSubmit]: output<tx>:", tx);
+            setProgress({message: `Waiting for confirmation...`, progress: 75})
+            const res = await tx.wait();
+            console.log("[onSubmit]: output<res>:", res);
+            
+            setProgress({message: `Done!`, progress: 100})
+            setRefresh(prev => prev + 1);
+            
+            await wait(2000);
+            setProgress({message: ``, progress: 0})
+
         }catch(e: any){
             throwError(e.message);
             setProgress({message: ``, progress: 0});
             return;
+
         }
-        
-        setProgress({message: `Waiting for confirmation...`, progress: 75})
-        const res = await tx.wait();
-        console.log("[onSubmit]: output<res>:", res);
-        
-        setProgress({message: `Done!`, progress: 100})
-        setRefresh(prev => prev + 1);
-        
-        await wait(2000);
-        setProgress({message: ``, progress: 0})
         
     }
 
