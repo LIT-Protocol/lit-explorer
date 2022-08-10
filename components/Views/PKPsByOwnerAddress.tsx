@@ -30,8 +30,12 @@ const PKPsByOwnerAddress = ({ownerAddress} : {
             } }
             renderCols={(width: any) => {
                 return appendEvenWidths([
-                    { headerName: "PKP Token ID", field: "tokenId", renderCell: RenderLink},
-                    { headerName: "Address", field: "address", renderCell: RenderPKPToAddress},
+                    { headerName: "PKP Token ID", field: "tokenId", renderCell: (props: any) => {
+                        return RenderLink(props, {short: true, copy: true})
+                    }},
+                    { headerName: "Address", field: "address", renderCell: (props: any) => {
+                        return RenderPKPToAddress(props, {short: true, copy: true});
+                    }},
                     { headerName:"Acquired Date", field: "date",  renderCell: RenderDate},
                     { headerName:"From", field: "from"},
                 ], width);

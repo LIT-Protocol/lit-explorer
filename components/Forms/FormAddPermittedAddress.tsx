@@ -126,7 +126,7 @@ const [progress, setProgress] = useState<MyProgressI>();
 
         return (
             <div className="mt-12 flex">
-                <MyButton onClick={onSubmit} className="ml-auto">Permit action</MyButton>
+                <MyButton onClick={onSubmit} className="ml-auto">Permit Address</MyButton>
             </div>            
         )
 

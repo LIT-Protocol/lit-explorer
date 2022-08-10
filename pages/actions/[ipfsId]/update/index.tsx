@@ -7,7 +7,7 @@ import getWeb3Wallet from "../../../../utils/blockchain/getWeb3Wallet";
 import { ipfsIdToIpfsIdHash } from "../../../../utils/ipfs/ipfsHashConverter";
 import throwError from "../../../../utils/throwError";
 import { NextPageWithLayout } from "../../../_app";
-import AddPermittedAction from "../../../../components/Forms/AddPermittedAction";
+// import AddPermittedAction from "../../../../components/Forms/AddPermittedAction";
 import MyProgress from "../../../../components/UI/MyProgress";
 import { MyProgressI } from "../../../../components/UI/CardInputs";
 
@@ -102,7 +102,7 @@ const RegisterActionPage: NextPageWithLayout = () => {
 
     return (
         <>
-          <AddPermittedAction ownerAddress={ownerAddress} ipfsId={id} signer={signer}/>
+          {/* <AddPermittedAction ownerAddress={ownerAddress} ipfsId={id} signer={signer}/> */}
         </>
     )
     
