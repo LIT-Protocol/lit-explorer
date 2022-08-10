@@ -1,8 +1,8 @@
 import { useRouter } from "next/router"
-import MainLayout from "../../components/MainLayout"
+import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";
-import { useAppContext } from "../../components/AppContext";
+import { useAppContext } from "../../components/Contexts/AppContext";
 import RLIsByOwner from "../../components/Views/RLIsByOwner";
 
 const OwnersPageById: NextPageWithLayout = () => {
@@ -15,10 +15,10 @@ const OwnersPageById: NextPageWithLayout = () => {
 
   let _ownerAddress : string = (ownerAddress as string);
 
-  // -- validate
+  // -- (validate)
   if ( ! ownerAddress ) return <p>Param is not ready</p>
 
-  // -- final render
+  // -- final
   return (
     <>
       <PKPsByOwnerAddress ownerAddress={_ownerAddress} />

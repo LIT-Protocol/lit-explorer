@@ -1,9 +1,9 @@
 import { Alert } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useEffect, useState } from "react"
-import DisplayCode from "../components/DisplayCode"
-import { cacheFetch } from "../utils/cacheFetch"
-import getContentWidth from "../utils/getContentWidth"
+import DisplayCode from "../UI/DisplayCode"
+import { cacheFetch } from "../../utils/cacheFetch"
+import getContentWidth from "../../utils/getContentWidth"
 
 interface LoadDataProps{
     title: string

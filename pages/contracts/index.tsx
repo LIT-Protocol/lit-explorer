@@ -1,4 +1,4 @@
-import MainLayout from "../../components/MainLayout"
+import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,6 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { APP_CONFIG } from "../../app_config";
 
 function createData( name: string, address: string ) {
   return { name, address };
@@ -15,9 +16,9 @@ function createData( name: string, address: string ) {
 const rows = [
   createData('AccessControlConditions', '0x156a99e169aAcaB8Cf5eA87D034664156Af4F0E6'),
   createData('LITToken', '0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b'),
-  createData('PKPNFT', '0x0008a7B1Ce657E78b4eDC6FC40078ce8bf08329A'),
-  createData('PubkeyRouterAndPermissions', '0x5Ef8A5e3b74DE013d608740F934c14109ae12a81'),
-  createData('Rate Limit NFT', '0x5f8c001Edb1Af78504E624BE3A0836C2659c02Dd'),
+  createData('PKPNFT', APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS),
+  createData('PubkeyRouterAndPermissions', APP_CONFIG.ROUTER_CONTRACT_ADDRESS),
+  createData('Rate Limit NFT', APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS),
   createData('Multisender', '0xe9e9613881F95987559ab943c539f256E582F839'),
   createData('Deployer address', '0x50e2dac5e78B5905CB09495547452cEE64426db2'),
   createData('Staked node address', '0xdbd360F30097fB6d938dcc8B7b62854B36160B45'),

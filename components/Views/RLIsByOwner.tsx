@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import { heyShorty } from "../../utils/converter";
 import { wait } from "../../utils/utils";
-import LoadData from "../LoadData";
+import LoadData from "../ViewModals/LoadData";
 import RLITransferModal from "../Modals/RLITransferModal";
 
 const RLIsByOwner = ({

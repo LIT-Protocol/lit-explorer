@@ -1,4 +1,4 @@
-import MainLayout from "../../components/MainLayout"
+import MainLayout from "../../components/Layouts/MainLayout"
 import Actions from "../../components/Views/Actions";
 import { NextPageWithLayout } from "../_app"
 

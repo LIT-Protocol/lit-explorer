@@ -1,4 +1,4 @@
-import { LinearProgressWithLabel } from "../Progress";
+import { LinearProgressWithLabel } from "./Progress";
 
 const MyProgress = ({
     value,

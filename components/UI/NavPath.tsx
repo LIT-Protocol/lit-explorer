@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import Copy from "./UI/Copy";
+import Copy from "./Copy";
 
 const NavPath = () => {
 

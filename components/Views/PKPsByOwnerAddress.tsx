@@ -1,7 +1,7 @@
 import { APP_CONFIG } from "../../app_config";
 import { heyShorty } from "../../utils/converter";
 import { appendEvenWidths } from "../../utils/mui/mui";
-import LoadData from "../LoadData";
+import LoadData from "../ViewModals/LoadData";
 import RenderDate from "./MuiRenders/RenderDate";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPubKey from "./MuiRenders/RenderPubKey";

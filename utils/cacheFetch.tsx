@@ -1,6 +1,6 @@
 const fetchAndCache = async (url: string, callback: Function) => {
 
-  console.warn(`Fetching new: ${url}`);
+  console.warn(`[fetchAndCache] fetching new: ${url}`);
 
   fetch(url).then((res) => res.json()).then((data) => {
     var date = new Date();
@@ -41,7 +41,7 @@ export const cacheFetch = (url: string, callback: Function, useCache = true) => 
 
   // -- (cached and not expired) check if exists in the storage or if the cache expires
   if (storage && new Date().getTime() < isExpired){
-    console.warn(`Using cache: ${url}`);
+    console.warn(`[cacheFetch] using cache: ${url}`);
     data = JSON.parse(storage);
     callback(data.data);
 

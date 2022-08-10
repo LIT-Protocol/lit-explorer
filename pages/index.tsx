@@ -1,4 +1,4 @@
-import MainLayout from '../components/MainLayout';
+import MainLayout from '../components/Layouts/MainLayout';
 import type { NextPageWithLayout } from './_app';
 
 const Home: NextPageWithLayout = () => {

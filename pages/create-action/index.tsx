@@ -1,4 +1,4 @@
-import MainLayout from "../../components/MainLayout"
+import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import MonacoEditor from '@monaco-editor/react';
 import { useState } from "react";
@@ -8,7 +8,7 @@ import throwError from "../../utils/throwError";
 import { useRouter } from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
 import MyProgress from "../../components/UI/MyProgress";
-import MyCard from "../../components/MyCard";
+import MyCard from "../../components/UI/MyCard";
 import { APP_CONFIG } from "../../app_config";
 import { tryUntil } from "../../utils/tryUntil";
 
@@ -53,12 +53,12 @@ go();`;
     setProgress(20);
     setMsg('Uploading to IPFS...');
     const ipfsData = await uploadToIPFS(code);
-    console.log("ipfsData:", ipfsData)
+    console.log("[handleUpload] ipfsData:", ipfsData)
     
     setProgress(40);
     setMsg('Requesting data to be pinned...');
     const data = await fetch(`/api/pinata/${ipfsData.path}`).then((res) => res.json());
-    console.log("data:", data);
+    console.log("[handleUpload] data:", data);
 
     setProgress(60);
     setMsg('Data uploaded! waiting for it to be pinned...');
@@ -81,7 +81,7 @@ go();`;
     })
 
     
-    console.log("isPinned:", isPinned);
+    console.log("[handleUpload] isPinned:", isPinned);
     
     setMsg('Done!');
     setProgress(100);

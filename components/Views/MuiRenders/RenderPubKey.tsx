@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AppRouter } from "../../../utils/AppRouter";
 import { pub2Addr } from "../../../utils/converter";
-import { useAppContext } from "../../AppContext";
+import { useAppContext } from "../../Contexts/AppContext";
 
 export const PubKey = ({
     pkpId,
@@ -62,22 +62,10 @@ export const PubKey = ({
 const RenderPubKey = (props: GridRenderCellParams) => {
 
     const pkpId = props.row.tokenId;
-    // const pkpId = decimalTohex(props.row.tokenId).replaceAll('0x', '');
-
-    // const pubKey = routerContract.read.getFullPubKey(tokenId);
-    
-    // console.log("pubKey:", pubKey)
-
-    // return '123';
-
-    // const address = pub2Addr(pkpId);
-
-    // return address;
 
     return (
        <PubKey pkpId={pkpId}/>
     )
-    
 }
 
 export default RenderPubKey;

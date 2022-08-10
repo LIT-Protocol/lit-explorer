@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
+import { appendEvenWidths } from "../../utils/mui/mui";
 import { wait } from "../../utils/utils";
-import { useAppContext } from "../AppContext";
-import LoadData from "../LoadData";
-import PKPOptionsModal from "../PKPOptionsModal";
+import { useAppContext } from "../Contexts/AppContext";
+import LoadData from "../ViewModals/LoadData";
+import PKPOptionsModal from "../Modals/PKPOptionsModal";
 import RenderLink from "./MuiRenders/RenderLink";
 
 const PKPPermittedControllers = ({ pkpId }: {
@@ -71,22 +72,12 @@ const PKPPermittedControllers = ({ pkpId }: {
           fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
           filter={(rawData: any) => {
             console.log("on filtered: ", rawData);
-
             return rawData?.data?.addresses;
-
-            // const list = 
-
-            // if( cacheAddress ){
-            //   list.push(cacheAddress);
-            // }
-
-            // return list;
           } }
           renderCols={(width: number) => {
-            return [
-              { headerName: "Address", field: "address", width, renderCell: RenderLink}
-            ];
-      
+            return appendEvenWidths([
+              { headerName: "Address", field: "address", renderCell: RenderLink}
+            ], width);
           } }
           renderRows={(filteredData: any) => {
             return filteredData?.map((item: any, i: number) => {

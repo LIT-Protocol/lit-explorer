@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import MainLayout from "../../../../components/MainLayout";
+import MainLayout from "../../../../components/Layouts/MainLayout";
 import callRegisterAction from "../../../../utils/blockchain/callRegisterAction";
 import getPubkeyRouterAndPermissionsContract from "../../../../utils/blockchain/getPubkeyRouterAndPermissionsContract";
 import getWeb3Wallet from "../../../../utils/blockchain/getWeb3Wallet";
 import { ipfsIdToIpfsIdHash } from "../../../../utils/ipfs/ipfsHashConverter";
 import throwError from "../../../../utils/throwError";
 import { NextPageWithLayout } from "../../../_app";
-import AddPermittedAction from "../../../../components/AddPermittedAction";
+import AddPermittedAction from "../../../../components/Forms/AddPermittedAction";
 import MyProgress from "../../../../components/UI/MyProgress";
 import { MyProgressI } from "../../../../components/UI/CardInputs";
 

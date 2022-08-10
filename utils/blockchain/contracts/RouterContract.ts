@@ -93,9 +93,23 @@ export class ReadRouterContract{
         return bool
     }
 
-    isPermittedAction = async (tokenId: any, ipfsHash: any) : Promise<boolean> => {
+    /**
+     * 
+     * Check if an action is permitted given the pkpid and ipfsId
+     * 
+     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
+     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * 
+     * @return { object } transaction 
+     */
+    isPermittedAction = async (pkpId: string, ipfsId: string) : Promise<boolean> => {
+        console.log("[isPermittedAction] input<pkpId>:", pkpId);
+        console.log("[isPermittedAction] input<ipfsId>:", ipfsId);
 
-        const bool = await this.contract.isPermittedAction(tokenId, ipfsHash);
+        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
+        console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
+
+        const bool = await this.contract.isPermittedAction(pkpId, ipfsHash);
         
         return bool
     }
@@ -109,13 +123,13 @@ export class ReadRouterContract{
      * @returns 
      */
     isActionRegistered = async (ipfsId: string) : Promise<boolean> => {
-        console.log("[isActionRegistered] input (ipfsid):", ipfsId);
+        console.log("[isActionRegistered] input<ipfsid>:", ipfsId);
         
         const ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
-        console.log("[isActionRegistered] converted (ipfsMultiHash):", ipfsMultiHash);
+        console.log("[isActionRegistered] converted<ipfsMultiHash>:", ipfsMultiHash);
         
         const bool = await this.contract.isActionRegistered(ipfsMultiHash);
-        console.log("[isActionRegistered] output (bool):", bool);
+        console.log("[isActionRegistered] output<bool>:", bool);
 
         return bool;
     }
@@ -148,21 +162,27 @@ export class WriteRouterContract{
         }
     }
 
-    addPermittedAction = async (ipfsId: any, pkpId: any) => {
+    /**
+     * TODO: add transaction type
+     * Add permitted action to a given PKP id
+     * 
+     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
+     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * 
+     * @return { object } transaction 
+     */
+    addPermittedAction = async (pkpId: string, ipfsId: string) : Promise<any> => {
 
-        console.log("ipfsId:", ipfsId);
-        console.log("pkpId:", pkpId);
+        console.log("[addPermittedAction] input<pkpId>:", pkpId);
+        console.log("[addPermittedAction] input<ipfsId>:", ipfsId);
         
-        const pkpId_hex = decimalTohex(pkpId);
-        console.log("pkpId_hex:", pkpId_hex);
+        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
+        console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
         
-        const ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
-        console.log("ipfsMultiHash:", ipfsMultiHash);
+        const tx = await this.contract.addPermittedAction(pkpId, ipfsHash);
+        console.log("[addPermittedAction] output<tx>:", tx);
 
-        let permittedAction = await this.contract.addPermittedAction(pkpId, ipfsMultiHash)
-
-        return permittedAction;
-
+        return tx;
     }
 
     /**

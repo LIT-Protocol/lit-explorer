@@ -1,11 +1,11 @@
-import SearchBar from "./SearchBar";
-import SideNav from "./SideNav";
-
-import throwError from '../utils/throwError';
+import SearchBar from "../Forms/SearchBar";
+import SideNav from "../UI/SideNav";
+import throwError from '../../utils/throwError';
 import { useRouter } from "next/router";
 import { Alert, AlertTitle } from '@mui/material'
-import NavPath from "./NavPath";
-import { AppRouter } from "../utils/AppRouter";
+import NavPath from "../UI/NavPath";
+import { AppRouter } from "../../utils/AppRouter";
+import { APP_CONFIG } from "../../app_config";
 
 interface MainLayoutProps {
     children: any
@@ -87,7 +87,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
             {/* ----- Floating Objects ----- */}
             <div className="support">
-                <a target="_blank" rel="noreferrer" href="https://discord.com/channels/896185694857343026/1002588409153458228">Support</a>
+                <a target="_blank" rel="noreferrer" href={APP_CONFIG.LIT_DISCORD}>Support</a>
             </div>
         </div>
 

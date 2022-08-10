@@ -2,7 +2,7 @@ import { Chip } from "@mui/material";
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import { MyProgressI } from "../../UI/CardInputs";
 import { wait } from "../../../utils/utils";
-import { useAppContext } from "../../AppContext";
+import { useAppContext } from "../../Contexts/AppContext";
 import throwError from "../../../utils/throwError";
 import { useState } from "react";
 

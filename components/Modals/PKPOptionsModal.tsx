@@ -6,29 +6,15 @@ import { Button, Chip, TextField } from '@mui/material';
 
 // @ts-ignore
 import converter from 'hex2dec';
-import throwError from '../utils/throwError';
-import { tryUntil, TryUntilProp } from '../utils/tryUntil';
-import { LinearProgressWithLabel } from './Progress';
+import throwError from '../../utils/throwError';
+import { tryUntil, TryUntilProp } from '../../utils/tryUntil';
+import { LinearProgressWithLabel } from '../UI/Progress';
 import { useState } from 'react';
-import { AppRouter } from '../utils/AppRouter';
-import { SupportedSearchTypes } from '../app_config';
-import { useAppContext } from './AppContext';
-import { wait } from '../utils/utils';
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'rgb(49, 45, 75)',
-  boxShadow: 'rgb(19 17 32 / 10%) 0px 2px 10px 0px',
-  p: 4,
-  color: 'rgba(231, 227, 252, 0.87)',
-  borderRadius: '6px',
-  maxHeight: '600px',
-
-};
+import { AppRouter } from '../../utils/AppRouter';
+import { SupportedSearchTypes } from '../../app_config';
+import { useAppContext } from '../Contexts/AppContext';
+import { wait } from '../../utils/utils';
+import { MODAL_STYLE } from './_modalStyle';
 
 interface PKPOptionsModalProps{
   pkpId: string | any,
@@ -128,7 +114,7 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={MODAL_STYLE}>
           <Typography id="modal-modal-title" variant="h5" component="h2">
             <div className="text-center">Add Permitted Address</div>
           </Typography>

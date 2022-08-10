@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { useState } from "react";
 import { MODAL_STYLE } from './_modalStyle';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
-import { LinearProgressWithLabel } from '../Progress';
+import { LinearProgressWithLabel } from '../UI/Progress';
 
 const _templateModal = (props: any) => {
 

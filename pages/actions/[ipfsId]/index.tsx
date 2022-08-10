@@ -1,21 +1,26 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import MainLayout from "../../../components/MainLayout"
+import MainLayout from "../../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../../_app"
 import MonacoEditor from '@monaco-editor/react';
 import ActionCodeOptions from "../../../components/Views/Parts/ActionCodeOptions";
-import MyProgress from "../../../components/UI/MyProgress";
-import { MyProgressI } from "../../../components/UI/CardInputs";
+import { fetchActionCode } from "../../../utils/fetch";
+import { useAppContext } from "../../../components/Contexts/AppContext";
+import AddPermittedActionForm from "../../../components/Forms/AddPermittedActionForm";
 
 const ActionsPage: NextPageWithLayout = () => {
 
+  // -- (router)
   const router = useRouter();
+
+  // -- (param)
   const { ipfsId } = router.query;
 
+  // -- (state)
   const [code, setCode] = useState('');
-  const [progress, setProgress] = useState<MyProgressI>();
 
-  const [refresh, setRefresh] = useState(0);
+  // -- (app context)
+  const { pkpContract } = useAppContext();
 
   // -- (mounted)
   useEffect(() => {
@@ -23,71 +28,34 @@ const ActionsPage: NextPageWithLayout = () => {
     // -- param is not ready
     if(!ipfsId) return;
 
-    const baseURL = process.env.NEXT_PUBLIC_IPFS_BASE_URL ?? '';
+    (async () => {
 
-    const url = `${baseURL}/${ipfsId}`;
+      const code = await fetchActionCode((ipfsId as string));
 
-    fetch(url).then((response) => response.text()).then((code) => {
-      console.log("baseURL:", baseURL);
-      console.log("url:", url);
-      // console.log(code)
       setCode(code);
-    });
 
+    })();
 
   }, [ipfsId])
 
-  // -- (event:callback) onProgress
-  const onProgress = async (props: MyProgressI) => {
+  // -- (render) header
+  const renderHeader = () => {
 
-    const progress = props.progress ?? 0;
-
-    console.log("[onProgress] props:", props);
-    setProgress(props);
-
-    if(progress >= 100){
-      console.log("[onProgress] 100%");
-      setRefresh(prev => prev + 1);
-    }
-
-  }
-
-  // -- (render) progress from callbacks
-  const renderProgress = () => {
-
-    const _progress = progress?.progress || 0;
-    const _message = progress?.message || '';
-
-    // -- validate
-    if(_progress <= 0) return <></>
+    const title = 'Your Lit Action Code';
 
     return (
-      <MyProgress message={_message} value={_progress}/>
-    )
-
-  }
-
-  if ( ! ipfsId ) return <p>ipfsId is not ready</p>
-  if ( ! code ) return <p>Loading data...</p>
-
-  return (
-    <>
-
-      { renderProgress() }
-
-      {/* ----- header ----- */}
       <div className="flex">
-        <h2>Your Lit Action Code</h2> 
+        <h2>{ title }</h2> 
         <div className="flex-content">
-          <ActionCodeOptions 
-            ipfsId={ipfsId}
-            onProgress={onProgress}
-            refresh={refresh} 
-          />
+          <ActionCodeOptions ipfsId={ipfsId} />
         </div>
       </div>
+    )
+  }
 
-      {/* ----- content ----- */}
+  // -- (render) content
+  const renderCode = () => {
+    return (
       <div className="code-editor mt-12">
         <MonacoEditor
           language="javascript"
@@ -96,6 +64,24 @@ const ActionsPage: NextPageWithLayout = () => {
           height="300px"
         />
       </div>
+    )
+  }
+
+  // -- (render) a form to allow users to add permitted action to their PKP
+  // -- input 1: pkpId
+  // -- input 2: user address
+  const renderAddPermittedActionsForm = () => {
+    return <AddPermittedActionForm ipfsId={(ipfsId as string)} />;
+  }
+
+  if ( ! ipfsId ) return <p>ipfsId is not ready</p>
+  if ( ! code ) return <p>Loading action code...</p>
+
+  return (
+    <>
+      { renderHeader() }
+      { renderCode() }
+      { renderAddPermittedActionsForm() }
     </>
   )
 }

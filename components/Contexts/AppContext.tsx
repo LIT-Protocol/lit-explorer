@@ -2,12 +2,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 // @ts-ignore
 import converter from 'hex2dec';
-import { pub2Addr, wei2eth } from "../utils/converter";
-import { PKPContract } from "../utils/blockchain/contracts/PKPContract";
-import { RouterContract } from "../utils/blockchain/contracts/RouterContract";
-import { RLIContract } from "../utils/blockchain/contracts/RLIContract";
-import { APP_CONFIG, SupportedNetworks } from "../app_config";
-import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
+import { pub2Addr, wei2eth } from "../../utils/converter";
+import { PKPContract } from "../../utils/blockchain/contracts/PKPContract";
+import { RouterContract } from "../../utils/blockchain/contracts/RouterContract";
+import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
+import { APP_CONFIG, SupportedNetworks } from "../../app_config";
+import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 
 declare global {
     interface Window{
@@ -42,8 +42,9 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     const connectContracts = async () => {
 
+        // -- validate
         if( pkpContract && routerContract && rliContract && loaded) return;
-
+        
         console.log("[connectContracts]");
 
         const { signer } = await getWeb3Wallet();

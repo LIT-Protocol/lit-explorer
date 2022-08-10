@@ -1,4 +1,4 @@
-import MainLayout from "../../components/MainLayout"
+import MainLayout from "../../components/Layouts/MainLayout"
 import PKPOwners from "../../components/Views/PKPOwners"
 import { NextPageWithLayout } from "../_app"
 

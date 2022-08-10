@@ -1,18 +1,13 @@
 import { Alert, Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { PopulatedTransaction, Signer } from "ethers";
 import { useEffect, useState } from "react";
-import { asyncForEach, asyncForEachReturn } from "../utils/utils";
-import callAddPermittedAction from "../utils/blockchain/callAddPermittedAction";
-import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkeyRouterAndPermissionsContract";
-import getTokensByAddress from "../utils/blockchain/getTokensByAddress";
-import { cacheFetch } from "../utils/cacheFetch";
-import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../utils/ipfs/ipfsHashConverter";
-import RenderDate from "./Views/MuiRenders/RenderDate";
-import RenderLink from "./Views/MuiRenders/RenderLink";
-import throwError from "../utils/throwError";
-import LoadData from "./LoadData";
-import { LinearProgressWithLabel } from "./Progress";
-import { useAppContext } from "./AppContext";
+import { asyncForEachReturn } from "../../utils/utils";
+import getTokensByAddress from "../../utils/blockchain/getTokensByAddress";
+import { ipfsIdToIpfsIdHash } from "../../utils/ipfs/ipfsHashConverter";
+import RenderLink from "../Views/MuiRenders/RenderLink";
+import throwError from "../../utils/throwError";
+import LoadData from "../ViewModals/LoadData";
+import { LinearProgressWithLabel } from "../UI/Progress";
+import { useAppContext } from "../Contexts/AppContext";
 
 interface AddPermittedActionProps{
     ownerAddress: string,

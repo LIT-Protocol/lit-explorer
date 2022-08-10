@@ -6,6 +6,7 @@ export const APP_CONFIG = {
     ECDSA_KEY: 2,
     IPFS_PIN_NAME: 'Lit Explorer v0.0.1',
     IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
+    LIT_DISCORD: 'https://discord.com/channels/896185694857343026/1002588409153458228'
 }
 
 /** ========== SUPPORTED NETWORKS ========== */

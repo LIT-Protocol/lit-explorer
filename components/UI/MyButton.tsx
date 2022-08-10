@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 
-const MyButton = ({ children, onClick, fullWidth } : { 
+const MyButton = ({ children, onClick, fullWidth, className } : { 
     children: any,
     onClick?(e: any): void | Promise<void>,
-    fullWidth?: boolean
+    fullWidth?: boolean,
+    className?: string
 }) => {
 
 
@@ -16,7 +17,7 @@ const MyButton = ({ children, onClick, fullWidth } : {
 
     return (
         <>
-            <Button className="btn-2" fullWidth={fullWidth} onClick={handleClick} >{ children }</Button>
+            <Button className={`${className} btn-2`} fullWidth={fullWidth} onClick={handleClick} >{ children }</Button>
         </>
     )
 }

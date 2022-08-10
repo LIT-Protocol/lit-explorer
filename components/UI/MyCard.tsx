@@ -1,14 +1,5 @@
-import { Box, Button, Typography, useThemeProps } from "@mui/material";
-import MyButton from "./MyButton";
-
-const STYLE = {
-    background: 'white',
-    borderRadius: '12px',
-    padding: '16px',
-    overflow: 'hidden',
-    border: '0px solid rgba(0, 0, 0, 0.125)',
-    boxShadow: 'rgb(0 0 0 / 10%) 0rem 0.25rem 0.375rem -0.0625rem, rgb(0 0 0 / 6%) 0rem 0.125rem 0.25rem -0.0625rem',
-}
+import { Box, Typography } from "@mui/material";
+import { WHITE_CARD } from "../Modals/_modalStyle";
 
 interface MyCardProps{
     children: any,
@@ -30,7 +21,7 @@ const MyCard = (props : MyCardProps) => {
     // -- (finally) render
     return (
         <div className={props.className}>
-            <Box sx={STYLE}>
+            <Box sx={WHITE_CARD}>
                 { renderTitle() }
                 <div className="mt-12">
                     { props?.children }

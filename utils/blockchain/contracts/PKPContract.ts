@@ -2,7 +2,7 @@ import { BigNumber, Contract, ethers } from "ethers";
 import { ContractProps } from "./ContractI";
 import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
 import { getContract } from './getContract';
-import { decimalTohex, MultiETHFormat, wei2eth } from "../../converter";
+import { decimalTohex, hexToDecimal, MultiETHFormat, wei2eth } from "../../converter";
 import { asyncForEach } from "../../utils";
 import { Either } from "monet";
 
@@ -53,13 +53,57 @@ export class ReadPKPContract{
         this.contract = contract;
     }
 
-    mintCost = async () => {
+    /**
+     * 
+     * Get mint cost for PKP
+     * 
+     * @returns { Promise<MultiETHFormat> } 
+     */
+    mintCost = async () : Promise<MultiETHFormat> => {
         
         const mintCost = await this.contract.mintCost();
 
         return wei2eth(mintCost);
         
     }
+
+    /**
+     * 
+     * Get all PKPs by a given address
+     * 
+     * @param { string } ownerAddress 
+     * @returns { Array<string> } a list of PKP NFTs
+     */
+    getTokensByAddress = async (ownerAddress: string) : Promise<Array<string>>=> {
+        
+        // -- validate
+        if ( ! ethers.utils.isAddress(ownerAddress) ){
+            throw new Error(`Given string is not a valid address "${ownerAddress}"`);
+        }
+
+        let tokens = [];
+    
+        for(let i = 0;; i++){
+    
+            let token;
+    
+            try{
+    
+                token = await this.contract.tokenOfOwnerByIndex(ownerAddress, i);
+    
+                token = hexToDecimal(token.toHexString()); 
+    
+                tokens.push(token);
+            
+            }catch(e){
+                console.log(`[getTokensByAddress] end: ${i}`)
+                break;
+            }
+        }
+    
+        return tokens;
+    }
+
 }
 
 /**

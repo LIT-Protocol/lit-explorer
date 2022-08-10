@@ -6,7 +6,7 @@ import { NextPage } from 'next';
 import NProgress from 'nprogress';
 import "nprogress/nprogress.css";
 import Router from 'next/router';
-import { AppContextProvider } from '../components/AppContext';
+import { AppContextProvider } from '../components/Contexts/AppContext';
 
 NProgress.configure({
   minimum: 0.3,

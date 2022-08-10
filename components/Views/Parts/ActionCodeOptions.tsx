@@ -1,24 +1,17 @@
 import { Chip, CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import EditIcon from '@mui/icons-material/Edit';
-import { useAppContext } from "../../AppContext";
+import { useAppContext } from "../../Contexts/AppContext";
 import { MyProgressI } from "../../UI/CardInputs";
 import ActionRegister from "./ActionRegister";
 
 const ActionCodeOptions = (props: {
     ipfsId: string | any,
-    onProgress?(progress: MyProgressI) : void,
-    refresh?: number
 }) => {
-
 
     // -- (app context) 
     const  { routerContract } = useAppContext();
 
     const [isRegistered, setIsRegistered] = useState<boolean | any>(null);
-
-    const router = useRouter();
 
     // -- (mounted)
     useEffect(() => {
@@ -27,7 +20,7 @@ const ActionCodeOptions = (props: {
             await checkIsRegistered();
         })();
         
-    }, [props.refresh])
+    }, [])
 
     // -- (void) check is registered 
     const checkIsRegistered = async () => {
@@ -41,18 +34,12 @@ const ActionCodeOptions = (props: {
 
         const _progress = progress.progress || 0;
 
-        // -- callback
-        if(props.onProgress){
-            props.onProgress(progress);
-        }
-
         if(_progress >= 0){
             await checkIsRegistered();
         }
 
     }
 
-    
     // -- (validations) if param doesnt have ipfsId
     if(! props?.ipfsId) return <></>;
     if( isRegistered == null ) return <><div className="sm"><CircularProgress disableShrink /></div></>
@@ -74,17 +61,15 @@ const ActionCodeOptions = (props: {
         />
     }
 
-    // -- all good
+    // -- finally
     return (
-        <>
-            <Stack direction="row" spacing={1}>
-                {
-                    isRegistered ? 
-                    renderRegistered() : 
-                    renderNotReigstered()
-                }
-            </Stack>
-        </>
+        <Stack direction="row" spacing={1}>
+            {
+                isRegistered ? 
+                renderRegistered() : 
+                renderNotReigstered()
+            }
+        </Stack>
     );
 }
 

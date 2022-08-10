@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
-import MyCard from "./MyCard";
-import { RLIContract } from "../utils/blockchain/contracts/RLIContract";
-import { Button } from "@mui/material";
-import {APP_CONFIG, SupportedNetworks} from "../app_config";
-import RLIListByOwner from "./Views/RLIsByOwner";
-import { useAppContext } from "./AppContext";
-import RLIMint from "./Views/RLIMint";
-import { MultiETHFormat } from "../utils/converter";
-import { wait } from "../utils/utils";
+import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
+import MyCard from "../UI/MyCard";
+import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
+import {APP_CONFIG, SupportedNetworks} from "../../app_config";
+import RLIListByOwner from "./RLIsByOwner";
+import { useAppContext } from "../Contexts/AppContext";
+import RLIMint from "./RLIMint";
+import { MultiETHFormat } from "../../utils/converter";
+import { wait } from "../../utils/utils";
 
-// NOTE: Flows
+// NOTE: TODO Flows
 // [x] Get the list of RLI a PKP controller holds
 // 2. Get the list of RLIs that a PKP holds
 // 3. [x] Calculator: 
@@ -94,44 +93,12 @@ const PKPStats = ({pkpId} : {
             // });
             // console.log("[mounted] res:", res);
             
-            
-            // const getTokenURIByIndex = await contract.read.getTokenURIByIndex(2);
-            // console.log("[mounted] getTokenURIByIndex:", getTokenURIByIndex);
-
-            // const rateLimitWindow = await contract.read.getRateLimitWindow();
-            // console.log("[mounted] rateLimitWindow:", rateLimitWindow);
-
-            // const additionalCost = await contract.read.costOfAdditionalRequestsPerMillisecond();
-            // console.log("[mounted] additionalCost:", additionalCost);
-
-            // const getTotalRLI = await contract.read.getTotalRLI(addresses[0]);
-            // console.log("[mounted] getTotalRLI:", getTotalRLI);
-
-            // const capacity = await contract.read.getCapacityByIndex(2);
-            // console.log("[mounted] capacity:", capacity);
-            
-            // const defaultRateLimitWindow = await contract.read.getDefaultRateLimitWindow();
-            // console.log("[mounted] defaultRateLimitWindow:", defaultRateLimitWindow);
-
-            // const requestsBySecond = await contract.read.getDefaultFreeRequestsPerSecond();
-            // console.log("[mounted] requestsBySecond:", requestsBySecond);
-            
-            // const costPerMillisecond = await contract.read.costOfPerMillisecond();
-            // console.log("[mounted] costPerMillisecond:", costPerMillisecond);
-
-            // const costOfMilliseconds = await contract.read.costOfMilliseconds(1000, 1659800204);
-            // console.log("[mounted] costOfMilliseconds:", costOfMilliseconds);
-
-            // const totalCostByRequestsPerSecond = await contract.read.costOfByRequestsPerSecond(1000000000000, 1659717168);
-            // console.log("[mounted] totalCostByRequestsPerSecond:", totalCostByRequestsPerSecond);
-
-
         })();
 
     }, []);
 
     // -- validate
-    if(!contract || !ownerAddress ) return <>'Loading...'</>;
+    if(!contract || !ownerAddress ) return <>Loading...</>;
 
     return (
         <>  

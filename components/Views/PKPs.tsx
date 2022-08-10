@@ -1,6 +1,6 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { appendEvenWidths } from "../../utils/mui/mui";
-import LoadData from "../LoadData";
+import LoadData from "../ViewModals/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPubKey from "./MuiRenders/RenderPubKey";
 
@@ -10,6 +10,7 @@ const PKPs = () => {
         <LoadData
             debug={false}
             title="PKP Tokens:"
+            loadingMessage="Loading PKPs..."
             errorMessage="No PKPs found."
             fetchPath={`/api/get-all-pkps`}
             filter={(rawData: any) => {

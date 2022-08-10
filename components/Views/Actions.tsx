@@ -1,7 +1,7 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { appendEvenWidths } from "../../utils/mui/mui";
 // import ActionCodeStatus from "./Parts/ActionCodeOptions";
-import LoadData from "../LoadData";
+import LoadData from "../ViewModals/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 import ActionCodeOptions from "./Parts/ActionCodeOptions";
 import ActionRegister from "./Parts/ActionRegister";

@@ -1,24 +1,15 @@
-import { NextPageWithLayout } from "../pages/_app"
-import CardInputs, { MyFormData, MyProgressI } from "./UI/CardInputs"
-// import getPKPNFTContract from "../utils/blockchain/getPKPNFTContract";
-import getWeb3Wallet from "../utils/blockchain/getWeb3Wallet";
-// import { Contract, ethers } from "ethers";
-import throwError from "../utils/throwError";
+import { NextPageWithLayout } from "../../pages/_app"
+import CardInputs, { MyFormData, MyProgressI } from "../UI/CardInputs"
+import throwError from "../../utils/throwError";
 import { useState } from "react";
-import { newObjectState } from "../utils/clone";
+import { newObjectState } from "../../utils/clone";
 import { useRouter } from "next/router";
-// import getPubkeyRouterAndPermissionsContract from "../utils/blockchain/getPubkeyRouterAndPermissionsContract";
-import { tryUntil, TryUntilProp } from "../utils/tryUntil";
-import { AppRouter } from "../utils/AppRouter";
-// import { PKPContract } from "../utils/blockchain/contracts/PKPContract";
-// import { APP_CONFIG, SupportedNetworks } from "../app_config";
-// import { RouterContract } from "../utils/blockchain/contracts/RouterContract";
-// import { wait } from "../utils/utils";
-// import { wei2eth } from "../utils/converter";
-import { useAppContext } from "./AppContext";
-import { hexToDecimal } from "../utils/converter";
+import { tryUntil, TryUntilProp } from "../../utils/tryUntil";
+import { AppRouter } from "../../utils/AppRouter";
+import { useAppContext } from "../Contexts/AppContext";
+import { hexToDecimal } from "../../utils/converter";
 
-const MintNewPKP: NextPageWithLayout = () => {
+const MintNewPKPForm: NextPageWithLayout = () => {
 
   // -- app context
   const appContext = useAppContext();
@@ -30,40 +21,6 @@ const MintNewPKP: NextPageWithLayout = () => {
   const [mintProgress, setMintProgress] = useState<MyProgressI>({progress: 0, message: ''})
   const [mintButtonText, setMintButtonText] = useState('Mint');
   const [mintedPKPId, setMintedPKPId] = useState<any>();
-
-  // // -- (prepare fields)
-  // const mintNewPKPFields = [
-  //   {
-  //     title: 'Token ID',
-  //     label: 'eg. 0xe6b4c652897ba545687b60b566d8d47c8e6d5770085d59a58dafac07012d09c8',
-  //   }
-  // ];
-
-  // // -- (getter) (smart contract) Get mint cost
-  // const getMintCost = async (contract: Contract) => {
-
-  //   const cost = await contract.mintCost();
-
-  //   return {
-  //     value: cost,
-  //   };
-
-  // }
-
-  // // -- (getter) get token id
-  // const getTokenID = (formData: MyFormData) => {
-
-  //   const tokenId = formData.find((item) => item.id == mintNewPKPFields[0].title)?.data;
-
-  //   // -- validate
-  //   if( ! tokenId?.includes('0x') ){
-  //     throwError("Invalid input - Token ID must begin with 0x");
-  //     return null
-  //   }
-
-  //   return ethers.BigNumber.from(tokenId);
-
-  // }
   
   // -- (void) redirect
   const redirect = async () => {
@@ -157,17 +114,15 @@ const MintNewPKP: NextPageWithLayout = () => {
   }
 
   return (
-    <>
-      <CardInputs
-        title={'Mint New PKP'}
-        buttonText={mintButtonText}
-        // fields={mintNewPKPFields}
-        onSubmit={onSubmit}
-        progress={mintProgress}
-        fullWidth={true}
-      />
-    </>
+    <CardInputs
+      title={'Mint New PKP'}
+      buttonText={mintButtonText}
+      // fields={MintNewPKPFormFields}
+      onSubmit={onSubmit}
+      progress={mintProgress}
+      fullWidth={true}
+    />
   )
 }
 
-export default MintNewPKP
+export default MintNewPKPForm
