@@ -5,8 +5,12 @@ import { NextPageWithLayout } from "../../_app"
 import MonacoEditor from '@monaco-editor/react';
 import ActionCodeOptions from "../../../components/Views/Parts/ActionCodeOptions";
 import { fetchActionCode } from "../../../utils/fetch";
-import { useAppContext } from "../../../components/Contexts/AppContext";
 import AddPermittedActionForm from "../../../components/Forms/AddPermittedActionForm";
+import RevokePermittedActionForm from "../../../components/Forms/RevokePermittedActionForm";
+import MyCard from "../../../components/UI/MyCard";
+import MyButton from "../../../components/UI/MyButton";
+import { wait } from "../../../utils/utils";
+import { CircularProgress } from "@mui/material";
 
 const ActionsPage: NextPageWithLayout = () => {
 
@@ -18,9 +22,7 @@ const ActionsPage: NextPageWithLayout = () => {
 
   // -- (state)
   const [code, setCode] = useState('');
-
-  // -- (app context)
-  const { pkpContract } = useAppContext();
+  const [loading, setLoading] = useState(false);
 
   // -- (mounted)
   useEffect(() => {
@@ -67,11 +69,39 @@ const ActionsPage: NextPageWithLayout = () => {
     )
   }
 
-  // -- (render) a form to allow users to add permitted action to their PKP
-  // -- input 1: pkpId
-  // -- input 2: user address
-  const renderAddPermittedActionsForm = () => {
-    return <AddPermittedActionForm ipfsId={(ipfsId as string)} />;
+  // -- (render) forms
+  const renderForms = () => {
+
+    const _renderContent = () => {
+      return (
+        <>
+          <AddPermittedActionForm ipfsId={(ipfsId as string)} onDone={reRender} />
+          <RevokePermittedActionForm ipfsId={(ipfsId as string)} onDone={reRender} />    
+        </>
+      )
+    }
+
+    const _renderLoading = () => {
+      return (
+        <CircularProgress disableShrink />
+      )
+    }
+    
+    return (
+      <MyCard title="Settings" className="mt-24">
+        {
+          loading ?
+          _renderLoading() :
+          _renderContent()
+        }
+      </MyCard>
+    )
+  }
+
+  const reRender = async () => {
+    setLoading(true);
+    await wait(1000);
+    setLoading(false);
   }
 
   if ( ! ipfsId ) return <p>ipfsId is not ready</p>
@@ -81,7 +111,7 @@ const ActionsPage: NextPageWithLayout = () => {
     <>
       { renderHeader() }
       { renderCode() }
-      { renderAddPermittedActionsForm() }
+      { renderForms() }
     </>
   )
 }

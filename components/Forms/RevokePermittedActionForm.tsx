@@ -6,9 +6,9 @@ import { MyProgressI } from "../UI/CardInputs";
 import MyButton from "../UI/MyButton";
 import MyCard from "../UI/MyCard";
 import MyProgress from "../UI/MyProgress";
-import UnpermittedPKPsSelection from "./UnpermittedPKPsSelection";
+import PermittedPKPsSelection from "./PermittedPKPsSelection";
 
-const AddPermittedActionForm = ({
+const RevokePermittedActionForm = ({
     ipfsId,
     onDone,
 } : {
@@ -30,15 +30,15 @@ const AddPermittedActionForm = ({
 
         // -- validate
         if( ! ipfsId ) return;
- 
+
         // -- refresh
         setChildRefresh(prev => prev + 1);
 
         (async() => {
-        
-            console.log("[AddPermittedActionForm] input<ipfsId>:", ipfsId);
+            
+            console.log("[RevokePermittedActionForm] input<ipfsId>:", ipfsId);
             const _isRegistered = await routerContract.read.isActionRegistered(ipfsId);
-            console.log("[AddPermittedActionForm] output<_isRegistered>:", _isRegistered);
+            console.log("[RevokePermittedActionForm] output<_isRegistered>:", _isRegistered);
             setIsActionRegisterd(_isRegistered);
 
         })();
@@ -68,18 +68,18 @@ const AddPermittedActionForm = ({
             throwError("_ipfsId cannot be empty!");
             return;
         }
-        
+         
         // -- execute
-        setProgress({message: `Permitting action to ${_pkpId}...`, progress: 50})
+        setProgress({message: `Revoking action from ${_pkpId}...`, progress: 50})
+        
         console.log("[onSubmit]: input<_pkpId>:", _pkpId);
         console.log("[onSubmit]: input<_ipfsId>:", _ipfsId);
         
         let tx: any;
         
         try{
-            tx = await routerContract.write.addPermittedAction(_pkpId, _ipfsId);
+            tx = await routerContract.write.revokePermittedAction(_pkpId, _ipfsId);
             console.log("[onSubmit]: output<tx>:", tx);
-
             setProgress({message: `Waiting for confirmation...`, progress: 75})
             const res = await tx.wait();
             console.log("[onSubmit]: output<res>:", res);
@@ -94,10 +94,11 @@ const AddPermittedActionForm = ({
                 onDone();
             }
 
-
         }catch(e: any){
             throwError(e.message);
             setProgress({message: ``, progress: 0});
+            return;
+
         }
         
     }
@@ -126,7 +127,7 @@ const AddPermittedActionForm = ({
 
         return (
             <div className="mt-12 flex">
-                <MyButton onClick={onSubmit} className="ml-auto">Permit action</MyButton>
+                <MyButton onClick={onSubmit} className="ml-auto">Revoke Action</MyButton>
             </div>            
         )
 
@@ -140,7 +141,7 @@ const AddPermittedActionForm = ({
         if (_progress > 0) return <></>
 
         return (
-            <UnpermittedPKPsSelection
+            <PermittedPKPsSelection
                 title="Select your PKP"
                 onSelect={onSelectPKP}
                 refresh={childRefresh}
@@ -157,7 +158,7 @@ const AddPermittedActionForm = ({
     const renderPKPSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard title="Add Permitted action to your PKP">
+                <MyCard title="Revoke Permitted action from your PKP">
                     { renderProgress() }
 
                     { renderForm() }
@@ -179,4 +180,4 @@ const AddPermittedActionForm = ({
         </>
     )
 }
-export default AddPermittedActionForm;
+export default RevokePermittedActionForm;

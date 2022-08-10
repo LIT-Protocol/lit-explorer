@@ -4,17 +4,19 @@ import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import { asyncForEachReturn } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
 
-const UnpermittedPKPsSelectionForm = ({ 
+const UnpermittedPKPsSelection = ({ 
     title,
     onSelect,
     refresh,
     ipfsId,
+    onDefaultToken,
  }: {
     title?: string,
     label?: string,
     onSelect?(data: any): void,
     refresh?: number,
     ipfsId?: string,
+    onDefaultToken?(token: string): void,
 }) => {
 
     // -- (app context)
@@ -29,7 +31,7 @@ const UnpermittedPKPsSelectionForm = ({
 
         // -- debug
         if(refresh){
-            console.log("[UnpermittedPKPsSelectionForm] refresh:", refresh);
+            console.log("[UnpermittedPKPsSelection] refresh:", refresh);
         }
         
         (async() => {
@@ -57,7 +59,11 @@ const UnpermittedPKPsSelectionForm = ({
 
         // -- only run the first time
         if( ! refresh ){
-            setSelectedToken(_tokens[0])
+            setSelectedToken(_unpermitted[0])
+
+            if( onDefaultToken ){
+                onDefaultToken(_unpermitted[0]);
+            }
         }
     }
 
@@ -100,4 +106,4 @@ const UnpermittedPKPsSelectionForm = ({
         </>
     )
 }
-export default UnpermittedPKPsSelectionForm;
+export default UnpermittedPKPsSelection;
