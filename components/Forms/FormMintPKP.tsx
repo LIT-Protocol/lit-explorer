@@ -9,7 +9,7 @@ import { AppRouter } from "../../utils/AppRouter";
 import { useAppContext } from "../Contexts/AppContext";
 import { hexToDecimal } from "../../utils/converter";
 
-const MintNewPKPForm: NextPageWithLayout = () => {
+const FormMintNewPKP: NextPageWithLayout = () => {
 
   // -- app context
   const appContext = useAppContext();
@@ -117,7 +117,7 @@ const MintNewPKPForm: NextPageWithLayout = () => {
     <CardInputs
       title={'Mint New PKP'}
       buttonText={mintButtonText}
-      // fields={MintNewPKPFormFields}
+      // fields={FormMintNewPKPFields}
       onSubmit={onSubmit}
       progress={mintProgress}
       fullWidth={true}
@@ -125,4 +125,4 @@ const MintNewPKPForm: NextPageWithLayout = () => {
   )
 }
 
-export default MintNewPKPForm
+export default FormMintNewPKP

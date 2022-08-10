@@ -5,12 +5,12 @@ import { NextPageWithLayout } from "../../_app"
 import MonacoEditor from '@monaco-editor/react';
 import ActionCodeOptions from "../../../components/Views/Parts/ActionCodeOptions";
 import { fetchActionCode } from "../../../utils/fetch";
-import AddPermittedActionForm from "../../../components/Forms/AddPermittedActionForm";
-import RevokePermittedActionForm from "../../../components/Forms/RevokePermittedActionForm";
+import FormAddPermittedAction from "../../../components/Forms/FormAddPermittedAction";
+import FormRevokePermittedAction from "../../../components/Forms/FormRevokePermittedAction";
 import MyCard from "../../../components/UI/MyCard";
-import MyButton from "../../../components/UI/MyButton";
 import { wait } from "../../../utils/utils";
 import { CircularProgress } from "@mui/material";
+import FormAddPermittedAddress from "../../../components/Forms/FormAddPermittedAddress";
 
 const ActionsPage: NextPageWithLayout = () => {
 
@@ -75,8 +75,9 @@ const ActionsPage: NextPageWithLayout = () => {
     const _renderContent = () => {
       return (
         <>
-          <AddPermittedActionForm ipfsId={(ipfsId as string)} onDone={reRender} />
-          <RevokePermittedActionForm ipfsId={(ipfsId as string)} onDone={reRender} />    
+          <FormAddPermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
+          <FormRevokePermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />    
+          <FormAddPermittedAddress ipfsId={(ipfsId as string)} onDone={reRender} />    
         </>
       )
     }

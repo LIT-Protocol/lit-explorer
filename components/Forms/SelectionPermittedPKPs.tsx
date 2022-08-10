@@ -4,7 +4,7 @@ import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import { asyncForEachReturn } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
 
-const UnpermittedPKPsSelection = ({ 
+const SelectionPermittedPKPs = ({ 
     title,
     onSelect,
     refresh,
@@ -31,7 +31,7 @@ const UnpermittedPKPsSelection = ({
 
         // -- debug
         if(refresh){
-            console.log("[UnpermittedPKPsSelection] refresh:", refresh);
+            console.log("[SelectionPermittedPKPs] refresh:", refresh);
         }
         
         (async() => {
@@ -48,21 +48,21 @@ const UnpermittedPKPsSelection = ({
         const _tokens : Array<string> = await pkpContract.read.getTokensByAddress(ownerAddress);
         console.log("[fetchTokens] output<_tokens>:", _tokens);
         
-        let _unpermitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
-            return await routerContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? null : pkpId;
+        let permitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
+            return await routerContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? pkpId : null;
         })
-        _unpermitted = _unpermitted.filter((pkpId) => pkpId != null)
+        permitted = permitted.filter((pkpId) => pkpId != null)
 
-        console.log("[_unpermitted] output<_unpermitted>:", _unpermitted);
+        console.log("[permitted] output<permitted>:", permitted);
 
-        setTokens(_unpermitted);
+        setTokens(permitted);
 
         // -- only run the first time
         if( ! refresh ){
-            setSelectedToken(_unpermitted[0])
+            setSelectedToken(permitted[0])
 
             if( onDefaultToken ){
-                onDefaultToken(_unpermitted[0]);
+                onDefaultToken(permitted[0]);
             }
         }
     }
@@ -106,4 +106,4 @@ const UnpermittedPKPsSelection = ({
         </>
     )
 }
-export default UnpermittedPKPsSelection;
+export default SelectionPermittedPKPs;

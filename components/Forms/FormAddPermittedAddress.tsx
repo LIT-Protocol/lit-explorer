@@ -6,9 +6,9 @@ import { MyProgressI } from "../UI/CardInputs";
 import MyButton from "../UI/MyButton";
 import MyCard from "../UI/MyCard";
 import MyProgress from "../UI/MyProgress";
-import PermittedPKPsSelection from "./PermittedPKPsSelection";
+import SelectionUnpermittedPKPs from "./SelectionUnpermittedPKPs";
 
-const RevokePermittedActionForm = ({
+const FormAddPermittedAddress = ({
     ipfsId,
     onDone,
 } : {
@@ -23,22 +23,22 @@ const RevokePermittedActionForm = ({
     const [isActionRegistered, setIsActionRegisterd] = useState(false);
     const [selectedPKPId, setSelectedPKPId] = useState();
     const [childRefresh, setChildRefresh] = useState(0);
-    const [progress, setProgress] = useState<MyProgressI>();
-
+    
+const [progress, setProgress] = useState<MyProgressI>();
     // -- (mounted)
     useEffect(() => {
 
         // -- validate
         if( ! ipfsId ) return;
-
+ 
         // -- refresh
         setChildRefresh(prev => prev + 1);
 
         (async() => {
-            
-            console.log("[RevokePermittedActionForm] input<ipfsId>:", ipfsId);
+        
+            console.log("[FormAddPermittedAddress] input<ipfsId>:", ipfsId);
             const _isRegistered = await routerContract.read.isActionRegistered(ipfsId);
-            console.log("[RevokePermittedActionForm] output<_isRegistered>:", _isRegistered);
+            console.log("[FormAddPermittedAddress] output<_isRegistered>:", _isRegistered);
             setIsActionRegisterd(_isRegistered);
 
         })();
@@ -68,18 +68,18 @@ const RevokePermittedActionForm = ({
             throwError("_ipfsId cannot be empty!");
             return;
         }
-         
-        // -- execute
-        setProgress({message: `Revoking action from ${_pkpId}...`, progress: 50})
         
+        // -- execute
+        setProgress({message: `Permitting action to ${_pkpId}...`, progress: 50})
         console.log("[onSubmit]: input<_pkpId>:", _pkpId);
         console.log("[onSubmit]: input<_ipfsId>:", _ipfsId);
         
         let tx: any;
         
         try{
-            tx = await routerContract.write.revokePermittedAction(_pkpId, _ipfsId);
+            tx = await routerContract.write.addPermittedAction(_pkpId, _ipfsId);
             console.log("[onSubmit]: output<tx>:", tx);
+
             setProgress({message: `Waiting for confirmation...`, progress: 75})
             const res = await tx.wait();
             console.log("[onSubmit]: output<res>:", res);
@@ -94,11 +94,10 @@ const RevokePermittedActionForm = ({
                 onDone();
             }
 
+
         }catch(e: any){
             throwError(e.message);
             setProgress({message: ``, progress: 0});
-            return;
-
         }
         
     }
@@ -127,7 +126,7 @@ const RevokePermittedActionForm = ({
 
         return (
             <div className="mt-12 flex">
-                <MyButton onClick={onSubmit} className="ml-auto">Revoke Action</MyButton>
+                <MyButton onClick={onSubmit} className="ml-auto">Permit action</MyButton>
             </div>            
         )
 
@@ -141,7 +140,7 @@ const RevokePermittedActionForm = ({
         if (_progress > 0) return <></>
 
         return (
-            <PermittedPKPsSelection
+            <SelectionUnpermittedPKPs
                 title="Select your PKP"
                 onSelect={onSelectPKP}
                 refresh={childRefresh}
@@ -158,7 +157,7 @@ const RevokePermittedActionForm = ({
     const renderPKPSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard title="Revoke Permitted action from your PKP">
+                <MyCard title="Add Permitted action to your PKP">
                     { renderProgress() }
 
                     { renderForm() }
@@ -180,4 +179,4 @@ const RevokePermittedActionForm = ({
         </>
     )
 }
-export default RevokePermittedActionForm;
+export default FormAddPermittedAddress;

@@ -4,7 +4,7 @@ import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import { asyncForEachReturn } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
 
-const PermittedPKPsSelection = ({ 
+const SelectionUnpermittedPKPs = ({ 
     title,
     onSelect,
     refresh,
@@ -31,7 +31,7 @@ const PermittedPKPsSelection = ({
 
         // -- debug
         if(refresh){
-            console.log("[PermittedPKPsSelection] refresh:", refresh);
+            console.log("[SelectionUnpermittedPKPs] refresh:", refresh);
         }
         
         (async() => {
@@ -48,21 +48,21 @@ const PermittedPKPsSelection = ({
         const _tokens : Array<string> = await pkpContract.read.getTokensByAddress(ownerAddress);
         console.log("[fetchTokens] output<_tokens>:", _tokens);
         
-        let permitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
-            return await routerContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? pkpId : null;
+        let _unpermitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
+            return await routerContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? null : pkpId;
         })
-        permitted = permitted.filter((pkpId) => pkpId != null)
+        _unpermitted = _unpermitted.filter((pkpId) => pkpId != null)
 
-        console.log("[permitted] output<permitted>:", permitted);
+        console.log("[_unpermitted] output<_unpermitted>:", _unpermitted);
 
-        setTokens(permitted);
+        setTokens(_unpermitted);
 
         // -- only run the first time
         if( ! refresh ){
-            setSelectedToken(permitted[0])
+            setSelectedToken(_unpermitted[0])
 
             if( onDefaultToken ){
-                onDefaultToken(permitted[0]);
+                onDefaultToken(_unpermitted[0]);
             }
         }
     }
@@ -106,4 +106,4 @@ const PermittedPKPsSelection = ({
         </>
     )
 }
-export default PermittedPKPsSelection;
+export default SelectionUnpermittedPKPs;

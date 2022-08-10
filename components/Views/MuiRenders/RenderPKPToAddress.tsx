@@ -2,16 +2,21 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AppRouter } from "../../../utils/AppRouter";
-import { pub2Addr } from "../../../utils/converter";
+import { heyShorty, pub2Addr } from "../../../utils/converter";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
 
-export const PubKey = ({
+export interface MyOptions {
+    copy?: boolean,
+    short?: boolean,
+}
+
+export const Address = ({
     pkpId,
-    copyOnly,
+    options
 } : {
     pkpId: number,
-    copyOnly?: boolean
+    options: MyOptions
 }) => {
 
     // -- (app context)
@@ -38,37 +43,38 @@ export const PubKey = ({
 
     }, [])
 
-    // -- (event) handleClick
-    const handleClick = async (e: any) => {
-        
-        e.preventDefault();
-        
-        const value = e.target.innerText;
-
-        router.push(AppRouter.getPage(value))
-    }
-
-    
     // -- (validation)
     if( ! address ) return <>Loading...</>
 
-    if( copyOnly ) return <Copy value={address}/>
+    // -- (render) render value
+    const renderValue = (address: string) => {
+
+        return (
+            <>
+                <a href={`${AppRouter.getPage(address)}`} onClick={() => router.push(AppRouter.getPage(address))}>
+                { options?.short ? heyShorty(address) : address }
+                </a>
+                { options?.copy ? <Copy value={address} /> : '' }
+            </>
+        )
+
+    }
 
     // -- (finally)
     return (
-        <>
-            <a href={`${AppRouter.getPage(address)}`} onClick={handleClick}>{ address }</a>
-        </>
+        <div className="flex ">
+            { renderValue(address) }
+        </div>
     )
 }
 
-const RenderPubKey = (props: GridRenderCellParams, copyOnly = false) => {
+const RenderPKPToAddress = (props: GridRenderCellParams, options: MyOptions) => {
 
     const pkpId = props.row.tokenId;
 
     return (
-        <PubKey pkpId={pkpId} copyOnly={copyOnly}/>
+        <Address pkpId={pkpId} options={options}/>
     )
 }
 
-export default RenderPubKey;
+export default RenderPKPToAddress;

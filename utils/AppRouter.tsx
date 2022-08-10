@@ -18,11 +18,11 @@ export class AppRouter{
      */
     static getSearchType = (text: string) : SupportedSearchTypes | never => {
 
-        if( text.includes('0x') ){
+        if( text?.includes('0x') ){
             return SupportedSearchTypes.ETH_ADDRESS;
         }
     
-        if( ! text.includes('0x') && (parseInt(text).toString()) !== 'NaN'){
+        if( ! text?.includes('0x') && (parseInt(text).toString()) !== 'NaN'){
             return SupportedSearchTypes.PKP_TOKEN_ID;
         }
     

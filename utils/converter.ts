@@ -109,5 +109,5 @@ export const heyShorty = (addr: string) => {
         return null;
     }
 
-    return addr.substring(0, 5) + '...' + addr.substring(addr.length - 4, addr.length);
+    return addr.substring(0, 10) + '...' + addr.substring(addr.length - 10, addr.length);
 }

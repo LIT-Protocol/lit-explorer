@@ -6,9 +6,9 @@ import { MyProgressI } from "../UI/CardInputs";
 import MyButton from "../UI/MyButton";
 import MyCard from "../UI/MyCard";
 import MyProgress from "../UI/MyProgress";
-import UnpermittedPKPsSelection from "./UnpermittedPKPsSelection";
+import SelectionUnpermittedPKPs from "./SelectionUnpermittedPKPs";
 
-const AddPermittedActionForm = ({
+const FormAddPermittedAction = ({
     ipfsId,
     onDone,
 } : {
@@ -23,8 +23,8 @@ const AddPermittedActionForm = ({
     const [isActionRegistered, setIsActionRegisterd] = useState(false);
     const [selectedPKPId, setSelectedPKPId] = useState();
     const [childRefresh, setChildRefresh] = useState(0);
-    const [progress, setProgress] = useState<MyProgressI>();
-
+    
+const [progress, setProgress] = useState<MyProgressI>();
     // -- (mounted)
     useEffect(() => {
 
@@ -36,9 +36,9 @@ const AddPermittedActionForm = ({
 
         (async() => {
         
-            console.log("[AddPermittedActionForm] input<ipfsId>:", ipfsId);
+            console.log("[FormAddPermittedAction] input<ipfsId>:", ipfsId);
             const _isRegistered = await routerContract.read.isActionRegistered(ipfsId);
-            console.log("[AddPermittedActionForm] output<_isRegistered>:", _isRegistered);
+            console.log("[FormAddPermittedAction] output<_isRegistered>:", _isRegistered);
             setIsActionRegisterd(_isRegistered);
 
         })();
@@ -140,7 +140,7 @@ const AddPermittedActionForm = ({
         if (_progress > 0) return <></>
 
         return (
-            <UnpermittedPKPsSelection
+            <SelectionUnpermittedPKPs
                 title="Select your PKP"
                 onSelect={onSelectPKP}
                 refresh={childRefresh}
@@ -179,4 +179,4 @@ const AddPermittedActionForm = ({
         </>
     )
 }
-export default AddPermittedActionForm;
+export default FormAddPermittedAction;

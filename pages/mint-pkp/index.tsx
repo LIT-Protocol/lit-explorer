@@ -1,12 +1,12 @@
 import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
-import MintNewPKP from "../../components/Forms/MintPKPForm";
+import FormMintNewPKP from "../../components/Forms/FormMintPKP";
 
 const MintPKPPage: NextPageWithLayout = () => {
   return (
     <>
       <div className="mt-12">
-        <MintNewPKP/>
+        <FormMintNewPKP/>
       </div>
     </>
   )

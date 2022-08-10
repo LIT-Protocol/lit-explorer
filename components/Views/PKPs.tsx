@@ -3,7 +3,8 @@ import { appendEvenWidths } from "../../utils/mui/mui";
 import Copy from "../UI/Copy";
 import LoadData from "../ViewModals/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
-import RenderPubKey from "./MuiRenders/RenderPubKey";
+import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
+import RenderToPubKey from "./MuiRenders/RenderToPubKey";
 
 const PKPs = () => {
 
@@ -19,15 +20,17 @@ const PKPs = () => {
                 return rawData?.data?.tokens;
             } }
             renderCols={(width: number) => {
-                return [
-                    { headerName: "PKP Token ID", field: "tokenId", width: width * .4, renderCell: RenderLink},
-                    { headerName: "Address", field: "address", width: width * .4, renderCell: (props: GridRenderCellParams) => {
-                        return RenderPubKey(props);
+                return appendEvenWidths([
+                    { headerName: "PKP Token ID", field: "tokenId", renderCell: (props: GridRenderCellParams) => {
+                        return RenderLink(props, {short: true, copy: true}); 
                     }},
-                    { headerName: "", field: "copy", width: width * .2, renderCell: (props: GridRenderCellParams) => {
-                        return RenderPubKey(props, true);
+                    { headerName: "ETH Address", field: "address", renderCell: (props: GridRenderCellParams) => {
+                        return RenderPKPToAddress(props, {short: true, copy: true});
                     }},
-                ];
+                    { headerName: "Public Key", field: "copy", renderCell: (props: GridRenderCellParams) => {
+                        return RenderToPubKey(props, {short: true, copy: true});
+                    }},
+                ], width);
             } }
             renderRows={(filteredData: any) => {
             return filteredData?.map((item: any, i: number) => {

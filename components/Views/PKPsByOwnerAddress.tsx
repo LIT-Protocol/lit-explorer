@@ -4,7 +4,7 @@ import { appendEvenWidths } from "../../utils/mui/mui";
 import LoadData from "../ViewModals/LoadData";
 import RenderDate from "./MuiRenders/RenderDate";
 import RenderLink from "./MuiRenders/RenderLink";
-import RenderPubKey from "./MuiRenders/RenderPubKey";
+import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
 
 const PKPsByOwnerAddress = ({ownerAddress} : {
     ownerAddress: string
@@ -31,7 +31,7 @@ const PKPsByOwnerAddress = ({ownerAddress} : {
             renderCols={(width: any) => {
                 return appendEvenWidths([
                     { headerName: "PKP Token ID", field: "tokenId", renderCell: RenderLink},
-                    { headerName: "Address", field: "address", renderCell: RenderPubKey},
+                    { headerName: "Address", field: "address", renderCell: RenderPKPToAddress},
                     { headerName:"Acquired Date", field: "date",  renderCell: RenderDate},
                     { headerName:"From", field: "from"},
                 ], width);
