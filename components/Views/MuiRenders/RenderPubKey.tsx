@@ -8,8 +8,10 @@ import Copy from "../../UI/Copy";
 
 export const PubKey = ({
     pkpId,
+    copyOnly,
 } : {
-    pkpId: number
+    pkpId: number,
+    copyOnly?: boolean
 }) => {
 
     // -- (app context)
@@ -18,7 +20,6 @@ export const PubKey = ({
 
     // -- (states)
     const [address, setAddress] = useState<string>();
-    const [loading, setLoading] = useState(false);
     
     // -- (mounted)
     useEffect(() => {
@@ -49,8 +50,9 @@ export const PubKey = ({
 
     
     // -- (validation)
-    if( loading ) return <>Loading...</>
     if( ! address ) return <>Loading...</>
+
+    if( copyOnly ) return <Copy value={address}/>
 
     // -- (finally)
     return (
@@ -60,12 +62,12 @@ export const PubKey = ({
     )
 }
 
-const RenderPubKey = (props: GridRenderCellParams) => {
+const RenderPubKey = (props: GridRenderCellParams, copyOnly = false) => {
 
     const pkpId = props.row.tokenId;
 
     return (
-        <PubKey pkpId={pkpId}/>
+        <PubKey pkpId={pkpId} copyOnly={copyOnly}/>
     )
 }
 

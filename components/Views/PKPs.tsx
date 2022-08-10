@@ -25,7 +25,7 @@ const PKPs = () => {
                         return RenderPubKey(props);
                     }},
                     { headerName: "", field: "copy", width: width * .2, renderCell: (props: GridRenderCellParams) => {
-                        return <><Copy value={props.row.tokenId}/></>;
+                        return RenderPubKey(props, true);
                     }},
                 ];
             } }
