@@ -9,12 +9,20 @@ interface Web3WalletProps{
     ownerAddress: any,
 }
 
-const getWeb3Wallet = async () : Promise<Web3WalletProps> => {
+const defaultProps = {
+    wallet: null, 
+    signer: null, 
+    addresses: null,
+    ownerAddress: null,
+}
+
+const getWeb3Wallet = async () : Promise<Web3WalletProps | never> => {
+    
     const web3Provider = window.ethereum;
 
     if( ! web3Provider ){
         alert("Please connect to a web3 wallet like Metamask.");
-        return {wallet: null, signer: null, addresses: null};
+        return defaultProps;
     }
 
     await web3Provider.request({

@@ -4,8 +4,14 @@ import MyDescription from "../../components/UI/MyDescription";
 import RLIs from "../../components/Views/RLIs";
 import RLITotalSupply from "../../components/Views/Stats/RLITotalSupply";
 import MyCard from "../../components/UI/MyCard";
+import Refreshable from "../../components/ViewModels/Refreshable";
+import FormMintRLI from "../../components/Forms/FormMintRLI";
+import MyButton from "../../components/UI/MyButton";
+import { useState } from "react";
 
 const RLIsPage: NextPageWithLayout = () => {
+
+  const [refresh, onRefresh] = useState(0);
 
   const renderDescription = () => {
 
@@ -31,8 +37,11 @@ const RLIsPage: NextPageWithLayout = () => {
     <>
       { renderDescription() }
       { renderStats() }
-      
-      <RLIs/>
+
+      <Refreshable refresh={refresh}>
+        <FormMintRLI onMint={() => onRefresh(prev => prev + 1)}/>
+        <RLIs/>
+      </Refreshable>
     </>
   )
 }

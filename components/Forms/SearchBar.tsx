@@ -9,14 +9,20 @@ const SearchBar = (props: {
 
     // -- (config)
     const config = {
-      placeholder : props?.placeholder ?? 'Search by address, pkp token id, or cid/ipfsid...',
+      placeholder : props?.placeholder ?? 'Search by Address / PKP Token ID / RFI Token ID / IPFS ID / ',
       imgSrc: props?.imgSrc ?? '/svg/search.svg',
     }
 
     // -- (finally)
     return (
         <div className="search-bar">
-          <Input id="search-bar" onKeyDown={props.onSearch} className="input-bright" type="search" placeholder={config.placeholder} />
+          
+          <Input id="search-bar" 
+            onKeyDown={props.onSearch} 
+            className="input-bright" 
+            type="search" 
+            placeholder={config.placeholder} 
+          />
 
           <Button onClick={props.onSearch} className='btn-clear'>
             <img src={config.imgSrc} alt="search"/>

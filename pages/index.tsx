@@ -16,8 +16,7 @@ const Home: NextPageWithLayout = () => {
 
   return (
     <div className="mt-12">
-    {/* Home page is empty, try other pages  */}
-    <CircularProgress/>
+      <CircularProgress/>
     </div>
   )
 }

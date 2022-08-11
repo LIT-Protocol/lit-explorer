@@ -6,7 +6,7 @@ import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";
 import { wait } from "../../utils/utils";
 
-const RLIMint = ({
+const FormMintRLI = ({
     onMint
 }: {
     onMint?(cost: MultiETHFormat, tx: any): void
@@ -53,11 +53,11 @@ const RLIMint = ({
         
         console.log("cost:", cost);
 
-        
         setProgress({
             progress: 75,
             message: 'Minting...',
         })
+        
         // -- mint
         const mintTx = await rliContract.write.mint({
             mintCost: {
@@ -87,10 +87,10 @@ const RLIMint = ({
     return (
         <div className="mt-12 mb-12">
             <CardInputs 
-                title="Set RLI Capacity"
+                title="Mint a Rate Limit Increase NFT"
                 fields={[
                     {
-                        title: "requests/millisecond",
+                        title: "Requests/millisecond",
                         label: "",
                     },
                     {
@@ -105,4 +105,4 @@ const RLIMint = ({
         </div>
     )
 }
-export default RLIMint;
+export default FormMintRLI;

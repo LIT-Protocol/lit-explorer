@@ -382,3 +382,7 @@ body {
 .m-auto{
   margin: auto;
 }
+
+#main-dynamic-content{
+  padding-bottom: 100px;
+}

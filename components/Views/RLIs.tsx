@@ -41,7 +41,9 @@ const RLIs = () => {
             i18n={{
                 titleId: 'all rlis - title',
                 errorMessageId: 'all rlis - error',
+                loadingId: 'all rlis - loading',
             }}
+            loadingMessage={''}
             debug={false}
             data={tokens}
             useData={true}
@@ -50,8 +52,8 @@ const RLIs = () => {
                 return appendEvenWidths([
                     { headerName: "Token ID", field: "tokenID", renderCell: RenderRLITokenId},
                     { headerName: "Requests/second", field: "requestsPerSecond"},
-                    { headerName: "Expires", field: "expires"},
-                    { headerName: "Expired at", field: "expired"},
+                    { headerName: "Expiry date", field: "expires"},
+                    { headerName: "Expired", field: "expired"},
                     { headerName: "View more", field: "viewMore", renderCell: (props: any) =>{
                         return <RLICapacityModal capacity={props.formattedValue}/>
                     }},

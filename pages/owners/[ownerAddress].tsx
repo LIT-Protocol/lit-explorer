@@ -3,7 +3,7 @@ import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";
 import { useAppContext } from "../../components/Contexts/AppContext";
-import RLIsByOwner from "../../components/Views/RLIsByOwner";
+import RLIsByOwnerAddress from "../../components/Views/RLIsByOwnerAddress";
 
 const OwnersPageById: NextPageWithLayout = () => {
 
@@ -22,7 +22,7 @@ const OwnersPageById: NextPageWithLayout = () => {
   return (
     <>
       <PKPsByOwnerAddress ownerAddress={_ownerAddress} />
-      <RLIsByOwner key={_ownerAddress} contract={rliContract} ownerAddress={_ownerAddress} />
+      <RLIsByOwnerAddress key={_ownerAddress} ownerAddress={_ownerAddress} />
     </>
   )
 }

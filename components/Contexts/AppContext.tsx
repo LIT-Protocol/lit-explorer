@@ -108,7 +108,19 @@ export const AppContextProvider = ({children}: {children: any}) => {
         rliContract: rliContract as RLIContract,
     }
 
+    // -- (render) web3 not logged
+    const renderNotLogged = () => {
+        
+        return (
+            <>
+                
+            </>
+        )
+
+    }
+
     if ( ! loaded ) return <>Loading context...</>;
+    if ( ! loaded ) return <></>;
 
     return (
         <AppContext.Provider value={sharedStates}>

@@ -150,11 +150,13 @@ export class ReadRLIContract {
             
             const token = await this.contract.tokenOfOwnerByIndex(ownerAddress, i);
 
-            const URI = await this.getTokenURIByIndex(i);
+            const tokenIndex = parseInt(token);
 
-            const capacity = await this.getCapacityByIndex(i);
+            const URI = await this.getTokenURIByIndex(tokenIndex);
 
-            const isExpired = await this.isTokenExpired(i);
+            const capacity = await this.getCapacityByIndex(tokenIndex);
+
+            const isExpired = await this.isTokenExpired(tokenIndex);
             
             return { 
                 tokenId: parseInt(token), 
@@ -176,11 +178,13 @@ export class ReadRLIContract {
             
             const token = await this.contract.tokenByIndex(i);
 
-            const URI = await this.getTokenURIByIndex(i);
+            const tokenIndex = parseInt(token);
 
-            const capacity = await this.getCapacityByIndex(i);
+            const URI = await this.getTokenURIByIndex(tokenIndex);
 
-            const isExpired = await this.isTokenExpired(i);
+            const capacity = await this.getCapacityByIndex(tokenIndex);
+
+            const isExpired = await this.isTokenExpired(tokenIndex);
             
             return { 
                 tokenId: parseInt(token), 

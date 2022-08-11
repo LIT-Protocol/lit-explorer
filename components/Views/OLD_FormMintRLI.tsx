@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
-import MyCard from "../UI/MyCard";
-import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
-import {APP_CONFIG, SupportedNetworks} from "../../app_config";
-import RLIListByOwner from "./RLIsByOwner";
-import { useAppContext } from "../Contexts/AppContext";
-import RLIMint from "./RLIMint";
+import RLIsByOwnerAddress from "./RLIsByOwnerAddress";
+import FormRLIMint from "../Forms/FormRLIMint";
 import { MultiETHFormat } from "../../utils/converter";
 import { wait } from "../../utils/utils";
+import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 
 // NOTE: TODO Flows
 // [x] Get the list of RLI a PKP controller holds
@@ -21,15 +17,9 @@ import { wait } from "../../utils/utils";
 // 5. Transfer 
 // [x]requires a date picker for calculating cost for the future
 
-const PKPStats = ({pkpId} : {
-    pkpId: any
-}) => {
-
-    // -- (app context)
-    const { rliContract } = useAppContext();
+const FormMintRLI = () => {
 
     // -- (states)
-    const [contract, setContract] = useState<RLIContract>();
     const [ownerAddress, setOwnerAddress] = useState<string>();
     const [enabledRLIListByOwner, setEnabledRLIListByOwner] = useState(false);
     
@@ -59,19 +49,8 @@ const PKPStats = ({pkpId} : {
         // -- start running straight away
         (async() => {
 
-            const { signer, ownerAddress } = await getWeb3Wallet();
+            const { ownerAddress } = await getWeb3Wallet();
 
-            console.log("ownerAddress:", ownerAddress);
-
-            const contract = new RLIContract();
-
-            await contract.connect({
-                network: SupportedNetworks.CELO_MAINNET,
-                contractAddress: APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS,
-                signer,
-            })
-
-            setContract(contract);
             setOwnerAddress(ownerAddress);
             setEnabledRLIListByOwner(true);
 
@@ -98,22 +77,18 @@ const PKPStats = ({pkpId} : {
     }, []);
 
     // -- validate
-    if(!contract || !ownerAddress ) return <>Loading...</>;
+    if( !ownerAddress ) return <>Loading...</>;
 
     return (
-        <>  
-            <div className="mt-24">
-                <MyCard title={"Stats"}>
-                    <RLIMint onMint={onMint}/>
+        <div className="mt-24">
+            <FormRLIMint onMint={onMint}/>
 
-                    {
-                        enabledRLIListByOwner ? 
-                        <RLIListByOwner contract={contract} ownerAddress={ownerAddress} /> : 
-                        ''
-                    }
-                </MyCard>
-            </div>
-        </>
+            {
+                enabledRLIListByOwner ? 
+                <RLIsByOwnerAddress ownerAddress={ownerAddress} /> : 
+                ''
+            }
+        </div>
     )
 }
-export default PKPStats;
+export default FormMintRLI;

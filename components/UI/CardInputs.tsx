@@ -37,7 +37,8 @@ interface CardInputsProps{
     fields?: Array<MyField>
     onSubmit?(formData: MyFormData): void
     progress?: MyProgressI,
-    fullWidth?: boolean
+    fullWidth?: boolean,
+    i18n?: any
 }
 
 const CardInputs = (props: CardInputsProps) => {
@@ -47,8 +48,8 @@ const CardInputs = (props: CardInputsProps) => {
     const [formDate, setFormDate] = useState<any>(null);
 
     // -- (declaration)
-    const title = props.title ?? 'Mint New PKP';
-    const buttonText = props.buttonText ?? 'MINT';
+    const title = props.title ?? '- TITLE -';
+    const buttonText = props.buttonText ?? '- MINT -';
     const fields = props?.fields ?? [];
 
     // -- (event) on button clicked
@@ -98,6 +99,7 @@ const CardInputs = (props: CardInputsProps) => {
     const renderTextField = (field: any, id: any) => {
         return (
             <div key={id} className="mb-12">
+                
                 <div>{ field.title }</div>
                 
                 <TextField

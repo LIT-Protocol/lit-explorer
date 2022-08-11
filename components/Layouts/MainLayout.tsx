@@ -2,7 +2,7 @@ import SearchBar from "../Forms/SearchBar";
 import SideNav from "../UI/SideNav";
 import throwError from '../../utils/throwError';
 import { useRouter } from "next/router";
-import { Alert, AlertTitle, Chip } from '@mui/material'
+import { Alert, AlertTitle, Button, Chip, Snackbar, Stack } from '@mui/material'
 import NavPath from "../UI/NavPath";
 import { AppRouter } from "../../utils/AppRouter";
 import { I18Provider, LOCALES } from "../Contexts/i18n";
@@ -85,6 +85,14 @@ const MainLayout = (props: MainLayoutProps) => {
 
     <I18Provider locale={locale}>
         <div className="app-context">
+
+            {/* <Snackbar open={true} autoHideDuration={6000} onClose={() => {}}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+                <Alert onClose={() => {}} severity="success" sx={{ width: '100%' }}>
+                This is a success message!
+                </Alert>
+            </Snackbar> */}
+
             {/* ----- Error message ----- */}
             <div id="global-message">
                 <Alert severity="error">

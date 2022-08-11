@@ -132,7 +132,11 @@ const LoadData = (props: LoadDataProps) => {
   // -- (render) loading
   const renderLoading = () => {
     return <>
-      <h2>{ props?.loadingMessage ?? 'Loading...'}</h2>
+      {
+        props?.i18n?.loadingId ? 
+        <h2><FormattedMessage id={props?.i18n?.loadingId} /></h2> : 
+        <h2>{ props?.loadingMessage ?? 'Loading...'}</h2>
+      }
       <Skeleton height={props.height ?? 332}></Skeleton>
     </>
   }

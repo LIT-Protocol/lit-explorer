@@ -25,5 +25,8 @@ export default {
         'rlis page' : 'By default, each Lit Action execution comes with a "free plan" that allows you to execute a limited number of requests/millisecond on the Lit nodes. To lift this limitation, you can "upgrade" your plan by purchasing an RLI NFT that comes with "flexible terms" which can be customised by 2 factors, the number of requests/millisecond and the expiry date.',
         'all rlis - title': 'Latest Rate Limit Increase NFTs',
         'all rlis - error': 'No RLI NFTs found.',
+        'all rlis - loading': 'Loading Rate Limit Increase NFTs...',
+        'mint rli - title': 'Mint a Rate Limit Increase NFT',
+        'mint rli - button': 'MINT RLI NFT',
     }
 }
