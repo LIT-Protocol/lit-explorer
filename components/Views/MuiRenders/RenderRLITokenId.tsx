@@ -17,9 +17,9 @@ const RenderRLITokenId = (props: GridRenderCellParams, options: MyOptions) => {
         return (
             <>
                 <div className="flex">
-                    {/* <a className="flex-content" href={`${AppRouter.getPage(value)}`} onClick={() => router.push(AppRouter.getPage(value))}> */}
+                    <a className="flex-content" href={`${AppRouter.getPage(value)}`} onClick={() => router.push(AppRouter.getPage(value))}>
                         { options?.short ? heyShorty(v) : v }
-                    {/* </a>                     */}
+                    </a>                    
                     { options?.copy ? <Copy value={v} /> : '' }
                 </div>
             </>

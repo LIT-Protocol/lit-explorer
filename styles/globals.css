@@ -311,6 +311,11 @@ body {
   height: 14px !important;
 }
 
+.thumbnail{
+  width: 128px;
+  width: 128px;
+}
+
 .md > .MuiCircularProgress-root{
   width: 24px !important;
   height: 24px !important;
@@ -373,4 +378,7 @@ body {
 
 .MuiSkeleton-root{
   transform-origin: 0 0% !important;
+}
+.m-auto{
+  margin: auto;
 }

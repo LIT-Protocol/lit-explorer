@@ -42,7 +42,8 @@ export const SUPPORTED_CHAINS = {
 export enum SupportedSearchTypes{
     ETH_ADDRESS = "ETH_ADDRESS",
     IPFS_ID = "IPFS_ID",
-    PKP_TOKEN_ID = "PKP_TOKEN_ID"
+    PKP_TOKEN_ID = "PKP_TOKEN_ID",
+    RLI_TOKEN_ID = "RLI_TOKEN_ID",
 }
 
 export const ROUTES = {
@@ -54,5 +55,8 @@ export const ROUTES = {
     },
     [SupportedSearchTypes.IPFS_ID]:{
         getRoute: (id : string) => `/actions/${id}`
-    }
+    },
+    [SupportedSearchTypes.RLI_TOKEN_ID]:{
+        getRoute: (id : string) => `/rlis/${id}`
+    },
 }

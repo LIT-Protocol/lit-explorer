@@ -1,3 +1,4 @@
+import { CircularProgress, Skeleton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../Contexts/AppContext";
 
@@ -28,7 +29,7 @@ const RLITotalSupply = () => {
     }
 
     // -- (validate)
-    if( ! totalSupply ) return <></>
+    if( ! totalSupply ) return <span className="sm"><CircularProgress/></span>
 
     return (<>{ totalSupply }</>)
 }

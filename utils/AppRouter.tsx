@@ -18,6 +18,12 @@ export class AppRouter{
      */
     static getSearchType = (text: string) : SupportedSearchTypes | never => {
 
+        console.log("[getSearchType] input<text>:", text);
+
+        if(parseInt(text) < 99999){
+            return SupportedSearchTypes.RLI_TOKEN_ID
+        }
+
         if( text?.includes('0x') ){
             return SupportedSearchTypes.ETH_ADDRESS;
         }
