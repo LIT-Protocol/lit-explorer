@@ -2,10 +2,14 @@ import SearchBar from "../Forms/SearchBar";
 import SideNav from "../UI/SideNav";
 import throwError from '../../utils/throwError';
 import { useRouter } from "next/router";
-import { Alert, AlertTitle } from '@mui/material'
+import { Alert, AlertTitle, Chip } from '@mui/material'
 import NavPath from "../UI/NavPath";
 import { AppRouter } from "../../utils/AppRouter";
-import { APP_CONFIG } from "../../app_config";
+import { I18Provider, LOCALES } from "../Contexts/i18n";
+import LanguagePickerModal from "../Modals/LanguagePickerModal";
+import { APP_CONFIG, APP_LINKS } from "../../app_config";
+import SupportIcon from '@mui/icons-material/Support';
+import { useEffect, useState } from "react";
 
 interface MainLayoutProps {
     children: any
@@ -15,6 +19,27 @@ const MainLayout = (props: MainLayoutProps) => {
 
     const router = useRouter();
 
+    const [locale, setLocale] = useState(LOCALES.ENGLISH);
+
+    useEffect(() => {
+
+        /**
+         * Select default language
+         */
+        console.log("locale:", locale);
+        console.log("[localStorage.getItem('lang')]:", localStorage.getItem('lang'));
+
+        const key = 'lang';
+
+        if( ! localStorage.getItem(key) ){
+            localStorage.setItem(key, LOCALES.ENGLISH);
+            setLocale(LOCALES.ENGLISH)
+        }else{
+            setLocale((localStorage.getItem(key) as string))
+        }
+
+    }, [])
+
     /**
      * 
      * Event: when user is typing on the search bar
@@ -22,7 +47,7 @@ const MainLayout = (props: MainLayoutProps) => {
      * @param { any } e event
      * @returns { void } 
      */
-      const onSearch = (e: any): void => {
+    const onSearch = (e: any): void => {
   
       // -- config
       const MIN_LENGTH = 20;
@@ -41,13 +66,25 @@ const MainLayout = (props: MainLayoutProps) => {
       const id = text;
 
       router.push(AppRouter.getPage(id))
-  
     }
+
+    // -- (event) on select language
+    const onSelectLanguage = (value: string) => {
+
+        const lang : any = LOCALES;
+        const selectedLocale = lang[value];
+
+        localStorage.setItem('lang', selectedLocale);
+
+        setLocale(selectedLocale);
+        
+    }
+
 
     return (
 
+    <I18Provider locale={locale}>
         <div className="app-context">
-
             {/* ----- Error message ----- */}
             <div id="global-message">
                 <Alert severity="error">
@@ -83,14 +120,18 @@ const MainLayout = (props: MainLayoutProps) => {
             </div>
             {/*  ----- ...Content Wrapper -----*/}
             
-            </div>
-
             {/* ----- Floating Objects ----- */}
-            <div className="support">
-                <a target="_blank" rel="noreferrer" href={APP_CONFIG.LIT_DISCORD}>Support</a>
+            <div className="support flex">
+                {/* <LanguagePickerModal onSelectLanguage={onSelectLanguage}/> */}
+                
+                <a target="_blank" rel="noreferrer" href={APP_LINKS.LIT_DISCORD}>
+                    <Chip onClick={ () => {} } icon={<SupportIcon />} label="Support"/>
+                </a>
+            </div>
+            
             </div>
         </div>
-
+        </I18Provider>
       )
 }
 export default MainLayout;

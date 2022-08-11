@@ -9,8 +9,9 @@ import { useRouter } from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
 import MyProgress from "../../components/UI/MyProgress";
 import MyCard from "../../components/UI/MyCard";
-import { APP_CONFIG } from "../../app_config";
+import { APP_CONFIG, APP_LINKS } from "../../app_config";
 import { tryUntil } from "../../utils/tryUntil";
+import MyDescription from "../../components/UI/MyDescription";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -194,10 +195,22 @@ go();`;
 
   }
 
+  const renderDescription = () => {
+
+    return (
+      <MyDescription titleId="what are lit actions - title" paragraphs={[
+        { id: 'what are lit actions' },
+        { id: 'read more', link: APP_LINKS.WORKING_WITH_LIT_ACTIONS },
+      ]}/>
+    )
+
+  }
+
   // (validations)
 
   return (
     <>
+      { renderDescription() }
       { renderProgress() }
       { renderPostUpload() }
       { renderContent() }      

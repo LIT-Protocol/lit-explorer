@@ -34,6 +34,7 @@ const AppContext = createContext(defaultSharedStates);
 
 export const AppContextProvider = ({children}: {children: any}) => {
     
+    // -- (shared states)
     const [pkpContract, setPkpContract] = useState<PKPContract>();
     const [routerContract, setRouterContract] = useState<RouterContract>();
     const [rliContract, setRliContract] = useState<RLIContract>();
@@ -96,14 +97,15 @@ export const AppContextProvider = ({children}: {children: any}) => {
              */
             await connectContracts();
 
+
         })();
 
-    });
+    }, []);
 
     let sharedStates = {
         pkpContract: pkpContract as PKPContract,
         routerContract: routerContract as RouterContract,
-        rliContract: rliContract as RLIContract
+        rliContract: rliContract as RLIContract,
     }
 
     if ( ! loaded ) return <>Loading context...</>;

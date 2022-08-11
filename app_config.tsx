@@ -6,7 +6,14 @@ export const APP_CONFIG = {
     ECDSA_KEY: 2,
     IPFS_PIN_NAME: 'Lit Explorer v0.0.1',
     IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
-    LIT_DISCORD: 'https://discord.com/channels/896185694857343026/1002588409153458228'
+}
+
+/** ========== LINKS ========== */
+export const APP_LINKS = {
+    WHAT_IS_PKP: 'https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs',
+    WORKING_WITH_LIT_ACTIONS: 'https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions',
+    // LIT_DISCORD: 'https://discord.com/channels/896185694857343026/1002588409153458228',
+    LIT_DISCORD: 'https://litgateway.com/discord',
 }
 
 /** ========== SUPPORTED NETWORKS ========== */

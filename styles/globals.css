@@ -364,3 +364,9 @@ body {
 .text-sm{
   font-size: 0.75em;
 }
+.p-12{
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
