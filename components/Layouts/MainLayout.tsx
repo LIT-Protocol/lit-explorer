@@ -122,7 +122,7 @@ const MainLayout = (props: MainLayoutProps) => {
             
             {/* ----- Floating Objects ----- */}
             <div className="support flex">
-                {/* <LanguagePickerModal onSelectLanguage={onSelectLanguage}/> */}
+                <LanguagePickerModal onSelectLanguage={onSelectLanguage}/>
                 
                 <a target="_blank" rel="noreferrer" href={APP_LINKS.LIT_DISCORD}>
                     <Chip onClick={ () => {} } icon={<SupportIcon />} label="Support"/>
