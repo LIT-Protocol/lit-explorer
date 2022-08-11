@@ -18,7 +18,7 @@ const rows = [
   createData('LITToken', '0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b'),
   createData('PKPNFT', APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS),
   createData('PubkeyRouterAndPermissions', APP_CONFIG.ROUTER_CONTRACT_ADDRESS),
-  createData('Rate Limit NFT', APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS),
+  createData('Rate Limit Increase NFT', APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS),
   createData('Multisender', '0xe9e9613881F95987559ab943c539f256E582F839'),
   createData('Deployer address', '0x50e2dac5e78B5905CB09495547452cEE64426db2'),
   createData('Staked node address', '0xdbd360F30097fB6d938dcc8B7b62854B36160B45'),

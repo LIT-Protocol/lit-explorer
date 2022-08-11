@@ -1,9 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import getPKPNFTContract from '../../utils/blockchain/getPKPNFTContract';
-
-// @ts-ignore
-import converter from 'hex2dec';
+import { PKPContract } from '../../utils/blockchain/contracts/PKPContract';
 
 type Data = {
   id?: string
@@ -16,27 +13,11 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
 
-  const contract = await getPKPNFTContract();
-  
-  let tokens = [];
+  const pkpContract = new PKPContract();
 
-  for(let i = 0;; i++){
+  await pkpContract.connect();
 
-    let token;
-
-    try{
-
-      token = JSON.parse(JSON.stringify(await contract.tokenByIndex(i)));
-
-      token = converter.hexToDec(token.hex); 
-
-      tokens.push(token);
-    
-    }catch(e){
-      console.log(`End of loop: ${i}`)
-      break;
-    }
-  }
+  const tokens = await pkpContract.read.getTokens();
 
   const data = {
     tokens

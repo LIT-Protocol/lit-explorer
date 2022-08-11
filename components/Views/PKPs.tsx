@@ -1,5 +1,4 @@
 import { appendEvenWidths } from "../../utils/mui/mui";
-import Copy from "../UI/Copy";
 import LoadData from "../ViewModels/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
@@ -11,6 +10,7 @@ const PKPs = () => {
     return (
         <LoadData
             debug={false}
+            cache={false}
             title="PKP Tokens:"
             loadingMessage="Loading PKPs..."
             errorMessage="No PKPs found."

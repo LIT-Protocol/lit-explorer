@@ -30,11 +30,15 @@ export class RouterContract{
      */
      connect = async (props?: ContractProps): Promise<void> => {
         
-        this.contract = await getContract({
+        const config = {
             network: props?.network ?? SupportedNetworks.CELO_MAINNET,
             signer: props?.signer,
             contractAddress: props?.contractAddress ?? APP_CONFIG.ROUTER_CONTRACT_ADDRESS
-        });
+        };
+
+        this.contract = await getContract(config);
+
+        console.log("[RouterContract] connect input<config>:", config);
 
         this.read = new ReadRouterContract(this.contract);
         this.write = new WriteRouterContract(this.contract);

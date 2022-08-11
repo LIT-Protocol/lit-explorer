@@ -12,6 +12,7 @@ export default {
         'PKPs': 'PKPS',
         'Actions': 'Actions',
         'Contracts': 'Contracts',
+        'RLIs': 'RLIs',
         'what are lit actions - title': 'What are Lit Actions?',
         'what are lit actions': `Lit Actions are Javascript functions that can utilize the threshold cryptography that powers the Lit Protocol. You can write some JS code, upload it to IPFS, and ask the Lit Nodes to execute that code and return the result.`,
         'owners page - title': 'Definition of a PKP NFT owner',
@@ -20,5 +21,7 @@ export default {
         'pkps page': 'Since a PKP is a valid ECDSA wallet, you could send a mix of BTC and ETH NFTs to it, and then sell it as a bundle by selling the NFT that controls it on OpenSea. The buyer gets the ability to sign and decrypt data with the PKP, since they own the controlling NFT. The buyer could then withdraw the BTC and NFTs if desired.',
         'actions page - title': 'Where are Lit Actions stored?',
         'actions page': 'Lit Actions are stored on IPFS and are immutable, like smart contracts. You can think of them as Javascript smart contracts that have network access and can make HTTP requests.',
+        'rlis page - title': 'What is a Rate Limit Increase NFT?',
+        'rlis page' : 'By default, each Lit Action execution comes with a "free plan" that allows you to execute a limited number of requests/millisecond on the Lit nodes. To lift this limitation, you can "upgrade" your plan by purchasing an RLI NFT that comes with "flexible terms" which can be customised by 2 factors, the number of requests/millisecond and the expiry date.',
     }
 }

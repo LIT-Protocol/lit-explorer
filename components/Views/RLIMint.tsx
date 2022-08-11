@@ -87,7 +87,7 @@ const RLIMint = ({
     return (
         <div className="mt-12 mb-12">
             <CardInputs 
-                title="Set RLI Capability"
+                title="Set RLI Capacity"
                 fields={[
                     {
                         title: "requests/millisecond",

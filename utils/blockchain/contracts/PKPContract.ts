@@ -28,13 +28,17 @@ export class PKPContract{
      * @param { Signer } signer 
      * @return { void }
      */
-     connect = async (props: ContractProps): Promise<void> => {
-        
-        this.contract = await getContract({
+     connect = async (props?: ContractProps): Promise<void> => {
+
+        const config = {
             network: props?.network ?? SupportedNetworks.CELO_MAINNET,
             signer: props?.signer,
-            contractAddress: props.contractAddress
-        });
+            contractAddress: props?.contractAddress ?? APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS
+        };
+
+        console.log("[PKPContract] connect input<config>:", config);
+        
+        this.contract = await getContract(config);
 
         this.read = new ReadPKPContract(this.contract);
         this.write = new WritePKPContract(this.contract);
@@ -74,7 +78,7 @@ export class ReadPKPContract{
      * @param { string } ownerAddress 
      * @returns { Array<string> } a list of PKP NFTs
      */
-    getTokensByAddress = async (ownerAddress: string) : Promise<Array<string>>=> {
+    getTokensByAddress = async (ownerAddress: string) : Promise<Array<string>> => {
         
         // -- validate
         if ( ! ethers.utils.isAddress(ownerAddress) ){
@@ -96,12 +100,39 @@ export class ReadPKPContract{
                 tokens.push(token);
             
             }catch(e){
-                console.log(`[getTokensByAddress] end: ${i}`)
+                console.log(`[getTokensByAddress] Ended search on index: ${i}`)
                 break;
             }
         }
     
         return tokens;
+    }
+
+    
+    getTokens = async () : Promise<Array<string>> => {
+
+        let tokens = [];
+    
+        for(let i = 0;; i++){
+    
+            let token;
+    
+            try{
+    
+                token = await this.contract.tokenByIndex(i);
+    
+                token = hexToDecimal(token.toHexString()); 
+    
+                tokens.push(token);
+            
+            }catch(e){
+                console.log(`[getTokensByAddress] Ended search on index: ${i}`)
+                break;
+            }
+        }
+    
+        return tokens;
+
     }
 
 }

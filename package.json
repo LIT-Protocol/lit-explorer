@@ -20,6 +20,7 @@
     "@pinata/sdk": "^1.1.26",
     "bip32": "^3.0.1",
     "bitcoinjs-lib": "^6.0.2",
+    "bs58": "^5.0.0",
     "copy-to-clipboard": "^3.3.2",
     "date-and-time": "^2.4.1",
     "ecpair": "^2.0.1",

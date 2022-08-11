@@ -1,5 +1,5 @@
 import { BigNumber, Contract, ethers } from 'ethers';
-import { SupportedNetworks } from '../../../app_config';
+import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
 import { asyncForEachReturn } from '../../utils';
 import { milliC, MultiDateFormat, MultiETHFormat, MultiTimeFormat, timestamp2Date, wei2eth } from '../../converter';
 import { getContract } from './getContract';
@@ -33,13 +33,17 @@ export class RLIContract {
      * @param { Signer } signer 
      * @return { void }
      */
-    connect = async (props: ContractProps): Promise<void> => {
-        
-        this.contract = await getContract({
+    connect = async (props?: ContractProps): Promise<void> => {
+
+        const config = {
             network: props?.network ?? SupportedNetworks.CELO_MAINNET,
             signer: props?.signer,
-            contractAddress: props.contractAddress
-        });
+            contractAddress: props?.contractAddress ?? APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS
+        };
+
+        this.contract = await getContract(config);
+
+        console.log("[RLIContract] connect input<config>:", config);
 
         this.read = new ReadRLIContract(this.contract);
         this.write = new WriteRLIContract(this.contract);

@@ -26,6 +26,7 @@ const SideNav = () => {
                 <li><Button onClick={() => router.push('/owners')}  className={currentRoute.includes("/owners") ? "btn active" : "btn"}><FormattedMessage id='Owners' /></Button></li>
                 <li><Button onClick={() => router.push('/pkps')}  className={currentRoute.includes("/pkps") ? "btn active" : "btn"}><FormattedMessage id='PKPs' /></Button></li>
                 <li><Button onClick={() => router.push('/actions')}  className={currentRoute.includes("/actions") ? "btn active" : "btn"}><FormattedMessage id='Actions' /></Button></li>
+                <li><Button onClick={() => router.push('/rlis')}  className={currentRoute.includes("/rlis") ? "btn active" : "btn"}><FormattedMessage id='RLIs' /></Button></li>
                 <li><Button onClick={() => router.push('/contracts')}  className={currentRoute.includes("/contracts") ? "btn active" : "btn"}><FormattedMessage id='Contracts' /></Button></li>
             </ul> 
         </>
