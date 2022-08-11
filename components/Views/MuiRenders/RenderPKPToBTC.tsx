@@ -1,7 +1,8 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { heyShorty } from "../../../utils/converter";
+import { AppRouter } from "../../../utils/AppRouter";
+import { heyShorty, pub2Addr, pub2BTC } from "../../../utils/converter";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
 
@@ -33,8 +34,10 @@ export const Address = ({
             if( address ) return;
 
             const _pubKey = await routerContract.read.getFullPubKey(pkpId);
+
+            const _address = pub2BTC(_pubKey);
             
-            setAddress(_pubKey.replaceAll('0x', ''));
+            setAddress(_address);
 
         })();
 
@@ -65,7 +68,7 @@ export const Address = ({
     )
 }
 
-const RenderPKPToPubKey = (props: GridRenderCellParams, options: MyOptions = {}) => {
+const RenderPKPToBTC = (props: GridRenderCellParams, options: MyOptions) => {
 
     const pkpId = props.row.tokenId;
 
@@ -74,4 +77,4 @@ const RenderPKPToPubKey = (props: GridRenderCellParams, options: MyOptions = {})
     )
 }
 
-export default RenderPKPToPubKey;
+export default RenderPKPToBTC;

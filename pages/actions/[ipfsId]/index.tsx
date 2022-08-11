@@ -127,9 +127,7 @@ const ActionsPage: NextPageWithLayout = () => {
     const _renderNoPKPsFound = () => {
       return (
         <>
-          Click here to 
-          <MyButton onClick={() => { router.push('/mint-pkp'); }}>mint</MyButton> 
-          one!
+          <MyButton onClick={() => { router.push('/mint-pkp'); }}>Click here to mint one!</MyButton> 
         </>
       )
     }

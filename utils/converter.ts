@@ -1,6 +1,7 @@
 // @ts-ignore
 import converter from 'hex2dec';
 import { BigNumber, ethers } from "ethers";
+import * as bitcoinjs from 'bitcoinjs-lib';
 
 export interface MultiTimeFormat{
     milliseconds: number,
@@ -91,6 +92,21 @@ export const pub2Addr = (pubKey: string) => {
     }
 
     return address;
+
+}
+
+export const pub2BTC = (pubKey: string) => {
+
+    const ECDSA_PUB_KEY = pubKey.replaceAll('0x', '');
+    console.warn("ECDSA_PUB_KEY:", ECDSA_PUB_KEY)
+
+    const pubkey = Buffer.from( ECDSA_PUB_KEY, 'hex' );
+
+    const { address } = bitcoinjs.payments.p2pkh({ pubkey });
+    
+    console.warn("address:", address)
+    
+    return address
 
 }
 

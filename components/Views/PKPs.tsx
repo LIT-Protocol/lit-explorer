@@ -1,9 +1,9 @@
-import { GridRenderCellParams } from "@mui/x-data-grid";
 import { appendEvenWidths } from "../../utils/mui/mui";
 import Copy from "../UI/Copy";
 import LoadData from "../ViewModels/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
+import RenderPKPToBTC from "./MuiRenders/RenderPKPToBTC";
 import RenderPKPToPubKey from "./MuiRenders/RenderPKPToPubKey";
 
 const PKPs = () => {
@@ -21,13 +21,16 @@ const PKPs = () => {
             } }
             renderCols={(width: number) => {
                 return appendEvenWidths([
-                    { headerName: "PKP Token ID", field: "tokenId", renderCell: (props: GridRenderCellParams) => {
+                    { headerName: "PKP Token ID", field: "tokenId", renderCell: (props: any) => {
                         return RenderLink(props, {short: true, copy: true}); 
                     }},
-                    { headerName: "ETH Address", field: "address", renderCell: (props: GridRenderCellParams) => {
+                    { headerName: "ETH Address", field: "address", renderCell: (props: any) => {
                         return RenderPKPToAddress(props, {short: true, copy: true});
                     }},
-                    { headerName: "Public Key", field: "copy", renderCell: (props: GridRenderCellParams) => {
+                    { headerName: "BTC Address", field: "btc", renderCell: (props: any) => {
+                        return RenderPKPToBTC(props, {short: true, copy: true});
+                    }},
+                    { headerName: "Public Key", field: "copy", renderCell: (props: any) => {
                         return RenderPKPToPubKey(props, {short: true, copy: true});
                     }},
                 ], width);
@@ -38,6 +41,7 @@ const PKPs = () => {
                     id: i + 1,
                     tokenId: item,
                     address: item,
+                    btc: item,
                     copy: item,
                 };
             });
