@@ -60,7 +60,6 @@ const RLIsByOwner = ({
                 onDone={onTransferCompleted}
             />
         </>
-
     }
 
     // -- (validations)
@@ -93,14 +92,14 @@ const RLIsByOwner = ({
                 } }
                 renderRows={(filteredData: any) => {
                     return filteredData?.map((RLI: any, i: number) => {
-                    return {
-                        id: i + 1,
-                        tokenID: RLI.tokenId,
-                        requestsPerSecond: RLI.capacity.requestsPerMillisecond,
-                        expires: RLI.capacity.expiresAt.formatted,
-                        expired: RLI.isExpired,
-                        RLI,
-                    };
+                        return {
+                            id: i + 1,
+                            tokenID: RLI.tokenId,
+                            requestsPerSecond: RLI.capacity.requestsPerMillisecond,
+                            expires: RLI.capacity.expiresAt.formatted,
+                            expired: RLI.isExpired,
+                            RLI,
+                        };
                     });
                 } }                         />
         {/* ------ ... List of RLIs owner owns ----- */}

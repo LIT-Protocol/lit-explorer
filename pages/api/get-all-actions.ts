@@ -1,10 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import getPKPNFTContract from '../../utils/blockchain/getPKPNFTContract';
-import pinataSDK, { PinataMetadataFilter, pinList } from '@pinata/sdk';
-
-// @ts-ignore
-import converter from 'hex2dec';
+import pinataSDK from '@pinata/sdk';
 import { APP_CONFIG } from '../../app_config';
 
 // https://github.com/PinataCloud/Pinata-SDK

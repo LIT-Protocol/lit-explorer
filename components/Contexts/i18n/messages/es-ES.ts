@@ -20,5 +20,6 @@ export default {
         'pkps page': 'Dado que un PKP es una billetera ECDSA válida, puede enviarle una combinación de BTC y ETH NFT y luego venderlo como un paquete vendiendo el NFT que lo controla en OpenSea. El comprador tiene la capacidad de firmar y descifrar datos con el PKP, ya que posee el NFT de control. El comprador podría luego retirar el BTC y los NFT si lo desea.',
         'actions page - title': '¿Dónde se almacenan Las Acciones Lit?',
         'actions page': 'Las Acciones Lit se almacenan en IPFS y son inmutables, como los contratos inteligentes. Puede pensar en ellos como contratos inteligentes de Javascript que tienen acceso a la red y pueden realizar solicitudes HTTP.',
+        'all rlis title': 'Latest Rate Limit Increase NFTs(in Spanish)',
     }
 }

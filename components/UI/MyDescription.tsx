@@ -20,15 +20,13 @@ const MyDescription = ({
 
                     // -- if it's a link
                     if( p?.link) {
-                        return <FormattedMessage id={p.id}>
+                        return <FormattedMessage key={p.id} id={p.id}>
                         {chunks => <a href={p.link} rel="noreferrer" target="_blank">{ chunks }</a>}
                         </FormattedMessage>
                     }
 
                     // -- else
-                    return <>
-                        <FormattedMessage id={p.id} />
-                    </>
+                    return <FormattedMessage key={p.id} id={p.id} />
                 })
             }
           </Typography>

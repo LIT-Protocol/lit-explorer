@@ -67,7 +67,7 @@ export class ReadRLIContract {
     // ========== Global Scope ==========
     totalSupply = async () : Promise<number> => {
         
-        const total = await this.contract.totalIdCounter();
+        const total = await this.contract.totalSupply();
 
         return parseInt(total);
 
@@ -146,9 +146,35 @@ export class ReadRLIContract {
 
         const total = await this.getTotalRLIByOwnerAddress(ownerAddress);
 
-        const tokens = asyncForEachReturn([...new Array(total)], async (_: undefined, i: number) => {
+        const tokens = await asyncForEachReturn([...new Array(total)], async (_: undefined, i: number) => {
             
             const token = await this.contract.tokenOfOwnerByIndex(ownerAddress, i);
+
+            const URI = await this.getTokenURIByIndex(i);
+
+            const capacity = await this.getCapacityByIndex(i);
+
+            const isExpired = await this.isTokenExpired(i);
+            
+            return { 
+                tokenId: parseInt(token), 
+                URI,
+                capacity,
+                isExpired
+            };
+        })
+
+        return tokens;
+    }
+
+    getTokens = async () : Promise<any> => {
+
+        let total = await this.contract.totalSupply();
+        total = parseInt(total);
+
+        const tokens = await asyncForEachReturn([...new Array(total)], async (_: any, i: number) => {
+            
+            const token = await this.contract.tokenByIndex(i);
 
             const URI = await this.getTokenURIByIndex(i);
 

@@ -1,23 +1,26 @@
-import { Alert } from "@mui/material"
+import { Alert, Skeleton } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useEffect, useState } from "react"
 import DisplayCode from "../UI/DisplayCode"
 import { cacheFetch } from "../../utils/cacheFetch"
 import getContentWidth from "../../utils/getContentWidth"
+import { FormattedMessage } from 'react-intl';
 
 interface LoadDataProps{
-    title: string
-    errorMessage: string
+    title?: string
+    errorMessage?: string
     fetchPath?: string
     data?: any
-    debug?: boolean
+    debug: boolean
     filter: Function
     renderCols?: Function,
     renderRows?: Function,
     loadingMessage?: string,
     height?: number
     renderStatus?: JSX.Element,
-    cache?: boolean
+    cache?: boolean,
+    i18n?: any,
+    useData?: boolean
 }
 
 const LoadData = (props: LoadDataProps) => {
@@ -74,10 +77,16 @@ const LoadData = (props: LoadDataProps) => {
    */
   useEffect(() => {
     setLoading(true);
-    console.log("LoadData:", props.fetchPath);
+    console.log("[LoadData] to fetch:", props.fetchPath);
+
+    // -- if data is provided already, so didn't have to fetch
+    if( props?.useData ){
+      preloadData(props.data);
+      return;
+    }
 
     // -- if fetch path is provided
-    if( ! props.data ){
+    if( ! props?.useData){
       console.log("--- use fetch ---");
       cacheFetch(`${props.fetchPath}`, async (rawData: any) => {
         preloadData(rawData);
@@ -85,13 +94,51 @@ const LoadData = (props: LoadDataProps) => {
       return;
     }
 
-    // -- if data is provided already, so didn't have to fetch
-    preloadData(props.data);
+   
 
-  }, [])
+  }, [props.data])
+
+  // -- (render)
+  const renderi18nTitle = () => {
+    return (
+      <>
+        { 
+          props?.i18n?.titleId ? 
+          <h2>
+            <FormattedMessage id={props?.i18n?.titleId} />
+          </h2>
+          : 
+          <h2>{ props.title }</h2>
+        }
+      </>
+    )
+  }
+
+  // -- (render)
+  const renderi18nError = () => {
+    return (
+      <>
+        { 
+          props?.i18n?.errorMessageId ? 
+            <FormattedMessage id={props?.i18n?.errorMessageId} />
+          : 
+          <>{ props.errorMessage }</>
+        }
+        
+      </>
+    )
+  }
+
+  // -- (render) loading
+  const renderLoading = () => {
+    return <>
+      <h2>{ props?.loadingMessage ?? 'Loading...'}</h2>
+      <Skeleton height={props.height ?? 332}></Skeleton>
+    </>
+  }
 
   // -- render different states
-  if (isLoading) return <p>{ props?.loadingMessage ?? 'Loading data...' }</p>
+  if (isLoading || ( props.useData && ! props.data)) return renderLoading()
   if (!rawData) return <p>No data found</p>
 
   return (
@@ -110,7 +157,9 @@ const LoadData = (props: LoadDataProps) => {
       columns.length > 0 && rows.length > 0 ?
       <>
         <div className="flex">
-          <h2>{ props.title }</h2>
+          
+          { renderi18nTitle() }
+
           {
             props.renderStatus ? 
             <div className="flex-content">
@@ -124,7 +173,9 @@ const LoadData = (props: LoadDataProps) => {
         </div>
       </>
       : <div className='mt-12'>
-        <Alert severity="error">{ props.errorMessage }</Alert>
+        <Alert severity="error">
+          { renderi18nError() }
+        </Alert>
       </div>
     }
 
