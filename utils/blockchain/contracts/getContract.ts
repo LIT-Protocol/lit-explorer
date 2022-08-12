@@ -94,7 +94,6 @@ export const getContract = async (props: {
     
     let ABI : ContractInterface | never;
 
-    // TODO: refactor this to facilitate both node/browser envs
     if (typeof window === 'undefined'){
         ABI = await getABI({
             network: props.network,

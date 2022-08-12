@@ -14,6 +14,9 @@ import FormAddPermittedAddress from "../../../components/Forms/FormAddPermittedA
 import { useAppContext } from "../../../components/Contexts/AppContext";
 import getWeb3Wallet from "../../../utils/blockchain/getWeb3Wallet";
 import MyButton from "../../../components/UI/MyButton";
+import { ROUTES } from "../../../app_config";
+
+// TODO: After you registered a lit action, the settings doesn't refresh
 
 const ActionsPage: NextPageWithLayout = () => {
 
@@ -127,7 +130,7 @@ const ActionsPage: NextPageWithLayout = () => {
     const _renderNoPKPsFound = () => {
       return (
         <>
-          <MyButton onClick={() => { router.push('/mint-pkp'); }}>Click here to mint one!</MyButton> 
+          <MyButton onClick={() => { router.push(ROUTES.MINT_PKP); }}>Click here to mint one!</MyButton> 
         </>
       )
     }

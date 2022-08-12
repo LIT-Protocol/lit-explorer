@@ -1,5 +1,4 @@
-import { NextRouter } from "next/router";
-import { ROUTES, SupportedSearchTypes } from "../app_config";
+import { SEARCH_ROUTES, SupportedSearchTypes } from "../app_config";
 import * as isIPFS from 'is-ipfs';
 
 export class AppRouter{
@@ -20,9 +19,9 @@ export class AppRouter{
 
         console.log("[getSearchType] input<text>:", text);
 
-        if(parseInt(text) < 99999){
-            return SupportedSearchTypes.RLI_TOKEN_ID
-        }
+        // if(parseInt(text) < 99999){
+        //     return SupportedSearchTypes.RLI_TOKEN_ID
+        // }
 
         if( text?.includes('0x') ){
             return SupportedSearchTypes.ETH_ADDRESS;
@@ -55,7 +54,7 @@ export class AppRouter{
         if( type === null ) throw new Error(`search type is null`);
     
         // -- execute
-        return ROUTES[type].getRoute(id);
+        return SEARCH_ROUTES[type].getRoute(id);
     }
 
 }

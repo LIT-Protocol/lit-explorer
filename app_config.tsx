@@ -37,16 +37,14 @@ export const SUPPORTED_CHAINS = {
 }
 
 /** ========== APP ROUTES ========== */
-// TODO: Refactor Routes
-
 export enum SupportedSearchTypes{
     ETH_ADDRESS = "ETH_ADDRESS",
     IPFS_ID = "IPFS_ID",
     PKP_TOKEN_ID = "PKP_TOKEN_ID",
-    RLI_TOKEN_ID = "RLI_TOKEN_ID",
+    // RLI_TOKEN_ID = "RLI_TOKEN_ID",
 }
 
-export const ROUTES = {
+export const SEARCH_ROUTES = {
     [SupportedSearchTypes.ETH_ADDRESS]:{
         getRoute: (id : string) => `/owners/${id}`
     },
@@ -56,7 +54,18 @@ export const ROUTES = {
     [SupportedSearchTypes.IPFS_ID]:{
         getRoute: (id : string) => `/actions/${id}`
     },
-    [SupportedSearchTypes.RLI_TOKEN_ID]:{
-        getRoute: (id : string) => `/rlis/${id}`
-    },
+    // [SupportedSearchTypes.RLI_TOKEN_ID]:{
+    //     getRoute: (id : string) => `/rlis/${id}`
+    // },
+}
+
+export const ROUTES = {
+    HOME: '/',
+    MINT_PKP: '/mint-pkp',
+    CREATE_ACTION: '/create-action',
+    OWNERS: '/owners',
+    PKPS: '/pkps',
+    ACTIONS: '/actions',
+    RLIS: '/rlis',
+    CONTRACTS: '/contracts',
 }

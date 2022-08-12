@@ -1,6 +1,7 @@
 import { CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { ROUTES } from '../app_config';
 import MainLayout from '../components/Layouts/MainLayout';
 import type { NextPageWithLayout } from './_app';
 
@@ -10,7 +11,7 @@ const Home: NextPageWithLayout = () => {
 
   useEffect(() => {
 
-    router.push('/mint-pkp')
+    router.push(ROUTES.MINT_PKP)
 
   }, [])
 

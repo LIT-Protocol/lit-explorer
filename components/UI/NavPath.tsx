@@ -1,4 +1,5 @@
 import { useRouter } from "next/router"
+import { ROUTES } from "../../app_config";
 import Copy from "./Copy";
 
 const NavPath = () => {
@@ -15,7 +16,7 @@ const NavPath = () => {
     
     return (
         <div className="path flex">
-            <div className="path-link" onClick={() => router.push('/')}><img src="/svg/home.svg" alt="home"/></div>
+            <div className="path-link" onClick={() => router.push(ROUTES.HOME)}><img src="/svg/home.svg" alt="home"/></div>
             {
                 page 
                 ? <div className="flex">
