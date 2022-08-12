@@ -9,30 +9,17 @@ import { useRouter } from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
 import MyProgress from "../../components/UI/MyProgress";
 import MyCard from "../../components/UI/MyCard";
-import { APP_CONFIG, APP_LINKS } from "../../app_config";
+import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION } from "../../app_config";
 import { tryUntil } from "../../utils/tryUntil";
 import MyDescription from "../../components/UI/MyDescription";
+import ButtonActionRegisterByIPFSId from "../../components/Forms/ButtonActionRegisterByIPFSId";
 
 const CreateAction: NextPageWithLayout = () => {
 
   const router = useRouter();
 
-  const litActionCode = `const go = async () => {
-  // this is the string "Hello World" for testing
-  const toSign = [72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100];
-  // this requests a signature share from the Lit Node
-  // the signature share will be automatically returned in the HTTP response from the node
-  const sigShare = await LitActions.signEcdsa({
-    toSign,
-    keyId: "1",
-    sigName: "sig1",
-  });
-};
-
-go();`;
-
   // -- (state)
-  const [code, setCode] = useState(litActionCode);
+  const [code, setCode] = useState(DEFAULT_LIT_ACTION);
   const [msg, setMsg] = useState('Loading...');
   const [progress, setProgress] = useState(0);
   const [ipfsId, setIpfsId] = useState<string | any>();
@@ -90,25 +77,6 @@ go();`;
   }
 
   /**
-   * (event) Register Lit Action
-   * @returns 
-   */
-  const handleRegister = async () => {
-
-    // -- validate
-    if( ! ipfsId || ipfsId == ''){
-      throwError("IPFS ID not found.");
-      return;
-    }
-
-    const page = AppRouter.getPage(ipfsId) + '/update';
-    router.push(page);
-
-    return;
-
-  }
-
-  /**
    * (render) render progress UI
    */
   const renderProgress = () => {
@@ -117,11 +85,7 @@ go();`;
     if(progress <= 0 || progress >= 100) return <></>
 
     // -- finally
-    return (
-      <>
-        <MyProgress value={progress} message={msg} />
-      </>
-    )
+    return <MyProgress value={progress} message={msg} />
 
   }
 
@@ -161,7 +125,7 @@ go();`;
         <div className="mt-12 flex">
           <div className="ml-auto flex">
             { _renderViewCodeButton() }
-            <Button onClick={handleRegister} className="btn-2 ml-auto">Register Action</Button>
+            <ButtonActionRegisterByIPFSId ipfsId={ipfsId} defaultButton={true} />
           </div>
         </div>
       </MyCard>

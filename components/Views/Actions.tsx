@@ -1,10 +1,8 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { appendEvenWidths } from "../../utils/mui/mui";
-// import ActionCodeStatus from "./Parts/ActionCodeOptions";
 import LoadData from "../ViewModels/LoadData";
 import RenderLink from "./MuiRenders/RenderLink";
-import ActionCodeOptions from "./Parts/ActionCodeOptions";
-import ActionRegister from "./Parts/ActionRegister";
+import ButtonActionRegisterByIPFSId from "../Forms/ButtonActionRegisterByIPFSId";
 
 const Actions = () => {
     return (
@@ -30,7 +28,7 @@ const Actions = () => {
                     }},
                     { headerName: "Created at", field: "createdAt"},
                     { headerName: "Actions", field: "registered", renderCell: (props: GridRenderCellParams) => {
-                        return <ActionCodeOptions key={props?.value} ipfsId={props?.value}/>;
+                        return <ButtonActionRegisterByIPFSId key={props?.value} ipfsId={props?.value}/>;
                     }},
                 ], width)
             } }

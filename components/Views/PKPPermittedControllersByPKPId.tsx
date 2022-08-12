@@ -7,7 +7,7 @@ import LoadData from "../ViewModels/LoadData";
 import PKPOptionsModal from "../Modals/PKPOptionsModal";
 import RenderLink from "./MuiRenders/RenderLink";
 
-const PKPPermittedControllers = ({ pkpId }: {
+const PKPPermittedControllersByPKPId = ({ pkpId }: {
     pkpId: any,
 }) => {
 
@@ -90,4 +90,4 @@ const PKPPermittedControllers = ({ pkpId }: {
       />
     )
 }
-export default PKPPermittedControllers;
+export default PKPPermittedControllersByPKPId;

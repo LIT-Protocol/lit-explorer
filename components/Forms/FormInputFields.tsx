@@ -1,8 +1,8 @@
 import { TextField } from "@mui/material";
 import { useState } from "react";
-import MyButton from "./MyButton";
-import MyCard from "./MyCard";
-import { LinearProgressWithLabel } from "./Progress";
+import MyButton from "../UI/MyButton";
+import MyCard from "../UI/MyCard";
+import { LinearProgressWithLabel } from "../UI/Progress";
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';

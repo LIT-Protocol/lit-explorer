@@ -2,9 +2,7 @@ import { Box, Chip, Typography } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { useEffect, useState } from "react";
 import { MODAL_STYLE } from './_modalStyle';
-import { LinearProgressWithLabel } from '../UI/Progress';
 import MoreIcon from '@mui/icons-material/More';
-import DisplayCode from '../UI/DisplayCode';
 
 const RLICapacityModal = (capacity: any) => {
 

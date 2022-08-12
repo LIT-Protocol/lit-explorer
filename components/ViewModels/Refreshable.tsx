@@ -5,7 +5,10 @@ import { wait } from "../../utils/utils";
 const Refreshable = ({ 
     children, 
     refresh 
-} : any) => {
+} : {
+    children: any,
+    refresh: any
+}) => {
 
     // -- (state)
     const [loading, setLoading] = useState(false);
@@ -13,6 +16,7 @@ const Refreshable = ({
 
     // -- (mounted)
     useEffect(() => {
+        console.log("[Refreshable] mounted");
 
         (async() => {
 
@@ -20,10 +24,12 @@ const Refreshable = ({
             setHeight(_height);
             
             if( ! refresh ) return;
-
+            
+            console.log("[Refreshable] ...refreshing START:", refresh);
             setLoading(true);
             await wait(2000);
             setLoading(false);
+            console.log("[Refreshable] ...refreshing DONE:", refresh);
         })();
 
     }, [refresh])

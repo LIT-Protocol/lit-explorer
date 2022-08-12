@@ -3,25 +3,22 @@ import { useEffect, useState } from "react";
 import MainLayout from "../../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../../_app"
 import MonacoEditor from '@monaco-editor/react';
-import ActionCodeOptions from "../../../components/Views/Parts/ActionCodeOptions";
 import { fetchActionCode } from "../../../utils/fetch";
 import FormAddPermittedAction from "../../../components/Forms/FormAddPermittedAction";
 import FormRevokePermittedAction from "../../../components/Forms/FormRevokePermittedAction";
 import MyCard from "../../../components/UI/MyCard";
-import { wait } from "../../../utils/utils";
-import { CircularProgress } from "@mui/material";
-import FormAddPermittedAddress from "../../../components/Forms/FormAddPermittedAddress";
+import { Alert, CircularProgress } from "@mui/material";
 import { useAppContext } from "../../../components/Contexts/AppContext";
 import getWeb3Wallet from "../../../utils/blockchain/getWeb3Wallet";
 import MyButton from "../../../components/UI/MyButton";
 import { ROUTES } from "../../../app_config";
-
-// TODO: After you registered a lit action, the settings doesn't refresh
+import ButtonActionRegisterByIPFSId from "../../../components/Forms/ButtonActionRegisterByIPFSId";
+import Refreshable from "../../../components/ViewModels/Refreshable";
 
 const ActionsPage: NextPageWithLayout = () => {
 
   // -- (app context)
-  const { pkpContract } = useAppContext();
+  const { pkpContract, routerContract } = useAppContext();
 
   // -- (router)
   const router = useRouter();
@@ -31,8 +28,9 @@ const ActionsPage: NextPageWithLayout = () => {
 
   // -- (state)
   const [code, setCode] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(0);
   const [hasPKPs, setHasPKPs] = useState(false);
+  const [actionRegistered, setActionRegistered] = useState(false);
 
   // -- (mounted)
   useEffect(() => {
@@ -46,8 +44,9 @@ const ActionsPage: NextPageWithLayout = () => {
 
       setCode(code);
 
-      // -- check user has PKP
+      // -- checks
       await checkifUserHasPKPs();
+      await checkIfActionRegistered();
 
 
     })();
@@ -65,6 +64,12 @@ const ActionsPage: NextPageWithLayout = () => {
     
   }
 
+  // -- (void) check if action is registered
+  const checkIfActionRegistered = async () => {
+    const _isRegistered = await routerContract.read.isActionRegistered((ipfsId as string));
+    setActionRegistered(_isRegistered);
+  }
+
   // -- (render) header
   const renderHeader = () => {
 
@@ -74,7 +79,7 @@ const ActionsPage: NextPageWithLayout = () => {
       <div className="flex">
         <h2>{ title }</h2> 
         <div className="flex-content">
-          <ActionCodeOptions ipfsId={ipfsId} />
+          <ButtonActionRegisterByIPFSId ipfsId={ipfsId} onDone={reRender}/>
         </div>
       </div>
     )
@@ -97,69 +102,67 @@ const ActionsPage: NextPageWithLayout = () => {
   // -- (render) forms
   const renderForms = () => {
 
-    const _renderContent = () => {
-      return (
-        <>
-          <FormAddPermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
-          <FormRevokePermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />    
-          <FormAddPermittedAddress ipfsId={(ipfsId as string)} onDone={reRender} />    
-        </>
-      )
-    }
-
+    // -- (inner render)
     const _renderLoading = () => {
       return (
-        <CircularProgress disableShrink />
+        <MyCard title={'Loading action settings...'} className="mt-24">
+          <CircularProgress/>
+        </MyCard>
       )
     }
 
-    // -- (render) only render this when user has PKPs
-    const _renderHasPKPs = () => {
-      return (
-        <>
-          {
-            loading ?
-            _renderLoading() :
-            _renderContent()
-          }
-        </>
-      )
-    }
-
-    // -- (render) else render when user has no PKPs
+    // -- (inner render) else render when user has no PKPs
     const _renderNoPKPsFound = () => {
       return (
-        <>
+        <MyCard title={'Oops.. It seems like you don\'t have any PKPs..'} className="mt-24">
           <MyButton onClick={() => { router.push(ROUTES.MINT_PKP); }}>Click here to mint one!</MyButton> 
-        </>
+        </MyCard>
       )
     }
+
+    // -- (inner render) render when action is not registered
+    const _renderActionNotRegistered = () => {
+        
+      return (
+        <MyCard className="mt-24" title="Action is not registered!">
+          <Alert severity="info">Registering your code allows you to set/unset which PKP and addresses that have permission to execute this code. </Alert>
+        </MyCard>
+      )
+    }
+
+
+    // -- (validations)
+    if( ! hasPKPs && ! actionRegistered) return _renderLoading();
+    if( ! hasPKPs ) return _renderNoPKPsFound();
+    if( ! actionRegistered ) return _renderActionNotRegistered();
     
+    // -- (finally)
     return (
-      <MyCard title={hasPKPs ? 'Settings' : 'Oops.. It seems like you don\'t have any PKPs..'} className="mt-24">
-        {
-          hasPKPs ?
-          _renderHasPKPs() :
-          _renderNoPKPsFound()
-        }
+      <MyCard title={'Action Settings'} className="mt-24">
+          <FormAddPermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
+          <FormRevokePermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />    
+          {/* <FormAddPermittedAddress ipfsId={(ipfsId as string)}  />     */}
       </MyCard>
     )
   }
 
   const reRender = async () => {
-    setLoading(true);
-    await wait(1000);
-    setLoading(false);
+    console.log("[reRender]");
+    setRefresh(prev => prev + 1)
+    await checkifUserHasPKPs();
+    await checkIfActionRegistered();
   }
 
   if ( ! ipfsId ) return <p>ipfsId is not ready</p>
   if ( ! code ) return <p>Loading action code...</p>
 
   return (
-    <>
+    <>      
       { renderHeader() }
       { renderCode() }
-      { renderForms() }
+      <Refreshable refresh={refresh} >
+        { renderForms() }
+      </Refreshable>
     </>
   )
 }

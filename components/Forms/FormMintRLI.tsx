@@ -1,6 +1,6 @@
 import throwError from "../../utils/throwError";
 import { useAppContext } from "../Contexts/AppContext";
-import CardInputs, { MyFieldType, MyProgressI } from "../UI/CardInputs";
+import FormInputFields, { MyFieldType, MyProgressI } from "./FormInputFields";
 import moment from "moment";
 import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";
@@ -86,7 +86,7 @@ const FormMintRLI = ({
 
     return (
         <div className="mt-12 mb-12">
-            <CardInputs 
+            <FormInputFields 
                 title="Mint a Rate Limit Increase NFT"
                 fields={[
                     {

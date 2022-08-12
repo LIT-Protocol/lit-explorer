@@ -4,7 +4,7 @@ import { heyShorty } from "../../utils/converter";
 import throwError from "../../utils/throwError";
 import { wait } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
-import { MyProgressI } from "../UI/CardInputs";
+import { MyProgressI } from "./FormInputFields";
 import MyButton from "../UI/MyButton";
 import MyCard from "../UI/MyCard";
 import MyProgress from "../UI/MyProgress";
@@ -174,7 +174,7 @@ const [progress, setProgress] = useState<MyProgressI>();
                     }}
                 />
             </div>
-            <div className='flex mt-24'>
+            <div className='mt-24'>
                 <TextField
                     label="Permitted Address (eg. 0x3B5...99A1)"
                     defaultValue=""

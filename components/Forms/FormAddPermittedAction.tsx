@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import throwError from "../../utils/throwError";
 import { wait } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
-import { MyProgressI } from "../UI/CardInputs";
+import { MyProgressI } from "./FormInputFields";
 import MyButton from "../UI/MyButton";
 import MyCard from "../UI/MyCard";
 import MyProgress from "../UI/MyProgress";

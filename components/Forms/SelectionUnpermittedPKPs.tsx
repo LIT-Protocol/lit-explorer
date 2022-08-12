@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import { asyncForEachReturn } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
+import Copy from "../UI/Copy";
 
 const SelectionUnpermittedPKPs = ({ 
     title,
@@ -85,25 +86,26 @@ const SelectionUnpermittedPKPs = ({
     if( ! ipfsId ) return <>No ipfsId found.</>
 
     return (
-        <>
+        <div className="flex">
             <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">{ title ?? 'TITLE' }</InputLabel>
-            
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={selectedToken}
-                label={ title ?? 'TITLE' }
-                onChange={handleChange}
-            >
-                {
-                    tokens.map((pkpId) => {
-                        return <MenuItem key={pkpId} value={pkpId}>{pkpId}</MenuItem>;
-                    })
-                }
-            </Select>
+                <InputLabel id="demo-simple-select-label">{ title ?? 'TITLE' }</InputLabel>
+                
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedToken}
+                    label={ title ?? 'TITLE' }
+                    onChange={handleChange}
+                >
+                    {
+                        tokens.map((pkpId) => {
+                            return <MenuItem key={pkpId} value={pkpId}>{pkpId}</MenuItem>;
+                        })
+                    }
+                </Select>
             </FormControl>
-        </>
+            <Copy value={(selectedToken as any)}/>
+        </div>
     )
 }
 export default SelectionUnpermittedPKPs;

@@ -2,7 +2,7 @@ import { useRouter } from "next/router"
 import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import LoadData from '../../components/ViewModels/LoadData';
-import PKPPermittedControllers from "../../components/Views/PKPPermittedControllers";
+import PKPPermittedControllersByPKPId from "../../components/Views/PKPPermittedControllersByPKPId";
 import RenderAction from "../../components/Views/MuiRenders/RenderAction";
 import MyCard from "../../components/UI/MyCard";
 import PubKeyByPKPId from "../../components/Views/Parts/PubKeyByPKPId";
@@ -31,7 +31,7 @@ const PKPsPageById: NextPageWithLayout = () => {
         <ETHAddressByPKPId pkpId={pkpId}/>
       </MyCard>
       
-      <PKPPermittedControllers pkpId={pkpId}/>
+      <PKPPermittedControllersByPKPId pkpId={pkpId}/>
 
       <LoadData
         debug={false}

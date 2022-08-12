@@ -1,11 +1,15 @@
 import { Chip, CircularProgress, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAppContext } from "../../Contexts/AppContext";
-import { MyProgressI } from "../../UI/CardInputs";
-import ActionRegister from "./ActionRegister";
+import { useAppContext } from "../Contexts/AppContext";
+import { MyProgressI } from "./FormInputFields";
+import ButtonTx from "../ViewModels/ButtonTx";
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import throwError from "../../utils/throwError";
 
-const ActionCodeOptions = (props: {
+const ButtonActionRegisterByIPFSId = (props: {
     ipfsId: string | any,
+    defaultButton?: boolean,
+    onDone?(): void
 }) => {
 
     // -- (app context) 
@@ -34,6 +38,13 @@ const ActionCodeOptions = (props: {
 
         const _progress = progress.progress || 0;
 
+        console.log("_progress:", _progress);
+        
+        if( _progress >= 100 && props.onDone){
+            console.warn("[onProgress]: DONE!");
+            props.onDone();
+        }
+
         if(_progress >= 0){
             await checkIsRegistered();
         }
@@ -49,15 +60,24 @@ const ActionCodeOptions = (props: {
     const renderRegistered = () => {
         return <>
             <Chip label={'Registered'} color={'success'} />
-            {/* <Chip onClick={ () => {} } icon={<EditIcon />} label="Edit" /> */}
         </>;
     }
     
     // -- (render) not registered
     const renderNotReigstered = () => {
-        return <ActionRegister 
-            onProgress={onProgress} 
-            ipfsId={props.ipfsId}
+        return <ButtonTx
+            defaultButton={props?.defaultButton ?? false}
+            icon={<AppRegistrationIcon />}
+            labels={{
+                default: 'Click to register',
+                executing: 'Registering action...'
+            }} 
+            transaction={async () => await routerContract.write.registerAction(props.ipfsId)}
+            onProgress={onProgress}
+            onError={function (e: any): void {
+                throwError(e.message);
+                return;
+            } }        
         />
     }
 
@@ -73,4 +93,4 @@ const ActionCodeOptions = (props: {
     );
 }
 
-export default ActionCodeOptions;
+export default ButtonActionRegisterByIPFSId;

@@ -1,5 +1,5 @@
 import { NextPageWithLayout } from "../../pages/_app"
-import CardInputs, { MyFormData, MyProgressI } from "../UI/CardInputs"
+import FormInputFields, { MyFormData, MyProgressI } from "./FormInputFields"
 import throwError from "../../utils/throwError";
 import { useState } from "react";
 import { newObjectState } from "../../utils/clone";
@@ -114,7 +114,7 @@ const FormMintNewPKP: NextPageWithLayout = () => {
   }
 
   return (
-    <CardInputs
+    <FormInputFields
       title={'Mint New PKP'}
       buttonText={mintButtonText}
       // fields={FormMintNewPKPFields}

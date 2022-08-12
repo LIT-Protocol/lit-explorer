@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { LOCALES } from '../locales';
 
 export default {
