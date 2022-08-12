@@ -1,7 +1,6 @@
 import { CID } from "multiformats";
 import bs58 from 'bs58';
 import { ethers } from "ethers";
-import getPubkeyRouterAndPermissionsContract from "../blockchain/getPubkeyRouterAndPermissionsContract";
 
 export interface IPFSHash {
     digest: string
@@ -80,24 +79,4 @@ export function parseMultihashContractResponse(response: any) {
   }
 
   return multiHash
-}
-
-/**
- * Convert "0xb4200a696794b8742fab705a8c065ea6788a76bc6d270c0bc9ad900b6ed74ebc"
- * To "QmUnwHVcaymJWiYGQ6uAHvebGtmZ8S1r9E6BVmJMtuK5WY"
- * 
- * @param { string } solidityIpfsId
- * @return { string } Qmxxx
- */
-export const solidityIpfsIdToCID = async (solidityIpfsId: string, signer?: any) => {
-  
-  const contract = await getPubkeyRouterAndPermissionsContract({wallet: signer});
-            
-  const ipfsRes = await contract.ipfsIds(solidityIpfsId);
-
-  const multiHash = parseMultihashContractResponse(ipfsRes);
-
-  const ipfsId = getIPFSIdFromBytes32(multiHash);
-
-  return ipfsId;
 }

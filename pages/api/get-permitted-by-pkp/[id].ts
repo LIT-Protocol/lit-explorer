@@ -16,24 +16,18 @@ export default async function handler(
 
     const { id } = req.query;
 
-    console.log("Found id:", id);
-
-    console.log("Connecting router contract...");
+    console.log('[api/get-permitted-by-pkp] input<id>:', id);
+    
     const routerContract = new RouterContract();
     await routerContract.connect()
     
-    console.log("Getting permitted addresses...");
     const addresses = await routerContract.read.getPermittedAddresses(id);
+    console.log('[api/get-permitted-by-pkp] output<addresses>:', addresses);
     
-    console.log("Getting permitted actions...");
     const actions = await routerContract.read.getPermittedActions(id);
+    console.log('[api/get-permitted-by-pkp] output<actions>:', actions);
 
-    console.log("actions:", actions);
-
-    const data = {
-      addresses,
-      actions,
-    }
+    const data = { addresses, actions }
     
     res.status(200).json({ data })
 }

@@ -7,6 +7,7 @@ import RenderAction from "../../components/Views/MuiRenders/RenderAction";
 import MyCard from "../../components/UI/MyCard";
 import PubKeyByPKPId from "../../components/Views/Parts/PubKeyByPKPId";
 import ETHAddressByPKPId from "../../components/Views/Parts/ETHAddressByPKPId";
+import { appendEvenWidths } from "../../utils/mui/mui";
 
 declare global {
   interface Window{
@@ -33,21 +34,21 @@ const PKPsPageById: NextPageWithLayout = () => {
       <PKPPermittedControllers pkpId={pkpId}/>
 
       <LoadData
-        key={ '2' + pkpId?.toString()}
         debug={false}
-        title="Authorised Actions stored on IPFS:"
-        errorMessage="No authorised actions found."
-        loadingMessage="Loading authorised actions..."
+        i18n={{
+          titleId: 'authorised action - title',
+          loadingId: 'authorised action - loading',
+          errorMessageid: 'authorised action - error',
+        }}
         fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
         filter={async (rawData: any) => {
           console.log("on filtered: ", rawData);
           return rawData?.data?.actions;
         } }
         renderCols={(width: number) => {
-          return [
-            { headerName: "action", field: "action", width, renderCell: RenderAction}
-          ];
-    
+          return appendEvenWidths([
+            { headerName: "IPFS ID", field: "action", renderCell: RenderAction}
+          ], width);
         } }
         renderRows={(filteredData: any) => {
           return filteredData?.map((item: any, i: number) => {

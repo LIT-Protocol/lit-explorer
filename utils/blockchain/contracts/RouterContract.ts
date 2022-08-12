@@ -3,7 +3,7 @@ import { ContractProps } from "./ContractI";
 import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
 import { getContract } from './getContract';
 import { decimalTohex } from "../../converter";
-import { getBytes32FromMultihash, IPFSHash, ipfsIdToIpfsIdHash } from "../../ipfs/ipfsHashConverter";
+import { getBytes32FromMultihash, getIPFSIdFromBytes32, IPFSHash, ipfsIdToIpfsIdHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
 import { tryUntil } from "../../tryUntil";
 
 /**
@@ -136,6 +136,34 @@ export class ReadRouterContract{
         console.log("[isActionRegistered] output<bool>:", bool);
 
         return bool;
+    }
+
+
+    /**
+     *  
+     * Convert IPFS response from Solidity to IPFS ID 
+     * From: "0xb4200a696794b8742fab705a8c065ea6788a76bc6d270c0bc9ad900b6ed74ebc"
+     * To: "QmUnwHVcaymJWiYGQ6uAHvebGtmZ8S1r9E6BVmJMtuK5WY"
+     * 
+     * @param { string } solidityIpfsId 
+     * 
+     * @return { Promise<string> }
+     */
+    getIpfsIds = async (solidityIpfsId: string) : Promise<string> => {
+
+        console.log("[getIpfsIds] input<solidityIpfsId>:", solidityIpfsId);
+        
+        const res = await this.contract.ipfsIds(solidityIpfsId)
+        console.log("[getIpfsIds] converted<res>:", res);
+        
+        const bytes32 = parseMultihashContractResponse(res);
+        console.log("[getIpfsIds] converted<bytes32>:", bytes32);
+        
+        const ipfsId = getIPFSIdFromBytes32(bytes32);
+        console.log("[getIpfsIds] converted<ipfsId>:", ipfsId);
+
+        return (ipfsId as string);
+        
     }
     
 

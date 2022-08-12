@@ -28,5 +28,8 @@ export default {
         'all rlis - loading': 'Loading Rate Limit Increase NFTs...',
         'mint rli - title': 'Mint a Rate Limit Increase NFT',
         'mint rli - button': 'MINT RLI NFT',
+        'authorised action - title': 'Authorised Actions stored on IPFS:',
+        'authorised action - loading': 'Loading Authorised Actions stored on IPFS...',
+        'authorised action - error': 'Cannot find authrosied actions.',
     }
 }
