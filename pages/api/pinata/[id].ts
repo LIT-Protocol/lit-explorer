@@ -46,7 +46,7 @@ export default function handler(
     //handle results here
     console.log("SUCCESS:", result);
     
-    const baseURL = process.env.NEXT_PUBLIC_IPFS_BASE_URL ?? '';
+    const baseURL = APP_CONFIG.IPFS_PATH;
     
     console.log("baseURL:", baseURL);
     
