@@ -10,7 +10,7 @@ import LanguagePickerModal from "../Modals/LanguagePickerModal";
 import { APP_CONFIG, APP_LINKS } from "../../app_config";
 import SupportIcon from '@mui/icons-material/Support';
 import { useEffect, useState } from "react";
-
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 interface MainLayoutProps {
     children: any
 }
@@ -132,9 +132,14 @@ const MainLayout = (props: MainLayoutProps) => {
             <div className="support flex">
                 {/* <LanguagePickerModal onSelectLanguage={onSelectLanguage}/> */}
                 
-                <a target="_blank" rel="noreferrer" href={APP_LINKS.LIT_DISCORD}>
-                    <Chip onClick={ () => {} } icon={<SupportIcon />} label="Support"/>
-                </a>
+                <div className="ml-auto flex">
+                    <a target="_blank" rel="noreferrer" href={APP_LINKS.LIT_DISCORD}>
+                        <Chip onClick={ () => {} } icon={<SupportIcon />} label="Support"/>
+                    </a>
+                    <a target="_blank" rel="noreferrer" href={APP_LINKS.DOC}>
+                        <Chip onClick={ () => {} } icon={<LocalLibraryIcon />} label="Documentation"/>
+                    </a>
+                </div>
             </div>
             
             </div>

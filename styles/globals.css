@@ -285,10 +285,14 @@ body {
 
 .support {
 	position: fixed;
-	bottom: 0;
-	right: 0;
-	padding: 12px;
-	font-size: 0.875rem;
+    bottom: 0;
+    right: 0;
+    padding: 12px;
+    font-size: 0.875rem;
+    background: #f0f2f5;
+    display: flex;
+    width: calc(100% - (260px) - (24px));
+	z-index: 1;
 }
 
 .support a {

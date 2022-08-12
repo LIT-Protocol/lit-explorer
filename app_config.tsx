@@ -14,6 +14,7 @@ export const APP_LINKS = {
     WORKING_WITH_LIT_ACTIONS: 'https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions',
     // LIT_DISCORD: 'https://discord.com/channels/896185694857343026/1002588409153458228',
     LIT_DISCORD: 'https://litgateway.com/discord',
+    DOC: 'https://developer.litprotocol.com/',
 }
 
 /** ========== SUPPORTED NETWORKS ========== */
