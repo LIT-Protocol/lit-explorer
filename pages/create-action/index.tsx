@@ -58,7 +58,7 @@ const CreateAction: NextPageWithLayout = () => {
       onTrying: (counter: number) => {
         setCompleted(true);
         setProgress(60 + counter);
-        setMsg(`Still waiting... but your code is available to register! just not ready to be viewed at the moment...`);
+        setMsg(`Still waiting... but your code is available to register! Just not ready to be yet...`);
       },
       onError: (_: any) => {
         throwError("Failed to check the pinning status, maybe check again in 5 mins");
