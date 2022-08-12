@@ -14,6 +14,7 @@ import MyButton from "../../../components/UI/MyButton";
 import { ROUTES } from "../../../app_config";
 import ButtonActionRegisterByIPFSId from "../../../components/Forms/ButtonActionRegisterByIPFSId";
 import Refreshable from "../../../components/ViewModels/Refreshable";
+import MyDescription from "../../../components/UI/MyDescription";
 
 const ActionsPage: NextPageWithLayout = () => {
 
@@ -68,6 +69,14 @@ const ActionsPage: NextPageWithLayout = () => {
   const checkIfActionRegistered = async () => {
     const _isRegistered = await routerContract.read.isActionRegistered((ipfsId as string));
     setActionRegistered(_isRegistered);
+  }
+
+  // -- (render) render description
+  const renderDescription = () => {
+    return <MyDescription 
+      titleId={'action page - title'} 
+      paragraphs={[{id: 'action page'}]}      
+    />
   }
 
   // -- (render) header
@@ -158,6 +167,7 @@ const ActionsPage: NextPageWithLayout = () => {
 
   return (
     <>      
+      { renderDescription() }
       { renderHeader() }
       { renderCode() }
       <Refreshable refresh={refresh} >

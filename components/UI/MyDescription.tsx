@@ -9,12 +9,12 @@ const MyDescription = ({
     paragraphs: Array<any>
 }) => {
     return (
-        <div className="p-12">
-          <Typography variant="h5">
+        <div className="mt-24 mb-12 d-title">
+          <Typography variant="h5" className="mb-6">
             <FormattedMessage id={titleId} />
           </Typography>
 
-          <Typography variant="subtitle1" paragraph={true}>
+          <Typography className="paragraph" variant="subtitle1" paragraph={true}>
             {
                 paragraphs.map((p: any) => {
 

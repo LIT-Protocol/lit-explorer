@@ -3,10 +3,8 @@ import { NextPageWithLayout } from "../_app"
 import MyDescription from "../../components/UI/MyDescription";
 import RLIs from "../../components/Views/RLIs";
 import RLITotalSupply from "../../components/Views/Stats/RLITotalSupply";
-import MyCard from "../../components/UI/MyCard";
 import Refreshable from "../../components/ViewModels/Refreshable";
 import FormMintRLI from "../../components/Forms/FormMintRLI";
-import MyButton from "../../components/UI/MyButton";
 import { useState } from "react";
 
 const RLIsPage: NextPageWithLayout = () => {
@@ -26,9 +24,9 @@ const RLIsPage: NextPageWithLayout = () => {
   // -- (render) stats
   const renderStats = () => {
     return (
-      <MyCard>
+      <>
         Total Supply: <RLITotalSupply/>
-      </MyCard>
+      </>
     )
   }
   
