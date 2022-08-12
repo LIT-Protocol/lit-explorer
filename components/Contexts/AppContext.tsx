@@ -167,8 +167,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     }
 
-    if ( ! loaded ) return <></>;
     if ( ! web3WalletConnected ) return renderNotLogged();
+    if ( ! loaded ) return <>Loading context...</>;
     if ( ! loaded ) return <></>;
 
     return (

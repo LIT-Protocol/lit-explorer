@@ -38,7 +38,7 @@ const PKPsPageById: NextPageWithLayout = () => {
         i18n={{
           titleId: 'authorised action - title',
           loadingId: 'authorised action - loading',
-          errorMessageid: 'authorised action - error',
+          errorMessageId: 'authorised action - error',
         }}
         fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
         filter={async (rawData: any) => {
