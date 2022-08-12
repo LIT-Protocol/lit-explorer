@@ -1,5 +1,6 @@
 import { Button, Input } from "@mui/material";
 import { FormattedMessage } from 'react-intl';
+import SearchIcon from '@mui/icons-material/Search';
 
 const SearchBar = (props: {
   onSearch: (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement> ) => void,
@@ -16,7 +17,11 @@ const SearchBar = (props: {
     // -- (finally)
     return (
         <div className="search-bar">
-          
+
+          <Button onClick={props.onSearch} className='btn-clear'>
+            <SearchIcon className="search-icon"/>
+          </Button>
+
           <Input id="search-bar" 
             onKeyDown={props.onSearch} 
             className="input-bright" 
@@ -24,9 +29,6 @@ const SearchBar = (props: {
             placeholder={config.placeholder} 
           />
 
-          <Button onClick={props.onSearch} className='btn-clear'>
-            <img src={config.imgSrc} alt="search"/>
-          </Button>
         </div>
     )
 }

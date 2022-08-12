@@ -9,6 +9,8 @@ import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import { APP_CONFIG, SupportedNetworks } from "../../app_config";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import SEOHeader from "./SEOHeader";
+import { Typography } from "@mui/material";
+import MyButton from "../UI/MyButton";
 
 declare global {
     interface Window{
@@ -40,7 +42,10 @@ export const AppContextProvider = ({children}: {children: any}) => {
     const [routerContract, setRouterContract] = useState<RouterContract>();
     const [rliContract, setRliContract] = useState<RLIContract>();
 
+    // -- (state)
+    const [web3WalletConnected, setWeb3WalletConnected] = useState(false);
     const [loaded, setLoaded] = useState(false);
+    
 
     const connectContracts = async () => {
 
@@ -84,6 +89,36 @@ export const AppContextProvider = ({children}: {children: any}) => {
     useEffect(() => {
 
         (async () => {
+
+            /**
+             * Check if web3 wallet is connected
+             */
+            const hasWeb3Wallet = typeof window?.ethereum !== 'undefined';
+            const walletConnected = window?.ethereum?.selectedAddress !== undefined || localStorage.getItem('wallet-connected') == 'true';
+            
+            console.log("hasWeb3Wallet:", hasWeb3Wallet);
+            console.log("walletConnected:", walletConnected);
+            
+            if ( hasWeb3Wallet ){
+
+                window?.ethereum?.on("accountsChanged", (accounts: Array<string>) => {
+
+                    /* do what you want here */
+                    console.log("accounts:", accounts);
+
+                    if( accounts.length > 0){
+                        setWeb3WalletConnected(true);
+                    }
+                })
+            }
+
+            const connected = hasWeb3Wallet && walletConnected;
+
+            console.log("connected:", connected)
+
+            setWeb3WalletConnected(connected);
+
+            if ( ! connected ) return;
             
             /**
              * Export bunch of functions so you can test on the browser
@@ -101,7 +136,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
         })();
 
-    }, []);
+    }, [web3WalletConnected]);
 
     let sharedStates = {
         pkpContract: pkpContract as PKPContract,
@@ -109,17 +144,30 @@ export const AppContextProvider = ({children}: {children: any}) => {
         rliContract: rliContract as RLIContract,
     }
 
+    // -- (event) handle login
+    const handleLogin = async () => {
+        await getWeb3Wallet();
+        localStorage.setItem('wallet-connected', JSON.stringify(true));
+        setWeb3WalletConnected(true);
+    }
+
     // -- (render) web3 not logged
     const renderNotLogged = () => {
         
         return (
-            <>
-                
-            </>
+            <div className="mt-24 flex">
+                <div className="text-center m-auto">
+                    <Typography variant="h4">Welcome to Lit Explorer! 👋🏻</Typography>
+                    <p className="paragraph">Please sign-in to your web3 account and start the adventure</p>
+                    <MyButton className="mt-12" onClick={handleLogin}>Connect Wallet</MyButton>
+                </div>
+
+            </div>
         )
 
     }
 
+    if ( ! web3WalletConnected ) return renderNotLogged();
     if ( ! loaded ) return <>Loading context...</>;
     if ( ! loaded ) return <></>;
 

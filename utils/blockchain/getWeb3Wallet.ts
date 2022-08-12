@@ -21,7 +21,7 @@ const getWeb3Wallet = async () : Promise<Web3WalletProps | never> => {
     const web3Provider = window.ethereum;
 
     if( ! web3Provider ){
-        alert("Please connect to a web3 wallet like Metamask.");
+        alert("Please install web3 wallet like Metamask/Brave.");
         return defaultProps;
     }
 
