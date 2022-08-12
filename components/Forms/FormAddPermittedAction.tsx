@@ -126,7 +126,7 @@ const [progress, setProgress] = useState<MyProgressI>();
 
         return (
             <div className="mt-12 flex">
-                <MyButton onClick={onSubmit} className="ml-auto">Permit action</MyButton>
+                <MyButton onClick={onSubmit} className="ml-auto">Grant Permission</MyButton>
             </div>            
         )
 
@@ -157,7 +157,7 @@ const [progress, setProgress] = useState<MyProgressI>();
     const renderPKPSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard title="Add permitted action to your PKP">
+                <MyCard title="Select a PKP to grant permission">
                     { renderProgress() }
 
                     { renderForm() }

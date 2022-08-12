@@ -28,6 +28,10 @@ const SideNav = () => {
                 <li><Button onClick={() => router.push(ROUTES.PKPS)}  className={currentRoute.includes(ROUTES.PKPS) ? "btn active" : "btn"}><FormattedMessage id='PKPs' /></Button></li>
                 <li><Button onClick={() => router.push(ROUTES.ACTIONS)}  className={currentRoute.includes(ROUTES.ACTIONS) ? "btn active" : "btn"}><FormattedMessage id='Actions' /></Button></li>
                 <li><Button onClick={() => router.push(ROUTES.RLIS)}  className={currentRoute.includes(ROUTES.RLIS) ? "btn active" : "btn"}><FormattedMessage id='RLIs' /></Button></li>
+            </ul> 
+
+            <Divider className='divider' textAlign="left"><FormattedMessage id='Other' /></Divider>
+            <ul className='ul'>
                 <li><Button onClick={() => router.push(ROUTES.CONTRACTS)}  className={currentRoute.includes(ROUTES.CONTRACTS) ? "btn active" : "btn"}><FormattedMessage id='Contracts' /></Button></li>
             </ul> 
         </>

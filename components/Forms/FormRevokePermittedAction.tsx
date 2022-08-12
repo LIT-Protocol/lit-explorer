@@ -127,7 +127,7 @@ const FormRevokePermittedAction = ({
 
         return (
             <div className="mt-12 flex">
-                <MyButton onClick={onSubmit} className="ml-auto">Revoke Action</MyButton>
+                <MyButton onClick={onSubmit} className="ml-auto">Revoke Permission</MyButton>
             </div>            
         )
 
@@ -158,7 +158,7 @@ const FormRevokePermittedAction = ({
     const renderPKPSelectionForm = () => {        
         return (
             <div className="mt-24">
-                <MyCard title="Revoke permitted action from your PKP">
+                <MyCard title="Revoke permitted action">
                     { renderProgress() }
 
                     { renderForm() }

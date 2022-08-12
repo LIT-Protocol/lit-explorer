@@ -138,7 +138,7 @@ const ActionsPage: NextPageWithLayout = () => {
     
     // -- (finally)
     return (
-      <MyCard title={'Action Settings'} className="mt-24">
+      <MyCard title={'Action Settings - Grant/revoke permission to run the code above'} className="mt-24">
           <FormAddPermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
           <FormRevokePermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />    
           {/* <FormAddPermittedAddress ipfsId={(ipfsId as string)}  />     */}

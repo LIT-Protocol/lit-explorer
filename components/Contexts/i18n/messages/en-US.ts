@@ -13,6 +13,7 @@ export default {
         'Actions': 'Actions',
         'Contracts': 'Contracts',
         'RLIs': 'RLIs',
+        'Other': 'OTHER',
         'what are lit actions - title': 'What are Lit Actions?',
         'what are lit actions': `Lit Actions are Javascript functions that can utilize the threshold cryptography that powers the Lit Protocol. You can write some JS code, upload it to IPFS, and ask the Lit Nodes to execute that code and return the result.`,
         'owners page - title': 'Definition of a PKP NFT owner',
