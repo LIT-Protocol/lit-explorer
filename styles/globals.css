@@ -255,10 +255,10 @@ body {
   color: white !important;
 }
 .MuiLinearProgress-colorPrimary{
-  background: white;
+  background: white !important;;
 }
 .MuiLinearProgress-barColorPrimary{
-  background-color: #7F47E8;
+  background-color: #7F47E8 !important;
 }
 .btn-2:hover{
   background: #977cc7 !important;
