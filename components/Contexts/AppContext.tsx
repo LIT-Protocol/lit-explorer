@@ -8,6 +8,7 @@ import { RouterContract } from "../../utils/blockchain/contracts/RouterContract"
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import { APP_CONFIG, SupportedNetworks } from "../../app_config";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
+import SEOHeader from "./SEOHeader";
 
 declare global {
     interface Window{
@@ -124,6 +125,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     return (
         <AppContext.Provider value={sharedStates}>
+            <SEOHeader/>
             { children }
         </AppContext.Provider>
     )

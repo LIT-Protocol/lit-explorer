@@ -11,6 +11,7 @@ import { APP_CONFIG, APP_LINKS } from "../../app_config";
 import SupportIcon from '@mui/icons-material/Support';
 import { useEffect, useState } from "react";
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+
 interface MainLayoutProps {
     children: any
 }
@@ -84,6 +85,7 @@ const MainLayout = (props: MainLayoutProps) => {
     return (
 
     <I18Provider locale={locale}>
+
         <div className="app-context">
 
             {/* <Snackbar open={true} autoHideDuration={6000} onClose={() => {}}
