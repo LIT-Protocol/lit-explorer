@@ -91,6 +91,7 @@ export default function RLITransferModal(props: RLITransferModal) {
         throwError(`Failed to execute: ${props}`);
       },
       interval: 3000,
+      max: 20,
     })
 
     console.log("isTransferred:", isTransferred)
