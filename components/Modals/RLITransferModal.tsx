@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useAppContext } from '../Contexts/AppContext';
 import { wait } from '../../utils/utils';
 import { MODAL_STYLE } from './_modalStyle';
+import { heyShorty } from '../../utils/converter';
 
 
 interface RLITransferModal{
@@ -48,7 +49,7 @@ export default function RLITransferModal(props: RLITransferModal) {
   const handleClick = async () => {
 
     setLoading(true);
-    setProgress(50);
+    setProgress(30);
 
     // -- prepare
     const tokenId = RLI_ID.row.tokenID;
@@ -77,21 +78,29 @@ export default function RLITransferModal(props: RLITransferModal) {
       return;
     }
 
-    setProgress(75);
+    setProgress(50);
     console.log("transferTx:", transferTx);
 
     // -- confirm is routed
     const isTransferred = await tryUntil({
-      onlyIf: async () => await rliContract.read.ownerOf(tokenId) === recipientAddress,
+      onlyIf: async () => {
+
+        let _newOwner = (await rliContract.read.ownerOf(tokenId)).toLowerCase();
+        let _recipientAddress = (recipientAddress as string).toLowerCase();
+
+        console.log(`${heyShorty(_newOwner)} === ${heyShorty(_recipientAddress)}: ${_newOwner === _recipientAddress}`);
+
+        return _newOwner === _recipientAddress;
+      },
       thenRun: async () => true,
       onTrying: (counter: number) => {
-        setProgress(75 + counter)
+        setProgress(55 + counter)
       },
       onError: (props: TryUntilProp) => {
         throwError(`Failed to execute: ${props}`);
       },
-      interval: 3000,
-      max: 20,
+      interval: 1000,
+      max: 50,
     })
 
     console.log("isTransferred:", isTransferred)
