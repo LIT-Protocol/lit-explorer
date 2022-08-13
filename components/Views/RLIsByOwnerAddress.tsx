@@ -76,7 +76,7 @@ const RLIsByOwnerAddress = ({
             errorMessage="No Rate Limit NFTs found."
             data={list}
             filter={(rawData: Array<any>) => {
-                console.log("on filtered: ", rawData);
+                console.log("[RLIsByOwnerAddress] input<rawData>", rawData);
                 return rawData;
             } }
             renderCols={(width: any) => {

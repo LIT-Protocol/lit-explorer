@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 
 // @ts-ignore
 import converter from 'hex2dec';
@@ -6,11 +6,15 @@ import { pub2Addr, wei2eth } from "../../utils/converter";
 import { PKPContract } from "../../utils/blockchain/contracts/PKPContract";
 import { RouterContract } from "../../utils/blockchain/contracts/RouterContract";
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
-import { APP_CONFIG, SupportedNetworks } from "../../app_config";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
-import SEOHeader from "./SEOHeader";
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import MyButton from "../UI/MyButton";
+import { STORAGE_KEYS } from "../../app_config";
+import throwError from "../../utils/throwError";
+import NavPath from "../UI/NavPath";
+import SearchBar from "../Forms/SearchBar";
+import router from "next/router";
+import { AppRouter } from "../../utils/AppRouter";
 
 declare global {
     interface Window{
@@ -21,16 +25,25 @@ declare global {
     }
 }
 
+interface MyWeb3{
+    get: boolean,
+    login(): Promise<void>,
+    logout(): Promise<void>,
+    ownerAddress: any,
+}
+
 interface SharedStates{
     pkpContract: PKPContract,
     routerContract: RouterContract,
     rliContract: RLIContract,
+    web3: MyWeb3
 }
 
 let defaultSharedStates : SharedStates = {
     pkpContract: ({} as PKPContract),
     routerContract: ({} as RouterContract),
     rliContract: ({} as RLIContract),
+    web3: ({} as MyWeb3)
 }
 
 const AppContext = createContext(defaultSharedStates);
@@ -41,16 +54,23 @@ export const AppContextProvider = ({children}: {children: any}) => {
     const [pkpContract, setPkpContract] = useState<PKPContract>();
     const [routerContract, setRouterContract] = useState<RouterContract>();
     const [rliContract, setRliContract] = useState<RLIContract>();
+    const [ownerAddress, setOwnerAddress] = useState<string>();
 
     // -- (state)
-    const [web3WalletConnected, setWeb3WalletConnected] = useState(false);
-    const [loaded, setLoaded] = useState(false);
-    
+    const [web3Connected, setWeb3Connected] = useState(false);
+    const [contractsLoaded, setContractsLoaded] = useState(false);
 
+    const injectGlobalFunctions = () => {
+        window.dec2hex = converter.decToHex;
+        window.hex2dec = converter.hexToDec
+        window.wei2eth = wei2eth;
+        window.pub2addr = pub2Addr
+    }
+    
     const connectContracts = async () => {
 
         // -- validate
-        if( pkpContract && routerContract && rliContract && loaded) return;
+        if( pkpContract && routerContract && rliContract && contractsLoaded) return;
         
         console.log("[connectContracts]");
 
@@ -60,121 +80,224 @@ export const AppContextProvider = ({children}: {children: any}) => {
         const _routerContract = new RouterContract();
         const _rliContract = new RLIContract();
 
-        await _pkpContract.connect({
-            network: SupportedNetworks.CELO_MAINNET,
-            contractAddress: APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS,
-            signer,
-        })
+        await _pkpContract.connect({ signer })
         
-        await _routerContract.connect({
-            network: SupportedNetworks.CELO_MAINNET,
-            contractAddress: APP_CONFIG.ROUTER_CONTRACT_ADDRESS,
-            signer,
-        })
+        await _routerContract.connect({ signer })
 
-        await _rliContract.connect({
-            network: SupportedNetworks.CELO_MAINNET,
-            contractAddress: APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS,
-            signer,
-        })
+        await _rliContract.connect({ signer })
 
         setPkpContract(_pkpContract);
         setRouterContract(_routerContract);
         setRliContract(_rliContract);
 
-        setLoaded(true);
+        setContractsLoaded(true);
 
+    }
+
+    // -- (event listeners) listen to all given events,
+    // and ignore if the given events are already being listened
+    const listenToWalletEvents = () : void => {
+
+        // -- setup events you want to listen
+        const walletEvents = {
+            'accountsChanged': (accounts: Array<string>) => {
+                const newOwner = accounts[0];
+                console.warn('[walletEvent:accountsChanged] output<newOwner>:', newOwner);
+                setOwnerAddress(newOwner)
+            },
+            'connect': (e: any) => console.warn("connect:", e),
+            'disconnect': (e: any) => console.warn("disconnect:", e),
+            'chainChanged': (e: any) => console.warn("chainChanged:", e),
+        }
+
+        const keys = Object.keys(walletEvents);
+
+        localStorage.setItem(STORAGE_KEYS.WALLET_EVENTS, keys.toString());
+
+        // check if listener already exists
+        let attachedWalletEvents : Array<string>;
+        
+        try{
+            attachedWalletEvents = window?.ethereum?.eventNames();
+        }catch(e: any){
+            console.warn("Provider Error:", e.message);
+            console.warn("Using localStorage as a fallback method instead");
+            attachedWalletEvents = (localStorage.getItem(STORAGE_KEYS.WALLET_EVENTS)?.split(',') as Array<string>);
+        }
+
+        keys.forEach((eventName: string, i:number) => {
+
+            // -- ignore if event already attached
+            if(attachedWalletEvents.includes(eventName)) return;
+
+            // -- finally
+            const callback = Object.values(walletEvents)[i];
+            window.ethereum.on(eventName, callback);
+        })
+
+        console.warn("✅ Web3 Provider Found! Listening to events:", Object.keys(walletEvents), '...');
+    }
+
+    /**
+     * An object to check if a web3 provider && wallet is connected
+     * @returns 
+     */
+    const MyWeb3 = () : {
+        installed: boolean, 
+        walletConnected: boolean, 
+        connected: boolean
+    } => {
+
+        const installed = typeof window?.ethereum !== 'undefined';
+        const walletConnected = localStorage.getItem(STORAGE_KEYS.WALLET_CONNECTED) == 'true';
+        const connected = installed && walletConnected;
+
+        return { installed, walletConnected, connected }
     }
 
     useEffect(() => {
 
+        /**
+         * Export bunch of functions so you can test on the browser
+         */
+        injectGlobalFunctions();
+
         (async () => {
 
-            /**
-             * Check if web3 wallet is connected
-             */
-            const hasWeb3Wallet = typeof window?.ethereum !== 'undefined';
-            const walletConnected = window?.ethereum?.selectedAddress !== undefined || localStorage.getItem('wallet-connected') == 'true';
-            
-            console.log("hasWeb3Wallet:", hasWeb3Wallet);
-            console.log("walletConnected:", walletConnected);
-            
-            if ( hasWeb3Wallet ){
+            // -- If a web3 provider is installed && cache key is found in the local storage
+            console.warn(`${MyWeb3().installed ? '✅ ' : '❌ '}MyWeb3().installed`)
+            console.warn(`${MyWeb3().walletConnected ? '✅ ' : '❌ '}MyWeb3().walletConnected`)
 
-                window?.ethereum?.on("accountsChanged", (accounts: Array<string>) => {
+            // -- If both web provider is installed and wallet is connected
+            if ( MyWeb3().connected && !contractsLoaded ){
+                
+                /**
+                 * Setup all contracts so that is available on all components
+                 */
+                connectContracts();
 
-                    /* do what you want here */
-                    console.log("accounts:", accounts);
+                const { ownerAddress } = await getWeb3Wallet();
+                setOwnerAddress(ownerAddress);
 
-                    if( accounts.length > 0){
-                        setWeb3WalletConnected(true);
-                    }
-                })
+                return;
             }
 
-            const connected = hasWeb3Wallet && walletConnected;
+            // -- If a web3 provider is installed
+            if ( MyWeb3().installed ){
+                listenToWalletEvents()
+            }
 
-            console.log("connected:", connected)
-
-            setWeb3WalletConnected(connected);
-
-            if ( ! connected ) return;
-            
-            /**
-             * Export bunch of functions so you can test on the browser
-             */
-            window.dec2hex = converter.decToHex;
-            window.hex2dec = converter.hexToDec
-            window.wei2eth = wei2eth;
-            window.pub2addr = pub2Addr
-
-            /**
-             * Setup all contracts so that is available on all components
-             */
-            await connectContracts();
-
+            // -- trigger state change
+            setWeb3Connected(MyWeb3().connected);
 
         })();
 
-    }, [web3WalletConnected]);
+    }, [web3Connected]);
 
-    let sharedStates = {
-        pkpContract: pkpContract as PKPContract,
-        routerContract: routerContract as RouterContract,
-        rliContract: rliContract as RLIContract,
+    /**
+     * 
+     * Event: when user is typing on the search bar
+     * 
+     * @param { any } e event
+     * @returns { void } 
+     */
+     const onSearch = (e: any): void => {
+  
+        // -- config
+        const MIN_LENGTH = 20;
+        
+        // -- prepare
+        const keyboardKey = e.key;
+        const text = (document.getElementById('search-bar') as HTMLInputElement).value;
+
+        // -- validate
+        if( keyboardKey && keyboardKey !== 'Enter') return;
+        if( text.length <= MIN_LENGTH){
+            throwError(`Search length cannot be less than ${MIN_LENGTH} characters`)
+        };
+
+        // -- prepare
+        const id = text;
+
+        router.push(AppRouter.getPage(id))
     }
 
     // -- (event) handle login
-    const handleLogin = async () => {
-        await getWeb3Wallet();
-        localStorage.setItem('wallet-connected', JSON.stringify(true));
-        setWeb3WalletConnected(true);
+    const onLogin = async () => {
+
+        console.warn('[onLogin]')
+
+        let _ownerAddress;
+
+        try{
+            const { ownerAddress } = await getWeb3Wallet();
+            
+            console.warn('[onLogin]: output<ownerAddress>:', ownerAddress)
+
+            _ownerAddress = ownerAddress;
+
+            localStorage.setItem(STORAGE_KEYS.WALLET_CONNECTED, 'true');
+            
+            console.log("MyWeb3().connected:", MyWeb3().connected);
+
+            setWeb3Connected(MyWeb3().connected);
+
+        }catch(e:any){
+            console.error("[onLogin] error<e.message>:", e.message);
+            throwError(e.message);
+            return;
+        }
+
+        console.log("_ownerAddress:", _ownerAddress)
+    }
+
+    // -- (event) logout of web 3
+    const onLogout = async () => {
+        console.log("onLogout:", onLogout);
+        setWeb3Connected(false);
+        setContractsLoaded(false);
+        localStorage.removeItem(STORAGE_KEYS.WALLET_CONNECTED)
+        localStorage.removeItem(STORAGE_KEYS.WALLET_EVENTS)
     }
 
     // -- (render) web3 not logged
     const renderNotLogged = () => {
+
+        // if( ! contractsLoaded ) return <CircularProgress/>
         
         return (
-            <div className="mt-24 flex">
+            <div className="flex login">
                 <div className="text-center m-auto">
                     <Typography variant="h4">Welcome to Lit Explorer! 👋🏻</Typography>
                     <p className="paragraph">Please sign-in to your web3 account and start the adventure</p>
-                    <MyButton className="mt-12" onClick={handleLogin}>Connect Wallet</MyButton>
+                    <MyButton className="mt-12" onClick={onLogin}>Connect Wallet</MyButton>
                 </div>
-
             </div>
         )
-
     }
 
-    if ( ! web3WalletConnected ) return renderNotLogged();
-    if ( ! loaded ) return <>Loading context...</>;
-    if ( ! loaded ) return <></>;
+    if ( ! web3Connected && ! contractsLoaded ) return renderNotLogged();
+
+    // -- share states for children components
+    let sharedStates = {
+        pkpContract: pkpContract as PKPContract,
+        routerContract: routerContract as RouterContract,
+        rliContract: rliContract as RLIContract,
+        web3: {
+            get: web3Connected,
+            login: onLogin,
+            logout: onLogout,
+            ownerAddress: ownerAddress,
+        }
+    }
 
     return (
         <AppContext.Provider value={sharedStates}>
-            <SEOHeader/>
-            { children }
+            <SearchBar onSearch={onSearch} />
+            <div id="main-dynamic-content">
+                <NavPath/>
+                { children }
+            </div>
         </AppContext.Provider>
     )
 }

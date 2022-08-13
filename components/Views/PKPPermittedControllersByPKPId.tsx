@@ -71,7 +71,7 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: {
           loadingMessage="Loading authorised PKP controllers..."
           fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
           filter={(rawData: any) => {
-            console.log("on filtered: ", rawData);
+            console.log("[PKPPermittedControllersByPKPId] input<rawData>", rawData);
             return rawData?.data?.addresses;
           } }
           renderCols={(width: number) => {

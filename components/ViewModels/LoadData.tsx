@@ -38,7 +38,7 @@ const LoadData = (props: LoadDataProps) => {
    */
   const preloadData = async (rawData: any) => {
 
-      console.log("[preloadData] rawData:", rawData);
+      console.log("[preloadData] input<rawData>:", rawData);
 
       // -- set raw data
       setRawData(rawData);
@@ -87,7 +87,6 @@ const LoadData = (props: LoadDataProps) => {
 
     // -- if fetch path is provided
     if( ! props?.useData){
-      console.log("--- use fetch ---");
       cacheFetch(`${props.fetchPath}`, async (rawData: any) => {
         preloadData(rawData);
       }, props.cache ?? true);

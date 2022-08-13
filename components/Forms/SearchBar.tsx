@@ -1,13 +1,13 @@
 import { Button, Input } from "@mui/material";
-import { FormattedMessage } from 'react-intl';
 import SearchIcon from '@mui/icons-material/Search';
+import BtnLogout from "../UI/BtnLogout";
 
 const SearchBar = (props: {
   onSearch: (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement> ) => void,
   placeholder?: string,
   imgSrc?: string
 }) => {
-
+  
     // -- (config)
     const config = {
       placeholder : props?.placeholder ?? 'Search by Address / PKP Token ID / RFI Token ID / IPFS ID / ',
@@ -28,6 +28,8 @@ const SearchBar = (props: {
             type="search" 
             placeholder={config.placeholder} 
           />
+
+          <BtnLogout/>
 
         </div>
     )

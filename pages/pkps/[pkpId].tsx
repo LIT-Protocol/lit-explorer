@@ -42,7 +42,7 @@ const PKPsPageById: NextPageWithLayout = () => {
         }}
         fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
         filter={async (rawData: any) => {
-          console.log("on filtered: ", rawData);
+          console.log("[pkpId] input<rawData>", rawData);
           return rawData?.data?.actions;
         } }
         renderCols={(width: number) => {

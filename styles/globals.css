@@ -441,3 +441,16 @@ body {
     vertical-align: unset;
     text-decoration: none;
 }
+
+.login{
+	height: 100%;
+	margin-top: 0;
+}
+button#demo-customized-button {
+    border-radius: 12px;
+    background: #E7E8EB;
+    color: black;
+    border: 2px white solid;
+    margin-top: 12px;
+    margin-right: 24px;
+}

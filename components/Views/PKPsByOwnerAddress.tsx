@@ -20,7 +20,7 @@ const PKPsByOwnerAddress = ({ownerAddress} : {
             loadingMessage={`Loading a list of PKP NFTs...`}
             fetchPath={`/api/get-pkps-by-address/${ownerAddress}`}
             filter={(rawData: any) => {
-                console.log("on filtered: ", rawData);
+                console.log("[PKPsByOwnerAddress] input<rawData>", rawData);
                 return rawData.data.result.filter(
                 (tx: any) => {
                     return tx.contractAddress === APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS.toLowerCase() && 

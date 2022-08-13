@@ -34,11 +34,9 @@ function MyApp({ Component, pageProps }: Props) {
   const getLayout = Component.getLayout || ((page: any) => page)
   
   return getLayout(
-      <>
-        <AppContextProvider>          
-          <Component {...pageProps} />
-        </AppContextProvider>
-      </>
+      <AppContextProvider>          
+        <Component {...pageProps} />
+      </AppContextProvider>
   )
 }
 

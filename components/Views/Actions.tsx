@@ -13,7 +13,7 @@ const Actions = () => {
             errorMessage="No actions found."
             fetchPath={`/api/get-all-actions`}
             filter={async (rawData: any) => {
-            console.log("on filtered: ", rawData);
+            console.log("[Action] input<rawData>", rawData);
             return rawData?.data?.rows?.map((row: any) => {
                 return {
                 ipfsId: row?.ipfs_pin_hash,

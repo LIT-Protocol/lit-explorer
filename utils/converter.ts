@@ -73,18 +73,16 @@ export const pub2Addr = (pubKey: string) => {
 
         // Decode public key
         const key = ec.keyFromPublic(_pubKey, 'hex');
-
-        console.log("Key:", key)
-
+        console.log("[pub2Addr] converted<key>:", key)
+        
         // Convert to uncompressed format
         const publicKey = key.getPublic().encode('hex').slice(2);
-
+        
         // Now apply keccak
         address = keccak256(Buffer.from(publicKey, 'hex')).slice(64 - 40);
-
-        console.log(`Public Key: 0x${publicKey}`);
-        console.log(`Address: 0x${address.toString()}`);
-
+        console.log("[pub2Addr] converted<publicKey>:", publicKey)
+        console.log("[pub2Addr] converted<address>:", address)
+        
         return address;
     } catch (err) {
         address = '';
@@ -98,13 +96,13 @@ export const pub2Addr = (pubKey: string) => {
 export const pub2BTC = (pubKey: string) => {
 
     const ECDSA_PUB_KEY = pubKey.replaceAll('0x', '');
-    console.warn("ECDSA_PUB_KEY:", ECDSA_PUB_KEY)
+    console.log("[pub2BTC] input<ECDSA_PUB_KEY>:", ECDSA_PUB_KEY)
 
     const pubkey = Buffer.from( ECDSA_PUB_KEY, 'hex' );
 
     const { address } = bitcoinjs.payments.p2pkh({ pubkey });
     
-    console.warn("address:", address)
+    console.log("[pub2BTC] converted<address>:", address)
     
     return address
 
@@ -118,12 +116,12 @@ export const hexToDecimal = (value: string) =>{
     return converter.hexToDec(value);
 }
 
-export const heyShorty = (addr: string) => {
+export const heyShorty = (addr: string, length = 10) => {
 
     if( ! addr ){
         console.warn("heyShorty() -> addr cannot be empty.");
         return null;
     }
 
-    return addr.substring(0, 10) + '...' + addr.substring(addr.length - 10, addr.length);
+    return addr.substring(0, length) + '...' + addr.substring(addr.length - length, addr.length);
 }

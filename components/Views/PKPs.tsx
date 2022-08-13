@@ -16,7 +16,7 @@ const PKPs = () => {
             errorMessage="No PKPs found."
             fetchPath={`/api/get-all-pkps`}
             filter={(rawData: any) => {
-                console.log("on filtered: ", rawData);
+                console.log("[PKPs] input<rawData>", rawData);
                 return rawData?.data?.tokens;
             } }
             renderCols={(width: number) => {

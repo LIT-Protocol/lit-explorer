@@ -8,6 +8,13 @@ export const APP_CONFIG = {
     IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
 }
 
+/** ========== Storage Keys ========== */
+export const STORAGE_KEYS = {
+    WALLET_CONNECTED : 'lit-explorer-wallet-connected',
+    LANG: 'lit-explorer-i18n-lang',
+    WALLET_EVENTS: 'lit-explorer-wallet-events',
+}   
+
 /** ========== LINKS ========== */
 export const APP_LINKS = {
     WHAT_IS_PKP: 'https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs',
