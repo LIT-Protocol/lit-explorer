@@ -316,7 +316,7 @@ export class WriteRLIContract{
         RLITokenAddress: string,
     }) : Promise<any> => {
         
-        const tx = await this.contract.transfer(
+        const tx = await this.contract.safeTransfer(
             fromAddress,
             toAddress,
             RLITokenAddress
