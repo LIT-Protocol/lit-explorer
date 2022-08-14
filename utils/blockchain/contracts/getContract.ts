@@ -1,6 +1,6 @@
 import { CeloProvider, CeloWallet } from "@celo-tools/celo-ethers-wrapper";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
-import { ABIsFallback } from "../../../ABIsFallback";
+// import { ABIsFallback } from "../../../ABIsFallback";
 import { SupportedNetworks, SUPPORTED_CHAINS } from "../../../app_config";
 import { cacheFetch } from "../../cacheFetch";
 
@@ -67,12 +67,12 @@ export const getABI = async ({network, contractAddress}: {
         ABI = data;
         
         // -- using fallback
-        if( data.includes('Max rate limit reached')){
-            console.warn("Using fallback for contract:", contractAddress);
-            let found : any = Object.entries(ABIsFallback).find((item) => item[0].toLowerCase() == contractAddress.toLocaleLowerCase());
+        // if( data.includes('Max rate limit reached')){
+        //     console.warn("Using fallback for contract:", contractAddress);
+        //     let found : any = Object.entries(ABIsFallback).find((item) => item[0].toLowerCase() == contractAddress.toLocaleLowerCase());
             
-            ABI = JSON.parse(found[1]);
-        }
+        //     ABI = JSON.parse(found[1]);
+        // }
 
         return ABI;
 

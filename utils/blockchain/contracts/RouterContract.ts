@@ -74,7 +74,16 @@ export class ReadRouterContract{
 
     getPermittedAddresses = async (id: any) => {
 
-        const addresses = await this.contract.getPermittedAddresses(id);
+        console.log("[getPermittedAddresses] input<id>:", id);
+        
+        let addresses;
+        
+        try{
+            addresses = await this.contract.getPermittedAddresses(id)
+        }catch(e: any){
+            console.log("[getPermittedAddresses] error<e.message>:", e.message);
+            addresses = [];
+        }
 
         return addresses;
 
