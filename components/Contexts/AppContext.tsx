@@ -9,12 +9,13 @@ import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import { CircularProgress, Typography } from "@mui/material";
 import MyButton from "../UI/MyButton";
-import { STORAGE_KEYS } from "../../app_config";
+import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION, ROUTES, SEARCH_ROUTES, STORAGE_KEYS, SupportedNetworks, SupportedSearchTypes, SUPPORTED_CHAINS } from "../../app_config";
 import throwError from "../../utils/throwError";
 import NavPath from "../UI/NavPath";
 import SearchBar from "../Forms/SearchBar";
 import router from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
+import { ABIS } from "../../ABIsFallback";
 
 declare global {
     interface Window{
@@ -22,6 +23,8 @@ declare global {
         hex2dec?(pkpId: string):void,
         wei2eth?(v:number):void,
         pub2addr?(v:any):void,
+        config: any,
+        commands: any,
     }
 }
 
@@ -64,7 +67,20 @@ export const AppContextProvider = ({children}: {children: any}) => {
         window.dec2hex = converter.decToHex;
         window.hex2dec = converter.hexToDec
         window.wei2eth = wei2eth;
-        window.pub2addr = pub2Addr
+        window.pub2addr = pub2Addr;
+        window.config = {
+            APP_CONFIG,
+            STORAGE_KEYS,
+            APP_LINKS,
+            SupportedNetworks,
+            SUPPORTED_CHAINS,
+            SupportedSearchTypes,
+            SEARCH_ROUTES,
+            ROUTES,
+            DEFAULT_LIT_ACTION,
+            ABIS,
+        },
+        window.commands = Object.keys(window).slice(Math.max(Object.keys(window).length - 5, 1))
     }
     
     const connectContracts = async () => {
