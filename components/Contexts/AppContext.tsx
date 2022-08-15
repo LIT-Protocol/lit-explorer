@@ -24,7 +24,10 @@ declare global {
         wei2eth?(v:number):void,
         pub2addr?(v:any):void,
         config: any,
-        commands: any,
+        login: any,
+        logout: any,
+        listCommands: any,
+        
     }
 }
 
@@ -64,10 +67,13 @@ export const AppContextProvider = ({children}: {children: any}) => {
     const [contractsLoaded, setContractsLoaded] = useState(false);
 
     const injectGlobalFunctions = () => {
+        
         window.dec2hex = converter.decToHex;
         window.hex2dec = converter.hexToDec
         window.wei2eth = wei2eth;
         window.pub2addr = pub2Addr;
+        window.login = onLogin
+        window.logout = onLogout
         window.config = {
             APP_CONFIG,
             STORAGE_KEYS,
@@ -79,8 +85,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             ROUTES,
             DEFAULT_LIT_ACTION,
             ABIS,
-        },
-        window.commands = Object.keys(window).slice(Math.max(Object.keys(window).length - 5, 1))
+        }
     }
     
     const connectContracts = async () => {
