@@ -86,7 +86,7 @@ export const DEFAULT_LIT_ACTION = `const go = async () => {
     // the signature share will be automatically returned in the HTTP response from the node
     const sigShare = await LitActions.signEcdsa({
       toSign,
-      keyId: "1",
+      publicKey: "0x03...e127",
       sigName: "sig1",
     });
   };
