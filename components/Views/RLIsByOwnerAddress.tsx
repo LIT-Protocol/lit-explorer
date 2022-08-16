@@ -72,7 +72,7 @@ const RLIsByOwnerAddress = ({
             cache={cache}
             useData={true}
             loadingMessage={'Loading RLIs by owner'}
-            title={`Rate Limit NFTs (${heyShorty(ownerAddress)})`}
+            title={`Rate Limit NFTs by a given address: ${heyShorty(ownerAddress, 4)}`}
             errorMessage="No Rate Limit NFTs found."
             data={list}
             filter={(rawData: Array<any>) => {

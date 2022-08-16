@@ -7,7 +7,7 @@ const PKPOwners = () => {
     return (
         <LoadData 
             debug={false}
-            title="PKP Owners:"
+            title="All Owners of PKPs:"
             errorMessage="No PKP owners found."
             fetchPath={"/api/get-all-pkp-owners"}
             filter={(rawData: any) => {

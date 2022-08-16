@@ -15,9 +15,9 @@ const PKPsByOwnerAddress = ({ownerAddress} : {
             cache={false}
             key={ownerAddress.toString()}
             debug={false}
-            title={`PKP NFTs (${heyShorty(ownerAddress)})`}
+            title={`PKPs by a given address: ${heyShorty(ownerAddress, 4)}`}
             errorMessage="No PKP owners found."
-            loadingMessage={`Loading a list of PKP NFTs...`}
+            loadingMessage={`Loading a list of PKPs by a given address...`}
             fetchPath={`/api/get-pkps-by-address/${ownerAddress}`}
             filter={(rawData: any) => {
                 console.log("[PKPsByOwnerAddress] input<rawData>", rawData);

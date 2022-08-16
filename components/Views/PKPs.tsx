@@ -11,8 +11,8 @@ const PKPs = () => {
         <LoadData
             debug={false}
             cache={false}
-            title="PKP Tokens:"
-            loadingMessage="Loading PKPs..."
+            title="All PKP Tokens:"
+            loadingMessage="Loading All  PKPs..."
             errorMessage="No PKPs found."
             fetchPath={`/api/get-all-pkps`}
             filter={(rawData: any) => {
