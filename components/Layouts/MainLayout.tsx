@@ -108,9 +108,6 @@ const MainLayout = (props: MainLayoutProps) => {
                             <a target="_blank" rel="noreferrer" href={APP_LINKS.LIT_DISCORD}>
                                 <Chip onClick={ () => {} } icon={<SupportIcon />} label="Support"/>
                             </a>
-                            <a target="_blank" rel="noreferrer" href={APP_LINKS.DOC}>
-                                <Chip onClick={ () => {} } icon={<LocalLibraryIcon />} label="Documentation"/>
-                            </a>
                         </div>
                     </div>
                     
