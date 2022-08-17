@@ -290,7 +290,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
             <div className="flex login">
                 <div className="text-center m-auto">
                     <Typography variant="h4">Welcome to Lit Explorer! 👋🏻</Typography>
-                    <p className="paragraph">Please sign-in to your web3 account and start the adventure</p>
+                    <p className="paragraph">Please sign-in to your web3 account and start the adventure.</p>
+                    <p className="paragraph">To learn more about Programmable Key Pairs (PKPs) and Lit Actions, read our <a href="https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs">documentation</a>.</p>
                     <MyButton className="mt-12" onClick={onLogin}>Connect Wallet</MyButton>
                 </div>
             </div>

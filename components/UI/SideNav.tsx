@@ -34,6 +34,9 @@ const SideNav = () => {
             <ul className='ul'>
                 <li><Button onClick={() => router.push(ROUTES.CONTRACTS)}  className={currentRoute.includes(ROUTES.CONTRACTS) ? "btn active" : "btn"}><FormattedMessage id='Contracts' /></Button></li>
             </ul> 
+            <ul className='ul'>
+                <li><Button onClick={() => window.location.href="https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs"} className={currentRoute.includes(ROUTES.DOCUMENTATION) ? "btn active" : "btn"}><FormattedMessage id='Documentation' /></Button></li>
+            </ul> 
         </>
     );
 }
