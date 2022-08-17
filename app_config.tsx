@@ -76,6 +76,7 @@ export const ROUTES = {
     ACTIONS: '/actions',
     RLIS: '/rlis',
     CONTRACTS: '/contracts',
+    DOCUMENTATION: '/documentation',
 }
 
 // ========== Lit Action Code ==========
