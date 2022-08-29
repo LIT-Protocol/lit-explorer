@@ -25,10 +25,12 @@ const getWeb3Wallet = async () : Promise<Web3WalletProps | never> => {
         return defaultProps;
     }
 
-    await web3Provider.request({
+    const web3ProviderRequest = {
         method: 'wallet_addEthereumChain',
-        params: [SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].params]
-    })
+        params: [SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].params],
+    }
+    
+    await web3Provider.request(web3ProviderRequest)
 
     const wallet = new ethers.providers.Web3Provider(web3Provider);
 
