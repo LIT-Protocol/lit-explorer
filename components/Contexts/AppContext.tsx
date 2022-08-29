@@ -264,13 +264,16 @@ export const AppContextProvider = ({children}: {children: any}) => {
             setWeb3Connected(MyWeb3().connected);
 
         }catch(e:any){
+
+            if( e === '8546: Not implemented'){
+                alert(`[${e}] Found conflicts between Metamask and Coinbase or Enkrypt Google Chrome Extensions. We are investigating a solution. Meanwhile, please remove the extensions so that Metamask could proceed. Thanks!`);
+                throwError(e);
+                return;
+            }
+
             console.error("[onLogin] error<e.message>:", e.message ?? e);
             throwError(e.message);
 
-            if( e === '8546: Not implemented'){
-                alert("Found conflicts between Metamask and Coinbase or Enkrypt Google Chrome Extensions. We are investigating a solution. Meanwhile, please remove the extensions so that Metamask could proceed. Thanks!");
-                return;
-            }
             return;
         }
 

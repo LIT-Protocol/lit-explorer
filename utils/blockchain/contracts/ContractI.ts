@@ -3,6 +3,6 @@ import { SupportedNetworks } from '../../../app_config';
 
 export interface ContractProps{
     signer?: Signer
-    contractAddress: string
+    contractAddress?: string
     network?: SupportedNetworks
 }
