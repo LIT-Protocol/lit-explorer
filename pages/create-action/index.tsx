@@ -13,6 +13,7 @@ import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION } from "../../app_config";
 import { tryUntil } from "../../utils/tryUntil";
 import MyDescription from "../../components/UI/MyDescription";
 import ButtonActionRegisterByIPFSId from "../../components/Forms/ButtonActionRegisterByIPFSId";
+import { preventPageLeave } from "../../utils/utils";
 
 const CreateAction: NextPageWithLayout = () => {
 
@@ -37,6 +38,8 @@ const CreateAction: NextPageWithLayout = () => {
    * (event) Upload the code to IPFS 
    */
   const handleUpload = async () => {
+
+    preventPageLeave();
     
     setProgress(20);
     setMsg('Uploading to IPFS...');
@@ -58,14 +61,14 @@ const CreateAction: NextPageWithLayout = () => {
       onTrying: (counter: number) => {
         setCompleted(true);
         setProgress(60 + counter);
-        setMsg(`Still waiting... but your code is available to register! Just not ready to be yet...`);
+        setMsg(`Pinning...`);
       },
       onError: (_: any) => {
         throwError("Failed to check the pinning status, maybe check again in 5 mins");
         return;
       },
-      max: 20,
-      interval: 6000,
+      max: 40,
+      interval: 3000,
     })
 
     
@@ -73,6 +76,7 @@ const CreateAction: NextPageWithLayout = () => {
     
     setMsg('Done!');
     setProgress(100);
+    preventPageLeave({ reset: true });
 
   }
 
@@ -108,8 +112,9 @@ const CreateAction: NextPageWithLayout = () => {
 
     // (inner render) render view code button
     const _renderViewCodeButton = () => {
-      if (progress < 100) return '';
-      return <Button onClick={_handleViewCode} className="btn-2 ml-auto">View code</Button>
+      if (progress < 100) return <Button disabled className="btn-2 ml-auto">View Code</Button>;
+
+      return <Button onClick={_handleViewCode} className="btn-2 ml-auto">View Code</Button>
     }
 
     // -- validate
@@ -125,7 +130,6 @@ const CreateAction: NextPageWithLayout = () => {
         <div className="mt-12 flex">
           <div className="ml-auto flex">
             { _renderViewCodeButton() }
-            <ButtonActionRegisterByIPFSId ipfsId={ipfsId} defaultButton={true} />
           </div>
         </div>
       </MyCard>
