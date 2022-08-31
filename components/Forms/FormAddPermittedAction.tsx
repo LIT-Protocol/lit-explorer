@@ -54,6 +54,19 @@ const [progress, setProgress] = useState<MyProgressI>();
     // -- (event) on submit 
     const onSubmit = async () => {
 
+        // -- validate ( register action first if not already done so)
+        setProgress({message: `Checking if action is registered...`, progress: 10})
+        const _isRegistered = await routerContract.read.isActionRegistered(ipfsId);
+        
+        if( ! _isRegistered ){
+            setProgress({message: `Registering action...`, progress: 20});
+            const tx = await routerContract.write.registerAction(ipfsId);
+
+            setProgress({message: `Waiting for confirmation...`, progress: 30});
+            await tx.wait();
+
+        }
+
         // -- prepare input data
         const _pkpId = selectedPKPId;
         const _ipfsId = ipfsId;
@@ -171,7 +184,7 @@ const [progress, setProgress] = useState<MyProgressI>();
 
     // -- (validation)
     if( ! ipfsId ) return <>ipfsId is not loaded</>
-    if( ! isActionRegistered ) return <>Found ipfsId, but Action code is not registered.</>
+    // if( ! isActionRegistered ) return <>Found ipfsId, but Action code is not registered.</>
     
     return (
         <>

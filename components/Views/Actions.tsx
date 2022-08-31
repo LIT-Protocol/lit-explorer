@@ -27,9 +27,9 @@ const Actions = () => {
                         return RenderLink(props, {short: true, copy: true})
                     }},
                     { headerName: "Created at", field: "createdAt"},
-                    { headerName: "Actions", field: "registered", renderCell: (props: GridRenderCellParams) => {
-                        return <ButtonActionRegisterByIPFSId key={props?.value} ipfsId={props?.value}/>;
-                    }},
+                    // { headerName: "Actions", field: "registered", renderCell: (props: GridRenderCellParams) => {
+                    //     return <ButtonActionRegisterByIPFSId key={props?.value} ipfsId={props?.value}/>;
+                    // }},
                 ], width)
             } }
             renderRows={(filteredData: any) => {
@@ -38,7 +38,7 @@ const Actions = () => {
                 id: i + 1,
                 ipfsId: item.ipfsId,
                 createdAt: item.createdAt || 'Not specified',
-                registered: item.ipfsId || 'Not specified',
+                // registered: item.ipfsId || 'Not specified',
                 };
             });
             } }    

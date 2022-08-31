@@ -87,9 +87,9 @@ const ActionsPage: NextPageWithLayout = () => {
     return (
       <div className="flex">
         <h2>{ title }</h2> 
-        <div className="flex-content">
+        {/* <div className="flex-content">
           <ButtonActionRegisterByIPFSId ipfsId={ipfsId} onDone={reRender}/>
-        </div>
+        </div> */}
       </div>
     )
   }
@@ -143,13 +143,16 @@ const ActionsPage: NextPageWithLayout = () => {
     // -- (validations)
     if( ! hasPKPs && ! actionRegistered) return _renderLoading();
     if( ! hasPKPs ) return _renderNoPKPsFound();
-    if( ! actionRegistered ) return _renderActionNotRegistered();
+    // if( ! actionRegistered ) return _renderActionNotRegistered();
     
     // -- (finally)
     return (
       <MyCard title={'PKP & Lit Action Settings'} className="mt-24">
+
           <FormAddPermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
-          <FormRevokePermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />    
+
+          <FormRevokePermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
+          
           {/* <FormAddPermittedAddress ipfsId={(ipfsId as string)}  />     */}
       </MyCard>
     )

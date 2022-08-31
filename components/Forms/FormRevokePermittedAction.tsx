@@ -172,7 +172,7 @@ const FormRevokePermittedAction = ({
 
     // -- (validation)
     if( ! ipfsId ) return <>ipfsId is not loaded</>
-    if( ! isActionRegistered ) return <>Found ipfsId, but Action code is not registered.</>
+    if( ! isActionRegistered ) return <></>
     
     return (
         <>
