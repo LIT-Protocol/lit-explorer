@@ -166,14 +166,16 @@ export const AppContextProvider = ({children}: {children: any}) => {
     const MyWeb3 = () : {
         installed: boolean, 
         walletConnected: boolean, 
-        connected: boolean
+        eventsListened: boolean, 
+        connected: boolean,
     } => {
 
         const installed = typeof window?.ethereum !== 'undefined';
         const walletConnected = localStorage.getItem(STORAGE_KEYS.WALLET_CONNECTED) == 'true';
+        const eventsListened = localStorage.getItem(STORAGE_KEYS.WALLET_EVENTS) == 'true';
         const connected = installed && walletConnected;
 
-        return { installed, walletConnected, connected }
+        return { installed, walletConnected, eventsListened, connected }
     }
 
     useEffect(() => {
@@ -204,7 +206,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             }
 
             // -- If a web3 provider is installed
-            if ( MyWeb3().installed ){
+            if ( MyWeb3().installed && ! MyWeb3().eventsListened){
                 listenToWalletEvents()
             }
 

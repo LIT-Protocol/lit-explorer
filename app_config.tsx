@@ -22,6 +22,7 @@ export const APP_LINKS = {
     // LIT_DISCORD: 'https://discord.com/channels/896185694857343026/1002588409153458228',
     LIT_DISCORD: 'https://litgateway.com/discord',
     DOC: 'https://developer.litprotocol.com/',
+    GITHUB_CONTRACTS: 'https://github.com/LIT-Protocol/LitNodeContracts',
 }
 
 /** ========== SUPPORTED NETWORKS ========== */

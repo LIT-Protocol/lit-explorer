@@ -3,6 +3,7 @@ import { LOCALES } from '../locales';
 export default {
     [LOCALES.ENGLISH]:{
         'read more' : '(...read more)',
+        'read more2' : '(read more)',
         'what is pkp - title' : `What is a Programmable Key Pair (PKP)?`,
         'what is pkp' : `A PKP is a public and private keypair that can be associated with one or many smart contracts. PKPs let developers create applications where user controlled keys can sign in the decentralized cloud. Use this page to mint a PKP NFT that lets you control which Lit Actions can sign using that key `,
         'Mint New PKP' : 'Mint New PKP',
@@ -35,5 +36,7 @@ export default {
         'authorised action - error': 'Cannot find authorized actions.',
         'action page - title': 'How do Lit Actions and PKPs work together?',
         'action page': 'A user may generate a new PKP, and may grant a Lit Action the right to sign using it. This means that Lit actions are kind of like smart contracts with a secret key they can use to sign or decrypt things.',
+        'contract page - title': 'Lit Protocol Contracts',
+        'contract page - subtitle': 'These are contracts that power the network.  These contracts govern the threshold encryption nodes, store access control conditions, and permit minting and delegation of PKPs.  These contracts are currently deployed on the Celo mainnet but could be deployed on any blockchain that the Lit Protocol supports.  You can find the github repo here: ',
     }
 }
