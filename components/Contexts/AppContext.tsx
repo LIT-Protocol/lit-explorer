@@ -65,6 +65,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
     // -- (state)
     const [web3Connected, setWeb3Connected] = useState(false);
     const [contractsLoaded, setContractsLoaded] = useState(false);
+    const [currentChain, setCurrentChain] = useState<string>();
 
     const injectGlobalFunctions = () => {
         
@@ -128,7 +129,13 @@ export const AppContextProvider = ({children}: {children: any}) => {
             },
             'connect': (e: any) => console.warn("connect:", e),
             'disconnect': (e: any) => console.warn("disconnect:", e),
-            'chainChanged': (e: any) => console.warn("chainChanged:", e),
+            'chainChanged': (e: any) => {
+                console.warn("chainChanged:", e)
+
+                if( e !== '0xa4ec'){
+                    onLogout();
+                }
+            },
         }
 
         const keys = Object.keys(walletEvents);
@@ -168,14 +175,16 @@ export const AppContextProvider = ({children}: {children: any}) => {
         walletConnected: boolean, 
         eventsListened: boolean, 
         connected: boolean,
+        isCeloChain: boolean,
     } => {
 
         const installed = typeof window?.ethereum !== 'undefined';
         const walletConnected = localStorage.getItem(STORAGE_KEYS.WALLET_CONNECTED) == 'true';
         const eventsListened = localStorage.getItem(STORAGE_KEYS.WALLET_EVENTS) == 'true';
         const connected = installed && walletConnected;
+        const isCeloChain = window?.ethereum?.chainId === '0xa4ec';
 
-        return { installed, walletConnected, eventsListened, connected }
+        return { installed, walletConnected, eventsListened, connected, isCeloChain }
     }
 
     useEffect(() => {
@@ -191,8 +200,13 @@ export const AppContextProvider = ({children}: {children: any}) => {
             console.warn(`${MyWeb3().installed ? '✅ ' : '❌ '}MyWeb3().installed`)
             console.warn(`${MyWeb3().walletConnected ? '✅ ' : '❌ '}MyWeb3().walletConnected`)
 
+            // -- If is not Celo Chain
+            if( ! MyWeb3().isCeloChain ){
+                return;
+            }
+
             // -- If both web provider is installed and wallet is connected
-            if ( MyWeb3().connected && !contractsLoaded ){
+            if ( MyWeb3().connected && !contractsLoaded && currentChain === '0xa4ec'){
                 
                 /**
                  * Setup all contracts so that is available on all components
@@ -215,7 +229,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
         })();
 
-    }, [web3Connected]);
+    }, [web3Connected, currentChain]);
 
     /**
      * 
@@ -247,6 +261,15 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     // -- (event) handle login
     const onLogin = async () => {
+        
+        if( ! MyWeb3().isCeloChain ){
+            // alert("Please switch to Celo Mainnet");
+            const { ownerAddress } = await getWeb3Wallet();
+            setOwnerAddress(ownerAddress);
+            // return;
+        }
+
+        setCurrentChain('0xa4ec');
 
         console.warn('[onLogin]')
 
