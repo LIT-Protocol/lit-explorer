@@ -7,8 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { APP_CONFIG, APP_LINKS } from "../../app_config";
-import MyDescription from "../../components/UI/MyDescription";
+import { APP_CONFIG } from "../../app_config";
 
 function createData( name: string, address: string ) {
   return { name, address };
@@ -30,43 +29,30 @@ const ContractsPage: NextPageWithLayout = () => {
   return (
     <>
         <h1>On Celo Mainnet</h1>
-
-        <MyDescription 
-          titleId={'contract page - title'} 
-          paragraphs={[
-            {id: 'contract page - subtitle'},
-            { id: 'read more2', link: APP_LINKS.GITHUB_CONTRACTS },
-          ]}      
-        />
-    
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            
-            {/* --- header --- */}
-            <TableHead>
-              <TableRow>
-                <TableCell><b>Smart Contract</b></TableCell>
-                <TableCell align="right"><b>Address</b></TableCell>
-              </TableRow>
-            </TableHead>
-            
-            {/* --- body --- */}
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">
-                    <a target="_blank" rel="noreferrer" href={`https://celoscan.io/address/${row.address}`}>{row.address}</a>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell><b>Smart Contract</b></TableCell>
+            <TableCell align="right"><b>Address</b></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow
+              key={row.name}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {row.name}
+              </TableCell>
+              <TableCell align="right">
+                <a target="_blank" rel="noreferrer" href={`https://celoscan.io/address/${row.address}`}>{row.address}</a>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        </Table>
         </TableContainer>
     </>
   )

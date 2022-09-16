@@ -173,18 +173,25 @@ export const AppContextProvider = ({children}: {children: any}) => {
     const MyWeb3 = () : {
         installed: boolean, 
         walletConnected: boolean, 
+<<<<<<< HEAD
         eventsListened: boolean, 
         connected: boolean,
         isCeloChain: boolean,
+=======
+        connected: boolean
+>>>>>>> parent of 25c1775 (fix: popup wallet)
     } => {
 
         const installed = typeof window?.ethereum !== 'undefined';
         const walletConnected = localStorage.getItem(STORAGE_KEYS.WALLET_CONNECTED) == 'true';
-        const eventsListened = localStorage.getItem(STORAGE_KEYS.WALLET_EVENTS) == 'true';
         const connected = installed && walletConnected;
         const isCeloChain = window?.ethereum?.chainId === '0xa4ec';
 
+<<<<<<< HEAD
         return { installed, walletConnected, eventsListened, connected, isCeloChain }
+=======
+        return { installed, walletConnected, connected }
+>>>>>>> parent of 25c1775 (fix: popup wallet)
     }
 
     useEffect(() => {
@@ -220,7 +227,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             }
 
             // -- If a web3 provider is installed
-            if ( MyWeb3().installed && ! MyWeb3().eventsListened){
+            if ( MyWeb3().installed ){
                 listenToWalletEvents()
             }
 
