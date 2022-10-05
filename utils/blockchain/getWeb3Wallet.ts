@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Signer } from 'ethers';
-import { SupportedNetworks, SUPPORTED_CHAINS } from "../../app_config";
+import { APP_CONFIG, SupportedNetworks, SUPPORTED_CHAINS } from "../../app_config";
 
 interface Web3WalletProps{
     wallet: any,
@@ -27,7 +27,7 @@ const getWeb3Wallet = async () : Promise<Web3WalletProps | never> => {
 
     const web3ProviderRequest = {
         method: 'wallet_addEthereumChain',
-        params: [SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].params],
+        params: [APP_CONFIG.NETWORK.params],
     }
     
     await web3Provider.request(web3ProviderRequest)

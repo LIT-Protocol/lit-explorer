@@ -1,6 +1,6 @@
 import { Contract } from "ethers";
 import { ContractProps } from "./ContractI";
-import { SupportedNetworks } from '../../../app_config';
+import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
 import { getContract } from './getContract';
 
 /**
@@ -28,7 +28,7 @@ export class RouterContract{
      connect = async (props: ContractProps): Promise<void> => {
         
         this.contract = await getContract({
-            network: props?.network ?? SupportedNetworks.CELO_MAINNET,
+            network: props?.network ?? APP_CONFIG.NETWORK_NAME,
             signer: props?.signer,
             contractAddress: props.contractAddress
         });

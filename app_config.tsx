@@ -1,13 +1,3 @@
-/** ========== CONTRACT ADDRESSES ========== */
-export const APP_CONFIG = {
-    PKP_NFT_CONTRACT_ADDRESS: "0x594E1dA675e2a17866B7E3D80c96Cb396f2A4ccD", 
-    RATE_LIMIT_CONTRACT_ADDRESS: "0xbd757dD9Bfba4Ac6df1E7e66B9C40486f4681f9B",
-    ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
-    ECDSA_KEY: 2,
-    IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
-    IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
-}
-
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
     WALLET_CONNECTED : 'lit-explorer-wallet-connected',
@@ -26,7 +16,8 @@ export const APP_LINKS = {
 
 /** ========== SUPPORTED NETWORKS ========== */
 export enum SupportedNetworks{
-    CELO_MAINNET = 'CELO_MAINNET'
+    CELO_MAINNET = 'CELO_MAINNET',
+    MUMBAI_TESTNET = 'MUMBAI_TESTNET'
 }
 
 export const SUPPORTED_CHAINS = {
@@ -39,6 +30,18 @@ export const SUPPORTED_CHAINS = {
             nativeCurrency: { name: "Celo", symbol: "CELO", decimals: 18 },
             rpcUrls: ["https://forno.celo.org"],
             blockExplorerUrls: ["https://explorer.celo.org/"],
+            iconUrls: ["future"],
+        }
+    },
+    [SupportedNetworks.MUMBAI_TESTNET]: {
+        ABI_API: "https://api-testnet.polygonscan.com/api?module=contract&action=getabi&address=",
+        EXPLORER_API: "https://mumbai.polygonscan.com/api",
+        params: {
+            chainId: "0x13881",
+            chainName: "Mumbai",
+            nativeCurrency: { name: "Matic", symbol: "MATIC", decimals: 18 },
+            rpcUrls: ["https://rpc-mumbai.maticvigil.com/v1/96bf5fa6e03d272fbd09de48d03927b95633726c"],
+            blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
             iconUrls: ["future"],
         }
     }
@@ -89,3 +92,28 @@ export const DEFAULT_LIT_ACTION = `const go = async () => {
   };
   
   go();`;
+
+
+  /** ========== CONTRACT ADDRESSES ========== */
+export const APP_CONFIG = {
+    ECDSA_KEY: 2,
+    IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
+    IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
+
+    // --- Main contracts used in this explorer
+    PKP_NFT_CONTRACT_ADDRESS: "0x738f0bbCDB6F5103A994a65D33EeF6B96e6a280F", 
+    RATE_LIMIT_CONTRACT_ADDRESS: "0x40E1C6a43d92639F8421C260D57Ff3d8b215A76D",
+    ROUTER_CONTRACT_ADDRESS: "0xD90493B5022E8457fAA3867d16d70559ee600940",
+
+    // -- only for display
+    ACCS_CONTRACT_ADDRESS: "0x7E60EF0F35A0E270B27054D20A03dB9Cbdfb563e",
+    LIT_TOKEN_CONTRACT: "0x1A4779619712070BD8Acbfdd5409D97C0A066131",
+    MULTI_SENDER_CONTRACT: "0xB4720616eabd25d9d4C0F52d49FB04C38dfAf964",
+    DEPLOYER_CONTRACT: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+    STAKED_NODE_CONTRACT: "0x889Db76286718dfbF4b62B6c9465B3aa9C28b3E7",
+
+    // -- explorer address
+    EXPLORER: "https://polygonscan.com/address/",
+    NETWORK_NAME: SupportedNetworks.MUMBAI_TESTNET,
+    NETWORK: SUPPORTED_CHAINS[SupportedNetworks.MUMBAI_TESTNET],
+}

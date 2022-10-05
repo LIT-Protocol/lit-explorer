@@ -100,7 +100,7 @@ const FormMintNewPKP: NextPageWithLayout = () => {
    * @param { MyFormData } formData 
    * @returns { void }
    */
-  const onSubmit = async (formData: MyFormData) => {
+  const onSubmit = async (formData: MyFormData) : Promise<void> => {
 
     const progress = mintProgress?.progress ?? 0;
 

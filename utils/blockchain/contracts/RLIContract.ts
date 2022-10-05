@@ -36,7 +36,7 @@ export class RLIContract {
     connect = async (props?: ContractProps): Promise<void> => {
 
         const config = {
-            network: props?.network ?? SupportedNetworks.CELO_MAINNET,
+            network: props?.network ?? APP_CONFIG.NETWORK_NAME,
             signer: props?.signer,
             contractAddress: props?.contractAddress ?? APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS
         };

@@ -1,7 +1,7 @@
 import { CeloProvider, CeloWallet } from "@celo-tools/celo-ethers-wrapper";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 // import { ABIsFallback } from "../../../ABIsFallback";
-import { SupportedNetworks, SUPPORTED_CHAINS } from "../../../app_config";
+import { APP_CONFIG, SupportedNetworks, SUPPORTED_CHAINS } from "../../../app_config";
 import { cacheFetch } from "../../cacheFetch";
 
 /**
@@ -21,7 +21,7 @@ export const getSigner = async (network: SupportedNetworks) : Promise<Signer> =>
     // -- (CELO MAINNET)
     if( network == SupportedNetworks.CELO_MAINNET){
 
-        const rpc = SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].params.rpcUrls[0];
+        const rpc = APP_CONFIG.NETWORK.params.rpcUrls[0];
 
         const provider = new CeloProvider(rpc);
 
@@ -50,15 +50,17 @@ export const getSigner = async (network: SupportedNetworks) : Promise<Signer> =>
  */
 export const getABI = async ({network, contractAddress}: {
     network: SupportedNetworks, 
-    contractAddress: string
+    contractAddress?: string
 }) : Promise<ContractInterface> => {
 
     let ABI;
     
-    // -- (CELO MAINNET)
-    if( network == SupportedNetworks.CELO_MAINNET){
+    const selectedNetwork = APP_CONFIG.NETWORK;
 
-        const ABI_API = SUPPORTED_CHAINS[network].ABI_API + contractAddress;
+    // -- (CELO MAINNET)
+    // if( network == SupportedNetworks.CELO_MAINNET){
+    try{
+        const ABI_API = selectedNetwork.ABI_API + contractAddress;
 
         const data = await fetch(ABI_API)
         .then((res) => res.json())
@@ -75,11 +77,13 @@ export const getABI = async ({network, contractAddress}: {
         // }
 
         return ABI;
-
+    }catch(e){
+        throw new Error(`No ABI code is found in network "${network}".`);
     }
 
+    // }
+
     // -- (otherwise)
-    throw new Error(`No ABI code is found in network "${network}".`);
     
 }
 
@@ -96,12 +100,19 @@ export const getABI = async ({network, contractAddress}: {
 export const getContract = async (props: {
     network: SupportedNetworks
     signer?: Signer,
-    contractAddress: string
-}) : Promise<Contract> => {
+    contractAddress?: string
+}) : Promise<Contract | undefined> => {
 
     let signer: Signer = props?.signer ?? await getSigner(props.network);
     
     let ABI : ContractInterface | never;
+
+    const _contractAddress = props.contractAddress ?? '';
+
+    if( _contractAddress === ''){
+        console.error("Contract address cannot be empty");
+        return;
+    }
 
     if (typeof window === 'undefined'){
         ABI = await getABI({
@@ -110,15 +121,15 @@ export const getContract = async (props: {
         });
     }else{
 
-        if( ! localStorage.getItem(props.contractAddress)){
+        if( ! localStorage.getItem(_contractAddress)){
             ABI = await getABI({
                 network: props.network,
-                contractAddress: props.contractAddress
+                contractAddress: _contractAddress
             });
     
-            localStorage.setItem(props.contractAddress, JSON.stringify(ABI))
+            localStorage.setItem(_contractAddress, JSON.stringify(ABI))
         }else{
-            const data = localStorage.getItem(props.contractAddress);
+            const data = localStorage.getItem(_contractAddress);
             const parsed = JSON.parse(data ?? '');
             ABI = parsed as ContractInterface;
         }
@@ -126,7 +137,7 @@ export const getContract = async (props: {
 
 
 
-    const contract = new ethers.Contract(props?.contractAddress, ABI, signer);
+    const contract = new ethers.Contract(_contractAddress, ABI, signer);
     
     return contract
 

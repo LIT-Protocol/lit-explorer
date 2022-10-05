@@ -31,17 +31,22 @@ export class RouterContract{
      connect = async (props?: ContractProps): Promise<void> => {
         
         const config = {
-            network: props?.network ?? SupportedNetworks.CELO_MAINNET,
+            network: props?.network ?? APP_CONFIG.NETWORK_NAME,
             signer: props?.signer,
             contractAddress: props?.contractAddress ?? APP_CONFIG.ROUTER_CONTRACT_ADDRESS
         };
 
-        this.contract = await getContract(config);
+        const _contract = await getContract(config);
 
-        console.log("[RouterContract] connect input<config>:", config);
-
-        this.read = new ReadRouterContract(this.contract);
-        this.write = new WriteRouterContract(this.contract);
+        if( ! _contract ){
+            console.error("Failed to get contract");
+        }else{
+            this.contract = _contract;
+            console.log("[RouterContract] connect input<config>:", config);
+    
+            this.read = new ReadRouterContract(this.contract);
+            this.write = new WriteRouterContract(this.contract);
+        }
     }
 
 }
@@ -58,7 +63,7 @@ export class ReadRouterContract{
     }
 
     isRouted = async (tokenId: any) : Promise<boolean>=> {
-
+        
         const isRouted = this.contract.isRouted(tokenId);
 
         return isRouted;

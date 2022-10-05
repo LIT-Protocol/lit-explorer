@@ -13,7 +13,7 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
 
-  const baseURL = SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].EXPLORER_API;
+  const baseURL = APP_CONFIG.NETWORK.EXPLORER_API;
   const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS;
   const query = `?module=token&action=getTokenHolders&contractaddress=${contractAddressHash}`;
 
