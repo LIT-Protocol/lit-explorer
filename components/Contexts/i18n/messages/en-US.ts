@@ -14,7 +14,7 @@ export default {
         'Contracts': 'Contracts',
         'Documentation': 'Documentation',
         'RLIs': 'RLIs',
-        'Other': 'OTHER',
+        'Other': 'RESOURCES',
         'what are lit actions - title': 'What are Lit Actions?',
         'what are lit actions': `Lit Actions are Javascript functions that can utilize the threshold cryptography that powers the Lit Protocol. Lit Actions are written in JavaScript, uploaded to IPFS, and the Lit Nodes execute that code and return the result `,
         'owners page - title': 'Definition of a PKP NFT owner',
