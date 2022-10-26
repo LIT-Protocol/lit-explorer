@@ -62,7 +62,7 @@ export const Address = ({
 
     // -- (finally)
     return (
-        <div className="flex ">
+        <div className="flex justify-cell">
             { renderValue(address) }
         </div>
     )

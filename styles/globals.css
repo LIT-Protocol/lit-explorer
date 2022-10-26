@@ -473,3 +473,8 @@ button#demo-customized-button {
     padding-top: 2px;
     padding-bottom: 2px;
 }
+
+.justify-cell{
+	justify-content: space-between;
+    width: 100%;
+}

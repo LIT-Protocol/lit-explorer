@@ -16,7 +16,7 @@ const RenderLink = (props: GridRenderCellParams, options: MyOptions) => {
 
         return (
             <>
-                <div className="flex">
+                <div className="flex justify-cell">
                     <a className="flex-content" href={`${AppRouter.getPage(value)}`} onClick={() => router.push(AppRouter.getPage(value))}>
                         { options?.short ? heyShorty(v) : v }
                     </a>                    
