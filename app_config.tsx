@@ -3,6 +3,7 @@ export const STORAGE_KEYS = {
     WALLET_CONNECTED : 'lit-explorer-wallet-connected',
     LANG: 'lit-explorer-i18n-lang',
     WALLET_EVENTS: 'lit-explorer-wallet-events',
+    LOGGED: 'lit-logged',
 }   
 
 /** ========== LINKS ========== */

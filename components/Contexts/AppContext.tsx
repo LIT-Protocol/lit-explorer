@@ -7,7 +7,7 @@ import { PKPContract } from "../../utils/blockchain/contracts/PKPContract";
 import { RouterContract } from "../../utils/blockchain/contracts/RouterContract";
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import MyButton from "../UI/MyButton";
 import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION, ROUTES, SEARCH_ROUTES, STORAGE_KEYS, SupportedNetworks, SupportedSearchTypes, SUPPORTED_CHAINS } from "../../app_config";
 import throwError from "../../utils/throwError";
@@ -174,14 +174,26 @@ export const AppContextProvider = ({children}: {children: any}) => {
         walletConnected: boolean, 
         eventsListened: boolean, 
         connected: boolean,
+        logged: boolean,
     } => {
+        
+        let installed = false;
+        let walletConnected = false;
+        let eventsListened = false;
+        let logged = false;
+        let connected = false;
 
-        const installed = typeof window?.ethereum !== 'undefined';
-        const walletConnected = localStorage.getItem(STORAGE_KEYS.WALLET_CONNECTED) == 'true';
-        const eventsListened = localStorage.getItem(STORAGE_KEYS.WALLET_EVENTS) == 'true';
-        const connected = installed && walletConnected;
+        try{
+            installed = typeof window?.ethereum !== 'undefined';
+            walletConnected = localStorage.getItem(STORAGE_KEYS.WALLET_CONNECTED) == 'true';
+            eventsListened = localStorage.getItem(STORAGE_KEYS.WALLET_EVENTS) == 'true';
+            logged = localStorage.getItem(STORAGE_KEYS.LOGGED) == 'true';
+            connected = installed && walletConnected;  
+        }catch(e){
+            console.warn("Failed to run MyWeb3():", e);
+        }
 
-        return { installed, walletConnected, eventsListened, connected }
+        return { installed, walletConnected, eventsListened, connected, logged }
     }
 
     useEffect(() => {
@@ -209,7 +221,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
                  * ** DON'T Connect until user clicks "CONNECT WALLET" **
                  * This will stop the popup
                  */
-                if( clickedConnectWallet ){
+                if( clickedConnectWallet || MyWeb3().logged){
                     connectContracts();
     
                     const { ownerAddress } = await getWeb3Wallet();
@@ -284,6 +296,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
             setWeb3Connected(MyWeb3().connected);
 
+            localStorage.setItem(STORAGE_KEYS.LOGGED, "true");
+
         }catch(e:any){
 
             if( e === '8546: Not implemented'){
@@ -307,14 +321,13 @@ export const AppContextProvider = ({children}: {children: any}) => {
         setClickedConnectWallet(false);
         setWeb3Connected(false);
         setContractsLoaded(false);
+        localStorage.removeItem(STORAGE_KEYS.LOGGED)
         localStorage.removeItem(STORAGE_KEYS.WALLET_CONNECTED)
         localStorage.removeItem(STORAGE_KEYS.WALLET_EVENTS)
     }
 
     // -- (render) web3 not logged
     const renderNotLogged = () => {
-
-        // if( ! contractsLoaded ) return <CircularProgress/>
         
         return (
             <div className="flex login">
@@ -328,7 +341,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
         )
     }
 
-    if ( ! web3Connected && ! contractsLoaded ) return renderNotLogged();
+    if ( ! web3Connected && ! contractsLoaded && ! clickedConnectWallet ) return renderNotLogged();
 
     // -- share states for children components
     let sharedStates = {
