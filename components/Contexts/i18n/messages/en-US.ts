@@ -12,7 +12,7 @@ export default {
         'profile page - p1': 'Here\'s where you can view your own PKPs. If you would like to find a list of PKPs owned by a specific wallet address, use the search bar above.',
         'Create Action': 'Create Action',
         'Pages': 'Categories',
-        'Owners': 'ALL PKP Owners',
+        'Owners': 'PKP Owners',
         'PKPs': 'PKPS',
         'Actions': 'Actions',
         'Contracts': 'Contracts',

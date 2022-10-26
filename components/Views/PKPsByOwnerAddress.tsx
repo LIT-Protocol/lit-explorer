@@ -5,10 +5,13 @@ import LoadData from "../ViewModels/LoadData";
 import RenderDate from "./MuiRenders/RenderDate";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
+import RenderPKPToBTC from "./MuiRenders/RenderPKPToBTC";
+import RenderPKPToPubKey from "./MuiRenders/RenderPKPToPubKey";
 
 interface PKPsByOwnerAddressOptions{
     title?: string,
     loadingMessage?: string,
+    height?: number
 }
 
 const PKPsByOwnerAddress = ({ownerAddress, options} : {
@@ -18,6 +21,7 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
     
     return (
         <LoadData
+            height={options?.height}
             cache={false}
             key={ownerAddress.toString()}
             debug={false}
@@ -39,8 +43,14 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
                     { headerName: "PKP Token ID", field: "tokenId", renderCell: (props: any) => {
                         return RenderLink(props, {short: true, copy: true})
                     }},
-                    { headerName: "Address", field: "address", renderCell: (props: any) => {
+                    { headerName: "ETH Address", field: "address", renderCell: (props: any) => {
                         return RenderPKPToAddress(props, {short: true, copy: true});
+                    }},
+                    { headerName: "BTC Address", field: "btc", renderCell: (props: any) => {
+                        return RenderPKPToBTC(props, {short: true, copy: true});
+                    }},
+                    { headerName: "Public Key", field: "copy", renderCell: (props: any) => {
+                        return RenderPKPToPubKey(props, {short: true, copy: true});
                     }},
                     { headerName:"Acquired Date", field: "date",  renderCell: RenderDate},
                     { headerName:"From", field: "from"},
@@ -54,7 +64,7 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
                         tokenId: pkp.tokenID,
                         address: pkp.tokenID,
                         date: pkp.timeStamp,
-                        from: pkp.from,
+                        from: pkp.from === '0x0000000000000000000000000000000000000000' ? 'Minted' : pkp.from,
                     };
                 });
             } }    

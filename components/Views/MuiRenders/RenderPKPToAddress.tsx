@@ -5,6 +5,7 @@ import { AppRouter } from "../../../utils/AppRouter";
 import { heyShorty, pub2Addr } from "../../../utils/converter";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
+const { toChecksumAddress } = require('ethereum-checksum-address')
 
 export interface MyOptions {
     copy?: boolean,
@@ -36,8 +37,10 @@ export const Address = ({
             const _pubKey = await routerContract.read.getFullPubKey(pkpId);
 
             const _address = '0x' + pub2Addr(_pubKey);
+
+            const _checksummed = toChecksumAddress(_address);
             
-            setAddress(_address);
+            setAddress(_checksummed);
 
         })();
 

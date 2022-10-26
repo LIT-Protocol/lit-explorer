@@ -171,7 +171,7 @@ const LoadData = (props: LoadDataProps) => {
             ''
           }
         </div>
-        <div id="data-area" style={{ height: props.height ?? 300, width: '100%' }}>
+        <div id="data-area" className="data-area" style={{ height: props.height ?? 300, width: '100%' }}>
           <DataGrid rows={rows} columns={columns} />
         </div>
       </>

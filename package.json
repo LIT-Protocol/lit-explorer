@@ -25,6 +25,7 @@
     "date-and-time": "^2.4.1",
     "ecpair": "^2.0.1",
     "elliptic": "^6.5.4",
+    "ethereum-checksum-address": "^0.0.8",
     "ethers": "^5.6.9",
     "hex2dec": "^1.1.2",
     "ipfs-core": "^0.15.4",
