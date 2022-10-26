@@ -7,7 +7,7 @@ import { PKPContract } from "../../utils/blockchain/contracts/PKPContract";
 import { RouterContract } from "../../utils/blockchain/contracts/RouterContract";
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
 import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
-import { CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import MyButton from "../UI/MyButton";
 import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION, ROUTES, SEARCH_ROUTES, STORAGE_KEYS, SupportedNetworks, SupportedSearchTypes, SUPPORTED_CHAINS } from "../../app_config";
 import throwError from "../../utils/throwError";
@@ -64,8 +64,11 @@ export const AppContextProvider = ({children}: {children: any}) => {
     // -- (state)
     const [web3Connected, setWeb3Connected] = useState(false);
     const [contractsLoaded, setContractsLoaded] = useState(false);
+    const [clickedConnectWallet, setClickedConnectWallet] = useState(false);
 
     const injectGlobalFunctions = () => {
+
+        console.warn("...injectGlobalFunctions");
         
         window.dec2hex = converter.decToHex;
         window.hex2dec = converter.hexToDec
@@ -88,6 +91,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
     }
     
     const connectContracts = async () => {
+
+        console.warn("...connectContracts");
 
         // -- validate
         if( pkpContract && routerContract && rliContract && contractsLoaded) return;
@@ -117,6 +122,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
     // -- (event listeners) listen to all given events,
     // and ignore if the given events are already being listened
     const listenToWalletEvents = () : void => {
+
+        console.warn("...listenToWalletEvents");
 
         // -- setup events you want to listen
         const walletEvents = {
@@ -179,6 +186,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     useEffect(() => {
 
+        console.warn("...running useEffect");
+
         /**
          * Export bunch of functions so you can test on the browser
          */
@@ -192,20 +201,29 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
             // -- If both web provider is installed and wallet is connected
             if ( MyWeb3().connected && !contractsLoaded ){
+
+                console.warn("...inside connected but contracts NOT loaded");
                 
                 /**
                  * Setup all contracts so that is available on all components
+                 * ** DON'T Connect until user clicks "CONNECT WALLET" **
+                 * This will stop the popup
                  */
-                connectContracts();
-
-                const { ownerAddress } = await getWeb3Wallet();
-                setOwnerAddress(ownerAddress);
+                if( clickedConnectWallet ){
+                    connectContracts();
+    
+                    const { ownerAddress } = await getWeb3Wallet();
+                    setOwnerAddress(ownerAddress);
+                }
 
                 return;
             }
 
             // -- If a web3 provider is installed
             if ( MyWeb3().installed && !MyWeb3().eventsListened){
+
+                console.warn("...inside installed but events NOT listened");
+
                 listenToWalletEvents()
             }
 
@@ -214,7 +232,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
         })();
 
-    }, [web3Connected]);
+    }, [web3Connected, clickedConnectWallet]);
 
     /**
      * 
@@ -246,6 +264,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     // -- (event) handle login
     const onLogin = async () => {
+
+        setClickedConnectWallet(true);
 
         console.warn('[onLogin]')
 
@@ -284,6 +304,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
     // -- (event) logout of web 3
     const onLogout = async () => {
         console.log("onLogout:", onLogout);
+        setClickedConnectWallet(false);
         setWeb3Connected(false);
         setContractsLoaded(false);
         localStorage.removeItem(STORAGE_KEYS.WALLET_CONNECTED)

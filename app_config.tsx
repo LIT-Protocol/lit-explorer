@@ -9,7 +9,6 @@ export const STORAGE_KEYS = {
 export const APP_LINKS = {
     WHAT_IS_PKP: 'https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs',
     WORKING_WITH_LIT_ACTIONS: 'https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions',
-    // LIT_DISCORD: 'https://discord.com/channels/896185694857343026/1002588409153458228',
     LIT_DISCORD: 'https://litgateway.com/discord',
     DOC: 'https://developer.litprotocol.com/',
 }
@@ -94,26 +93,54 @@ export const DEFAULT_LIT_ACTION = `const go = async () => {
   go();`;
 
 
-  /** ========== CONTRACT ADDRESSES ========== */
+/** ========== CONTRACT ADDRESSES ========== */
+const APP_CONFIGS = {
+    CELO: {
+        ECDSA_KEY: 2,
+        IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
+        IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
+    
+        // --- Main contracts used in this explorer
+        PKP_NFT_CONTRACT_ADDRESS: "0x594E1dA675e2a17866B7E3D80c96Cb396f2A4ccD", 
+        RATE_LIMIT_CONTRACT_ADDRESS: "0xbd757dD9Bfba4Ac6df1E7e66B9C40486f4681f9B",
+        ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
+    
+        // -- only for display
+        ACCS_CONTRACT_ADDRESS: "0x156a99e169aAcaB8Cf5eA87D034664156Af4F0E6",
+        LIT_TOKEN_CONTRACT: "0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b",
+        MULTI_SENDER_CONTRACT: "0xe9e9613881F95987559ab943c539f256E582F839",
+        DEPLOYER_CONTRACT: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+        STAKED_NODE_CONTRACT: "0xdbd360F30097fB6d938dcc8B7b62854B36160B45",
+    
+        // -- explorer address
+        EXPLORER: "https://polygonscan.com/address/",
+        NETWORK_NAME: SupportedNetworks.CELO_MAINNET,
+        NETWORK: SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET],
+    },
+    MUMBAI: {
+        // ECDSA_KEY: 2,
+        // IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
+        // IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
+    
+        // // --- Main contracts used in this explorer
+        // PKP_NFT_CONTRACT_ADDRESS: "0x594E1dA675e2a17866B7E3D80c96Cb396f2A4ccD", 
+        // RATE_LIMIT_CONTRACT_ADDRESS: "0xbd757dD9Bfba4Ac6df1E7e66B9C40486f4681f9B",
+        // ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
+    
+        // // -- only for display
+        // ACCS_CONTRACT_ADDRESS: "0x156a99e169aAcaB8Cf5eA87D034664156Af4F0E6",
+        // LIT_TOKEN_CONTRACT: "0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b",
+        // MULTI_SENDER_CONTRACT: "0xe9e9613881F95987559ab943c539f256E582F839",
+        // DEPLOYER_CONTRACT: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+        // STAKED_NODE_CONTRACT: "0xdbd360F30097fB6d938dcc8B7b62854B36160B45",
+    
+        // // -- explorer address
+        // EXPLORER: "https://polygonscan.com/address/",
+        // NETWORK_NAME: SupportedNetworks.CELO_MAINNET,
+        // NETWORK: SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET],
+    },
+}
+
 export const APP_CONFIG = {
-    ECDSA_KEY: 2,
-    IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
-    IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
-
-    // --- Main contracts used in this explorer
-    PKP_NFT_CONTRACT_ADDRESS: "0x738f0bbCDB6F5103A994a65D33EeF6B96e6a280F", 
-    RATE_LIMIT_CONTRACT_ADDRESS: "0x40E1C6a43d92639F8421C260D57Ff3d8b215A76D",
-    ROUTER_CONTRACT_ADDRESS: "0xD90493B5022E8457fAA3867d16d70559ee600940",
-
-    // -- only for display
-    ACCS_CONTRACT_ADDRESS: "0x7E60EF0F35A0E270B27054D20A03dB9Cbdfb563e",
-    LIT_TOKEN_CONTRACT: "0x1A4779619712070BD8Acbfdd5409D97C0A066131",
-    MULTI_SENDER_CONTRACT: "0xB4720616eabd25d9d4C0F52d49FB04C38dfAf964",
-    DEPLOYER_CONTRACT: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
-    STAKED_NODE_CONTRACT: "0x889Db76286718dfbF4b62B6c9465B3aa9C28b3E7",
-
-    // -- explorer address
-    EXPLORER: "https://polygonscan.com/address/",
-    NETWORK_NAME: SupportedNetworks.MUMBAI_TESTNET,
-    NETWORK: SUPPORTED_CHAINS[SupportedNetworks.MUMBAI_TESTNET],
+    ...APP_CONFIGS.CELO,
 }
