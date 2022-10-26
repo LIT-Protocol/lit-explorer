@@ -24,7 +24,7 @@ const Copy = ({
 
     // -- finally
     return (
-        <Chip className="copy" onClick={ () => handleCopy(value) } icon={<ContentCopyIcon />} label="" /> 
+        <Chip className="copy" onClick={ () => handleCopy(value) } icon={<ContentCopyIcon />} label="" />
     )
 }
 export default Copy;

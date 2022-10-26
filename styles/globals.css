@@ -165,7 +165,11 @@ body {
 	opacity: 0.98;
 	display: none;
 }
-
+.closeBtn{
+	position: absolute;
+	top: 26px;
+    right: 12px;
+}
 #global-message-success {
 	position: fixed;
 	width: 100%;

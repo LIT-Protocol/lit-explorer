@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import { AppContextProvider, useAppContext } from "../Contexts/AppContext";
 import SEOHeader from "../Contexts/SEOHeader";
-
+import CloseIcon from '@mui/icons-material/Close';
 
 interface MainLayoutProps {
     children: any
@@ -54,6 +54,24 @@ const MainLayout = (props: MainLayoutProps) => {
         
     }
 
+    const clearMessage = () => {
+        console.log("clear message");
+
+        const globalMessage = document.getElementById('global-message-success') as HTMLDivElement;
+
+        const globalMessageTitle = document.getElementById('global-message-success-title') as HTMLDivElement;
+    
+        const globalMessageContent = document.getElementById('global-message-success-content') as HTMLDivElement;
+
+        
+        clearTimeout(window.messageTimeout)
+
+        globalMessage.style.display = 'none';
+        globalMessageTitle.innerText = '';
+        globalMessageContent.innerText = '';
+        
+    }
+
     return (
         <>
             <SEOHeader/>
@@ -70,6 +88,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
                     {/* ----- Error message ----- */}
                     <div id="global-message">
+                        <CloseIcon className="closeBtn" onClick={clearMessage}/>
                         <Alert severity="error">
                             <AlertTitle id="global-message-title">Error</AlertTitle>
                             <div id="global-message-content">123</div>
@@ -78,6 +97,7 @@ const MainLayout = (props: MainLayoutProps) => {
 
                     {/* ----- Info Message ----- */}
                     <div id="global-message-success">
+                        <CloseIcon className="closeBtn" onClick={clearMessage}/>
                         <Alert severity="success">
                             <AlertTitle id="global-message-success-title"></AlertTitle>
                             <div id="global-message-success-content"></div>
