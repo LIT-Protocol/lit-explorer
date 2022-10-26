@@ -124,7 +124,8 @@ body {
 }
 
 .search-bar {
-	display: flex;
+    display: flex;
+    background: #27233b;
 }
 
 .btn-clear {
@@ -456,4 +457,8 @@ button#demo-customized-button {
 }
 .Mui-disabled.btn-2{
 	background: #d2d2d2 !important;
+}
+
+#search-bar{
+	color: #e7e8eb !important;
 }

@@ -10,9 +10,9 @@ const PKPs = () => {
     return (
         <LoadData
             debug={false}
-            cache={false}
-            title="All PKP Tokens:"
-            loadingMessage="Loading All  PKPs..."
+            cache={true}
+            title="10 Latest PKPs Minted by other users"
+            loadingMessage="Finding the 10 latest minted PKPs..."
             errorMessage="No PKPs found."
             fetchPath={`/api/get-all-pkps`}
             filter={(rawData: any) => {

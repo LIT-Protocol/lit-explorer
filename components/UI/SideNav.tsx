@@ -18,6 +18,12 @@ const SideNav = () => {
 
 
             <ul className='ul'>
+                <li><Button onClick={() => router.push(ROUTES.PROFILE)} className={currentRoute.includes(ROUTES.PROFILE) ? "btn active" : "btn"}><FormattedMessage id='Profile' /></Button></li>
+            </ul>        
+
+            <Divider className='divider' textAlign="left"><FormattedMessage id='PKP & Lit Action' /></Divider>
+
+            <ul className='ul'>
                 <li><Button onClick={() => router.push(ROUTES.MINT_PKP)} className={currentRoute.includes(ROUTES.MINT_PKP) ? "btn active" : "btn"}><FormattedMessage id='Mint New PKP' /></Button></li>
                 <li><Button onClick={() => router.push(ROUTES.CREATE_ACTION)} className={currentRoute.includes(ROUTES.CREATE_ACTION) ? "btn active" : "btn"}><FormattedMessage id='Create Action' /></Button></li>
             </ul>        

@@ -68,6 +68,7 @@ export const SEARCH_ROUTES = {
 
 export const ROUTES = {
     HOME: '/',
+    PROFILE: '/profile',
     MINT_PKP: '/mint-pkp',
     CREATE_ACTION: '/create-action',
     OWNERS: '/owners',

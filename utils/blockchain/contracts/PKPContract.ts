@@ -38,7 +38,12 @@ export class PKPContract{
 
         console.log("[PKPContract] connect input<config>:", config);
         
-        this.contract = await getContract(config);
+
+        const _contract = await getContract(config);
+
+        if ( ! _contract ) return;
+
+        this.contract = _contract;
 
         this.read = new ReadPKPContract(this.contract);
         this.write = new WritePKPContract(this.contract);
@@ -109,12 +114,16 @@ export class ReadPKPContract{
     }
 
     
-    getTokens = async () : Promise<Array<string>> => {
+    getTokens = async (lastNumberOfTokens: number) : Promise<Array<string>> => {
 
         let tokens = [];
     
         for(let i = 0;; i++){
-    
+            
+            if( i >= lastNumberOfTokens ){
+                break;
+            }
+
             let token;
     
             try{

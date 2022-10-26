@@ -6,8 +6,14 @@ import RenderDate from "./MuiRenders/RenderDate";
 import RenderLink from "./MuiRenders/RenderLink";
 import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
 
-const PKPsByOwnerAddress = ({ownerAddress} : {
-    ownerAddress: string
+interface PKPsByOwnerAddressOptions{
+    title?: string,
+    loadingMessage?: string,
+}
+
+const PKPsByOwnerAddress = ({ownerAddress, options} : {
+    ownerAddress: string,
+    options?: PKPsByOwnerAddressOptions
 }) => {
     
     return (
@@ -15,9 +21,9 @@ const PKPsByOwnerAddress = ({ownerAddress} : {
             cache={false}
             key={ownerAddress.toString()}
             debug={false}
-            title={`PKPs by a given address: ${heyShorty(ownerAddress, 4)}`}
+            title={options?.title ?? `PKPs by a given address: ${heyShorty(ownerAddress, 4)}`}
             errorMessage="No PKP owners found."
-            loadingMessage={`Loading a list of PKPs by a given address...`}
+            loadingMessage={options?.loadingMessage ?? `Loading a list of PKPs by a given address...`}
             fetchPath={`/api/get-pkps-by-address/${ownerAddress}`}
             filter={(rawData: any) => {
                 console.log("[PKPsByOwnerAddress] input<rawData>", rawData);

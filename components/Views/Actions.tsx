@@ -9,7 +9,7 @@ const Actions = () => {
         <LoadData
             debug={false}
             height={500}
-            title="Latest Lit Actions:"
+            title="Latest Lit Actions created by other users"
             errorMessage="No actions found."
             fetchPath={`/api/get-all-actions`}
             filter={async (rawData: any) => {
