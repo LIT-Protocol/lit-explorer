@@ -76,7 +76,7 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: {
           } }
           renderCols={(width: number) => {
             return appendEvenWidths([
-              { headerName: "Address", field: "address", renderCell: RenderLink}
+              { headerName: "ETH Address", field: "address", renderCell: RenderLink}
             ], width);
           } }
           renderRows={(filteredData: any) => {
