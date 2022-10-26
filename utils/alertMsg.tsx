@@ -30,7 +30,7 @@ const alertMsg = (props: AlertMsgProps) => {
         globalMessage.style.display = 'none';
         globalMessageTitle.innerText = '';
         globalMessageContent.innerText = '';
-    }, 30000)
+    }, 3000)
 
     if( props?.throwError ){
         throw new Error(`${props.message}`);
