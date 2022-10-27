@@ -482,3 +482,24 @@ button#demo-customized-button {
 	justify-content: space-between;
     width: 100%;
 }
+.logo-area{
+	position: relative;
+}
+.logo-network{
+	position: absolute;
+	font-size: 8px;
+	width: 260px;
+	text-align: center;
+	top: 0px;
+	right: 0;
+	left: 0;
+	z-index: inherit;
+	/* width: 48px; */
+	/* border-radius: 4px; */
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 4px;
+	padding-right: 4px;
+	background: #de443730
+
+}

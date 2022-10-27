@@ -1,7 +1,7 @@
 import { Button, Divider, Link, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { FormattedMessage } from 'react-intl';
-import { ROUTES } from "../../app_config";
+import { APP_CONFIG, ROUTES } from "../../app_config";
 
 const SideNav = () => {
     const router = useRouter();
@@ -9,8 +9,13 @@ const SideNav = () => {
 
     return (
         <>
+            {[
+                APP_CONFIG.NETWORK_LABEL.ENABLED ? 
+                <div className="logo-network">{ APP_CONFIG.NETWORK_LABEL.NAME }</div> : 
+                ''
+            ]}
             <Typography variant="h5" className='title'>
-            <div>
+            <div className="logo-area">
                 <img src='/svg/logo.svg' alt="Lit Protocol" />
                 <Link href="/">Lit Explorer</Link>
             </div>
