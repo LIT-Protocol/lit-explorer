@@ -76,6 +76,7 @@ export class ReadPKPContract{
     }
 
     /**
+     * (IERC721Enumerable)
      * 
      * Get all PKPs by a given address
      * 
@@ -112,7 +113,16 @@ export class ReadPKPContract{
         return tokens;
     }
 
-    
+    /**
+     * (IERC721Enumerable)
+     * 
+     * Get the x latest number of tokens
+     * 
+     * @param { number } lastNumberOfTokens
+     * 
+     * @returns { Array<string> } a list of PKP NFTs
+     * 
+     */
     getTokens = async (lastNumberOfTokens: number) : Promise<Array<string>> => {
 
         let tokens = [];
