@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "yarn fetchContracts && next dev",
+    "build": "yarn fetchContracts && next build",
+    "start": "yarn fetchContracts && next start",
+    "lint": "next lint",
+    "fetchContracts": "rm ./ABIs/deployed-contracts.json && node ./tools/getDeployedContracts.mjs"
   },
   "dependencies": {
     "@celo-tools/celo-ethers-wrapper": "^0.3.0",

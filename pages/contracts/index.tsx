@@ -15,13 +15,13 @@ function createData( name: string, address: string ) {
 
 const rows = [
   createData('AccessControlConditions', APP_CONFIG.ACCS_CONTRACT_ADDRESS),
-  createData('LITToken', APP_CONFIG.LIT_TOKEN_CONTRACT),
+  createData('LITToken', APP_CONFIG.LIT_TOKEN_CONTRACT_ADDRESS),
   createData('PKPNFT', APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS),
   createData('PubkeyRouterAndPermissions', APP_CONFIG.ROUTER_CONTRACT_ADDRESS),
   createData('Rate Limit Increase NFT', APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS),
-  createData('Multisender', APP_CONFIG.MULTI_SENDER_CONTRACT),
-  createData('Deployer address', APP_CONFIG.DEPLOYER_CONTRACT),
-  createData('Staked node address', APP_CONFIG.STAKED_NODE_CONTRACT),
+  createData('Multisender', APP_CONFIG.MULTI_SENDER_CONTRAC_ADDRESS),
+  createData('Deployer address', APP_CONFIG.DEPLOYER_CONTRACT_ADDRESS),
+  createData('Staked node address', APP_CONFIG.STAKED_NODE_CONTRACT_ADDRESS),
 ];
 
 const ContractsPage: NextPageWithLayout = () => {

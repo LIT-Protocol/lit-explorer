@@ -1,3 +1,8 @@
+// import json
+import * as deployedContracts from './ABIs/deployed-contracts.json';
+
+export const DEPLOYED_CONTRACTS = deployedContracts;
+
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
     WALLET_CONNECTED : 'lit-explorer-wallet-connected',
@@ -110,10 +115,10 @@ const APP_CONFIGS = {
     
         // -- only for display
         ACCS_CONTRACT_ADDRESS: "0x156a99e169aAcaB8Cf5eA87D034664156Af4F0E6",
-        LIT_TOKEN_CONTRACT: "0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b",
-        MULTI_SENDER_CONTRACT: "0xe9e9613881F95987559ab943c539f256E582F839",
-        DEPLOYER_CONTRACT: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
-        STAKED_NODE_CONTRACT: "0xdbd360F30097fB6d938dcc8B7b62854B36160B45",
+        LIT_TOKEN_CONTRACT_ADDRESS: "0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b",
+        MULTI_SENDER_CONTRACT_ADDRESS: "0xe9e9613881F95987559ab943c539f256E582F839",
+        DEPLOYER_CONTRACT_ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+        STAKED_NODE_CONTRACT_ADDRESS: "0xdbd360F30097fB6d938dcc8B7b62854B36160B45",
     
         // -- explorer address
         EXPLORER: "https://polygonscan.com/address/",
@@ -130,16 +135,20 @@ const APP_CONFIGS = {
         IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
     
         // --- Main contracts used in this explorer
-        PKP_NFT_CONTRACT_ADDRESS: "0x594E1dA675e2a17866B7E3D80c96Cb396f2A4ccD", 
-        RATE_LIMIT_CONTRACT_ADDRESS: "0xbd757dD9Bfba4Ac6df1E7e66B9C40486f4681f9B",
-        ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
+        PKP_NFT_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pkpNftContractAddress, 
+        RATE_LIMIT_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.rateLimitNftContractAddress,
+        ROUTER_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pubkeyRouterContractAddress,
+
+        // -- (NEW) to be added to the explorer
+        PKP_HELPER_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pkpHelperContractAddress,
+        PKP_PERMISSIONS_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pkpPermissionsContractAddress,
     
         // -- only for display
-        ACCS_CONTRACT_ADDRESS: "0x156a99e169aAcaB8Cf5eA87D034664156Af4F0E6",
-        LIT_TOKEN_CONTRACT: "0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b",
-        MULTI_SENDER_CONTRACT: "0xe9e9613881F95987559ab943c539f256E582F839",
-        DEPLOYER_CONTRACT: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
-        STAKED_NODE_CONTRACT: "0xdbd360F30097fB6d938dcc8B7b62854B36160B45",
+        ACCS_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.accessControlConditionsContractAddress,
+        LIT_TOKEN_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.litTokenContractAddress,
+        MULTI_SENDER_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.multisenderContractAddress,
+        DEPLOYER_CONTRACT_ADDRESS: "(??)0x50e2dac5e78B5905CB09495547452cEE64426db2",
+        STAKED_NODE_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.stakingContractAddress,
     
         // -- explorer address
         EXPLORER: "https://polygonscan.com/address/",
