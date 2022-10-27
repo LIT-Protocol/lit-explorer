@@ -181,8 +181,8 @@ const APP_CONFIGS = {
     
         // -- explorer address
         EXPLORER: "https://polygonscan.com/address/",
-        NETWORK_NAME: SupportedNetworks.CELO_MAINNET,
-        NETWORK: SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET],
+        NETWORK_NAME: SupportedNetworks.MUMBAI_TESTNET,
+        NETWORK: SUPPORTED_CHAINS[SupportedNetworks.MUMBAI_TESTNET],
     },
 }
 

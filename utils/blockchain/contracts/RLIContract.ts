@@ -69,6 +69,15 @@ export class ReadRLIContract {
     }
 
     // ========== Global Scope ==========
+
+    /**
+     * (IERC721Enumerable)
+     * 
+     * Get the total supply for the tokens 
+     * 
+     * @returns { Promise<number } 
+     * 
+     */
     totalSupply = async () : Promise<number> => {
         
         const total = await this.contract.totalSupply();
@@ -90,7 +99,7 @@ export class ReadRLIContract {
 
     // ========== User Scope ==========
 
-    // get the number of RLI NFTs that a owner holds
+    // (IERC721Metadata) get the number of RLI NFTs that a owner holds
     getTotalRLIByOwnerAddress = async (ownerAddress: string) : Promise<number> => {
 
         // -- validate
@@ -103,7 +112,13 @@ export class ReadRLIContract {
         return parseInt(total);
     }
 
-    // get token URI
+    /**
+     * (IERC721Metadata)
+     * 
+     * Get token URI by index
+     * 
+     * @param { number } index
+     */
     getTokenURIByIndex = async (index: number) : Promise<string> => {
 
         const base64 = await this.contract.tokenURI(index);
@@ -125,7 +140,7 @@ export class ReadRLIContract {
 
     }
 
-    // owner of RLI
+    // (IERC721 Core) owner of RLI
     ownerOf = async (tokenId: number) => {
         
         const ownerOf = this.contract.ownerOf(tokenId)
@@ -199,14 +214,6 @@ export class ReadRLIContract {
         })
 
         return tokens;
-    }
-
-    getTokensByPKPID = async(pkpId: number) : Promise<any> => {
-
-
-
-        return pkpId;
-
     }
 
     /**

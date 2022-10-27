@@ -1,9 +1,12 @@
-// import fetch for node
 import fetch from 'node-fetch';
-
-// import fs
 import fs from 'fs';
 
+/** ==================== Config ==================== */
+const URL = 'https://raw.githubusercontent.com/LIT-Protocol/LitNodeContracts/main/deployed-contracts.json';
+
+const OUTPUT_CONTRACT_ADDRESSES = './ABIs/deployed-contracts.json';
+
+/** ==================== Helper ==================== */
 // write to a file
 const writeToFile = (data, filename) => {
     fs.writeFile(filename, data, (err) => {
@@ -15,11 +18,7 @@ const writeToFile = (data, filename) => {
     });
 };
 
+/** ==================== Main ==================== */
+const data = await fetch(URL).then((res) => res.json());
 
-const url = 'https://raw.githubusercontent.com/LIT-Protocol/LitNodeContracts/main/deployed-contracts.json';
-
-const data = await fetch(url).then((res) => res.json());
-
-console.log("data:", data)
-
-writeToFile(JSON.stringify(data, null, 2), './ABIs/deployed-contracts.json');
+writeToFile(JSON.stringify(data, null, 2), OUTPUT_CONTRACT_ADDRESSES);

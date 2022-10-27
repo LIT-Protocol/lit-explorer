@@ -63,15 +63,33 @@ export class ReadRouterContract{
     }
 
     isRouted = async (tokenId: any) : Promise<boolean>=> {
+
+        console.log("[RouterContracts] isRouted tokenId:", tokenId);
         
         const isRouted = this.contract.isRouted(tokenId);
 
         return isRouted;
     }
 
+    /**
+     * 
+     * Get the full public key of the owner of the token
+     * NOTE:
+     * - (NEW) Mumbai is using the getPubkey() function
+     * - Celo is using the getFullPubKey() function
+     * Will try to use either way to get the public key
+     * 
+     */
     getFullPubKey = async (tokenId: any) : Promise<any> => {
 
-        const pubKey = await this.contract.getFullPubkey(tokenId);
+        console.warn("--- getFullPubKey ---");
+
+        let pubKey = await this.contract.getPubkey(tokenId);
+
+        // Backward compatibility for CELO
+        if ( ! pubKey ){
+            pubKey = await this.contract.getFullPubKey(tokenId);
+        }
 
         return pubKey;
     

@@ -67,7 +67,7 @@ const FormMintNewPKP: NextPageWithLayout = () => {
           }))
         },
         onError: (props: TryUntilProp) => {
-          throwError(`Failed to execute: ${props}`);
+          throwError(`Failed to execute: ${JSON.stringify(props)}`);
         },
         interval: 3000,
       });
