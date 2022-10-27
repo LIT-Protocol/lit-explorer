@@ -174,7 +174,18 @@ export class WritePKPContract{
 
         const res = await tx.wait();
 
-        const tokenIdFromEvent = res.events[0].topics[3];
+        window.mint = res;
+
+        console.log("window.mint:", window.mint);
+
+        let tokenIdFromEvent;
+
+        // celo
+        // tokenIdFromEvent = res.events[0].topics[3]
+
+        // mumbai
+        tokenIdFromEvent = res.events[1].topics[3]
+        console.warn("tokenIdFromEvent:", tokenIdFromEvent)
 
         return { tx, tokenId: tokenIdFromEvent};
 

@@ -5,6 +5,7 @@ import { getABI, getContractFromAppConfig } from "../utils/blockchain/contracts/
 declare global {
     interface Window {
         test: any;
+        mint: any;
     }
 }
 

@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 
 /** ==================== Config ==================== */
-const URL = 'https://raw.githubusercontent.com/LIT-Protocol/LitNodeContracts/main/deployed-contracts.json';
+const URL = 'https://raw.githubusercontent.com/LIT-Protocol/LitNodeContracts/main/deployed_contracts_mumbai.json';
 
 const OUTPUT_CONTRACT_ADDRESSES = './ABIs/deployed-contracts.json';
 
