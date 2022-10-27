@@ -14,7 +14,7 @@ export default async function handler(
 ) {
 
   const baseURL = APP_CONFIG.NETWORK.EXPLORER_API;
-  const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS;
+  const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS;
   const query = `?module=token&action=getTokenHolders&contractaddress=${contractAddressHash}`;
 
   const dataRes = await fetch(`${baseURL}${query}`);

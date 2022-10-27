@@ -68,7 +68,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     const injectGlobalFunctions = () => {
 
-        console.warn("...injectGlobalFunctions");
+        // console.warn("...injectGlobalFunctions");
         
         window.dec2hex = converter.decToHex;
         window.hex2dec = converter.hexToDec
@@ -92,7 +92,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
     
     const connectContracts = async () => {
 
-        console.warn("...connectContracts");
+        // console.warn("...connectContracts");
 
         // -- validate
         if( pkpContract && routerContract && rliContract && contractsLoaded) return;
@@ -198,7 +198,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     useEffect(() => {
 
-        console.warn("...running useEffect");
+        // console.warn("...running useEffect");
 
         /**
          * Export bunch of functions so you can test on the browser
@@ -214,7 +214,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             // -- If both web provider is installed and wallet is connected
             if ( MyWeb3().connected && !contractsLoaded ){
 
-                console.warn("...inside connected but contracts NOT loaded");
+                // console.warn("...inside connected but contracts NOT loaded");
                 
                 /**
                  * Setup all contracts so that is available on all components
@@ -234,7 +234,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             // -- If a web3 provider is installed
             if ( MyWeb3().installed && !MyWeb3().eventsListened){
 
-                console.warn("...inside installed but events NOT listened");
+                // console.warn("...inside installed but events NOT listened");
 
                 listenToWalletEvents()
             }

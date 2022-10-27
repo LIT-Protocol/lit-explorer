@@ -1,7 +1,10 @@
 // import json
-import * as deployedContracts from './ABIs/deployed-contracts.json';
-
-export const DEPLOYED_CONTRACTS = deployedContracts;
+import deployedContracts from './ABIs/deployed-contracts.json';
+import PKPHelper from './ABIs/PKPHelper.json';
+import PKPNFT from './ABIs/PKPNFT.json';
+import PKPPermissions from './ABIs/PKPPermissions.json';
+import PubkeyRouter from './ABIs/PubkeyRouter.json';
+import RateLimitNFT from './ABIs/RateLimitNFT.json';
 
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
@@ -133,22 +136,48 @@ const APP_CONFIGS = {
         ECDSA_KEY: 2,
         IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
         IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
-    
+
+
         // --- Main contracts used in this explorer
-        PKP_NFT_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pkpNftContractAddress, 
-        RATE_LIMIT_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.rateLimitNftContractAddress,
-        ROUTER_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pubkeyRouterContractAddress,
+        PKP_NFT_CONTRACT: {
+            ADDRESS: deployedContracts.pkpNftContractAddress,
+            ABI: PKPNFT.abi,
+        }, 
+        RATE_LIMIT_CONTRACT: {
+            ADDRESS: deployedContracts.rateLimitNftContractAddress,
+            ABI: RateLimitNFT.abi,
+        },
+        ROUTER_CONTRACT: {
+            ADDRESS: deployedContracts.pubkeyRouterContractAddress,
+            ABI: PubkeyRouter.abi,
+        },
 
         // -- (NEW) to be added to the explorer
-        PKP_HELPER_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pkpHelperContractAddress,
-        PKP_PERMISSIONS_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.pkpPermissionsContractAddress,
+        PKP_HELPER_CONTRACT: {
+            ADDRESS: deployedContracts.pkpHelperContractAddress,
+            ABI: PKPHelper.abi,
+        },
+        PKP_PERMISSIONS_CONTRACT: {
+            ADDRESS: deployedContracts.pkpPermissionsContractAddress,
+            ABI: PKPPermissions.abi,
+        },
     
         // -- only for display
-        ACCS_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.accessControlConditionsContractAddress,
-        LIT_TOKEN_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.litTokenContractAddress,
-        MULTI_SENDER_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.multisenderContractAddress,
-        DEPLOYER_CONTRACT_ADDRESS: "(??)0x50e2dac5e78B5905CB09495547452cEE64426db2",
-        STAKED_NODE_CONTRACT_ADDRESS: DEPLOYED_CONTRACTS.stakingContractAddress,
+        ACCS_CONTRACT: {
+            ADDRESS: deployedContracts.accessControlConditionsContractAddress,
+        },
+        LIT_TOKEN_CONTRACT: {
+            ADDRESS: deployedContracts.litTokenContractAddress,
+        },
+        MULTI_SENDER_CONTRACT: {
+            ADDRESS: deployedContracts.multisenderContractAddress,
+        },
+        DEPLOYER_CONTRACT: {
+            ADDRESS: "(??)0x50e2dac5e78B5905CB09495547452cEE64426db2",
+        },
+        STAKED_NODE_CONTRACT: {
+            ADDRESS: deployedContracts.stakingContractAddress,
+        },
     
         // -- explorer address
         EXPLORER: "https://polygonscan.com/address/",

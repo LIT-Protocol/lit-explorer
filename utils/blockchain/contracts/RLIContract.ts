@@ -38,12 +38,16 @@ export class RLIContract {
         const config = {
             network: props?.network ?? APP_CONFIG.NETWORK_NAME,
             signer: props?.signer,
-            contractAddress: props?.contractAddress ?? APP_CONFIG.RATE_LIMIT_CONTRACT_ADDRESS
+            contractAddress: props?.contractAddress ?? APP_CONFIG.RATE_LIMIT_CONTRACT.ADDRESS
         };
 
-        this.contract = await getContract(config);
+        const _contract = await getContract(config);
 
-        console.log("[RLIContract] connect input<config>:", config);
+        if ( ! _contract ) return;
+
+        this.contract = _contract;
+
+        console.log("[📝 RLIContract] connect input<config>:", config);
 
         this.read = new ReadRLIContract(this.contract);
         this.write = new WriteRLIContract(this.contract);

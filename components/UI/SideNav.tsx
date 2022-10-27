@@ -9,11 +9,11 @@ const SideNav = () => {
 
     return (
         <>
-            {[
+            {
                 APP_CONFIG.NETWORK_LABEL.ENABLED ? 
                 <div className="logo-network">{ APP_CONFIG.NETWORK_LABEL.NAME }</div> : 
                 ''
-            ]}
+            }
             <Typography variant="h5" className='title'>
             <div className="logo-area">
                 <img src='/svg/logo.svg' alt="Lit Protocol" />

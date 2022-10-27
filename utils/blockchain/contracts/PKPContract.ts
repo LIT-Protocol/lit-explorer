@@ -33,17 +33,16 @@ export class PKPContract{
         const config = {
             network: props?.network ?? APP_CONFIG.NETWORK_NAME,
             signer: props?.signer,
-            contractAddress: props?.contractAddress ?? APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS
+            contractAddress: props?.contractAddress ?? APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS
         };
-
-        console.log("[PKPContract] connect input<config>:", config);
-        
 
         const _contract = await getContract(config);
 
         if ( ! _contract ) return;
 
         this.contract = _contract;
+
+        console.log("[📝 PKPContract] connect input<config>:", config);
 
         this.read = new ReadPKPContract(this.contract);
         this.write = new WritePKPContract(this.contract);

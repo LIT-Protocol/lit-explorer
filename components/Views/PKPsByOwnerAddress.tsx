@@ -33,7 +33,7 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
                 console.log("[PKPsByOwnerAddress] input<rawData>", rawData);
                 return rawData.data.result.filter(
                 (tx: any) => {
-                    return tx.contractAddress === APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS.toLowerCase() && 
+                    return tx.contractAddress === APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS.toLowerCase() && 
                     ownerAddress.toString().toLowerCase() == tx.to.toLowerCase();
                 }
                 );

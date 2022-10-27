@@ -33,7 +33,7 @@ export class RouterContract{
         const config = {
             network: props?.network ?? APP_CONFIG.NETWORK_NAME,
             signer: props?.signer,
-            contractAddress: props?.contractAddress ?? APP_CONFIG.ROUTER_CONTRACT_ADDRESS
+            contractAddress: props?.contractAddress ?? APP_CONFIG.ROUTER_CONTRACT.ADDRESS
         };
 
         const _contract = await getContract(config);
@@ -42,7 +42,7 @@ export class RouterContract{
             console.error("Failed to get contract");
         }else{
             this.contract = _contract;
-            console.log("[RouterContract] connect input<config>:", config);
+            console.log("[📝 RouterContract] connect input<config>:", config);
     
             this.read = new ReadRouterContract(this.contract);
             this.write = new WriteRouterContract(this.contract);

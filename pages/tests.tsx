@@ -1,5 +1,12 @@
-import { APP_CONFIG, DEPLOYED_CONTRACTS, SupportedNetworks } from "../app_config";
-import { getABI } from "../utils/blockchain/contracts/getContract";
+import { APP_CONFIG, SupportedNetworks } from "../app_config";
+import { getABI, getContractFromAppConfig } from "../utils/blockchain/contracts/getContract";
+
+// write an interface for globalThis
+declare global {
+    interface Window {
+        test: any;
+    }
+}
 
 const tests = () => {
   return (
@@ -9,7 +16,7 @@ const tests = () => {
         onClick={async () => {
           const ABI = await getABI({
             network: SupportedNetworks.MUMBAI_TESTNET,
-            contractAddress: APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS,
+            contractAddress: APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS,
           });
 
           console.log("ABI:", ABI);
@@ -21,10 +28,14 @@ const tests = () => {
       {/* ---------- */}
       <button onClick={async () => {
 
-        console.log(DEPLOYED_CONTRACTS);
+        const contract = getContractFromAppConfig("1");
+
+        
+        console.log(contract);
+
         
       }}>
-        get deployed contracts JSON
+        TEST
       </button>
     </>
   );
