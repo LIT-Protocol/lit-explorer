@@ -1,5 +1,5 @@
 import { CeloProvider, CeloWallet } from "@celo-tools/celo-ethers-wrapper";
-import { Contract, ContractInterface, ethers, Signer } from "ethers";
+import { Contract, ContractInterface, ethers, Signer, Wallet } from "ethers";
 // import { ABIsFallback } from "../../../ABIsFallback";
 import { APP_CONFIG, SupportedNetworks, SUPPORTED_CHAINS } from "../../../app_config";
 import { cacheFetch } from "../../cacheFetch";
@@ -18,6 +18,8 @@ export const getSigner = async (network: SupportedNetworks) : Promise<Signer> =>
 
     let signer : Signer;
 
+    const randomPrivateKey = ethers.Wallet.createRandom().privateKey;
+
     // -- (CELO MAINNET)
     if( network == SupportedNetworks.CELO_MAINNET){
 
@@ -27,12 +29,17 @@ export const getSigner = async (network: SupportedNetworks) : Promise<Signer> =>
 
         await provider.ready;
 
-        const randomWallet = ethers.Wallet.createRandom().privateKey;
-
-        signer = new CeloWallet(randomWallet, provider);
+        signer = new CeloWallet(randomPrivateKey, provider);
 
         return signer;
     }
+
+    const provider = new ethers.providers.JsonRpcProvider(APP_CONFIG.NETWORK.params.rpcUrls[0]);
+
+    signer = new ethers.Wallet(randomPrivateKey, provider);
+
+
+    return signer;
 
     // -- (otherwise)
     throw new Error(`No signer is found in network "${network}".`);

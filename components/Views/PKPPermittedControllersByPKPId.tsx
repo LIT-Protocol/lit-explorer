@@ -12,7 +12,7 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: {
 }) => {
 
     // -- (app context)
-    const { routerContract } = useAppContext();
+    const { pkpPermissionsContract } = useAppContext();
 
     // -- (state)
     const [updating, setUpdating] = useState(false);
@@ -26,8 +26,8 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: {
             
             const { ownerAddress } = await getWeb3Wallet();
 
-            const _isPermitted = await routerContract.read.isPermittedAddress(pkpId, ownerAddress);
-
+            const _isPermitted = await pkpPermissionsContract.read.isPermittedAddress(pkpId, ownerAddress);
+            
             setIsPermitted(_isPermitted);
 
         })();

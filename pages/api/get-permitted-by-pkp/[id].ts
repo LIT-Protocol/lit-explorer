@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
-import { RouterContract } from '../../../utils/blockchain/contracts/RouterContract';
+import { PKPPermissionsContract } from '../../../utils/blockchain/contracts/PKPPermissionsContract';
 
 type Data = {
   id?: string
@@ -18,13 +18,13 @@ export default async function handler(
 
     console.log('[api/get-permitted-by-pkp] input<id>:', id);
     
-    const routerContract = new RouterContract();
-    await routerContract.connect()
+    const pkpPermissionsContract = new PKPPermissionsContract();
+    await pkpPermissionsContract.connect()
     
-    const addresses = await routerContract.read.getPermittedAddresses(id);
+    const addresses = await pkpPermissionsContract.read.getPermittedAddresses(id);
     console.log('[api/get-permitted-by-pkp] output<addresses>:', addresses);
     
-    const actions = await routerContract.read.getPermittedActions(id);
+    const actions = await pkpPermissionsContract.read.getPermittedActions(id);
     console.log('[api/get-permitted-by-pkp] output<actions>:', actions);
 
     const data = { addresses, actions }

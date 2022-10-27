@@ -16,6 +16,8 @@ import SearchBar from "../Forms/SearchBar";
 import router from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
 import { ABIS } from "../../ABIsFallback";
+import { PKPPermissionsContract } from "../../utils/blockchain/contracts/PKPPermissionsContract";
+import { PKPHelperContract } from "../../utils/blockchain/contracts/PKPHelperContract";
 
 declare global {
     interface Window{
@@ -39,6 +41,8 @@ interface MyWeb3{
 
 interface SharedStates{
     pkpContract: PKPContract,
+    pkpPermissionsContract: PKPPermissionsContract,
+    pkpHelperContract: PKPHelperContract,
     routerContract: RouterContract,
     rliContract: RLIContract,
     web3: MyWeb3
@@ -46,6 +50,8 @@ interface SharedStates{
 
 let defaultSharedStates : SharedStates = {
     pkpContract: ({} as PKPContract),
+    pkpPermissionsContract: ({} as PKPPermissionsContract),
+    pkpHelperContract: ({} as PKPHelperContract),
     routerContract: ({} as RouterContract),
     rliContract: ({} as RLIContract),
     web3: ({} as MyWeb3)
@@ -57,6 +63,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
     
     // -- (shared states)
     const [pkpContract, setPkpContract] = useState<PKPContract>();
+    const [pkpPermissionsContract, setPkpPermissionsContract] = useState<PKPPermissionsContract>();
+    const [pkpHelperContract, setPkpHelperContract] = useState<PKPHelperContract>();
     const [routerContract, setRouterContract] = useState<RouterContract>();
     const [rliContract, setRliContract] = useState<RLIContract>();
     const [ownerAddress, setOwnerAddress] = useState<string>();
@@ -102,8 +110,15 @@ export const AppContextProvider = ({children}: {children: any}) => {
         const { signer } = await getWeb3Wallet();
 
         const _pkpContract = new PKPContract();
+        const _pkpPermissionsContract = new PKPPermissionsContract();
+        const _pkpHelperContract = new PKPHelperContract();
         const _routerContract = new RouterContract();
         const _rliContract = new RLIContract();
+        
+        // (new)
+        await _pkpPermissionsContract.connect({ signer });
+
+        await _pkpHelperContract.connect({ signer });
 
         await _pkpContract.connect({ signer })
         
@@ -114,6 +129,9 @@ export const AppContextProvider = ({children}: {children: any}) => {
         setPkpContract(_pkpContract);
         setRouterContract(_routerContract);
         setRliContract(_rliContract);
+
+        setPkpPermissionsContract(_pkpPermissionsContract);
+        setPkpHelperContract(_pkpHelperContract);
 
         setContractsLoaded(true);
 
@@ -346,6 +364,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
     // -- share states for children components
     let sharedStates = {
         pkpContract: pkpContract as PKPContract,
+        pkpPermissionsContract: pkpPermissionsContract as PKPPermissionsContract,
+        pkpHelperContract: pkpHelperContract as PKPHelperContract,
         routerContract: routerContract as RouterContract,
         rliContract: rliContract as RLIContract,
         web3: {

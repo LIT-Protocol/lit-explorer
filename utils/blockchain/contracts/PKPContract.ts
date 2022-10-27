@@ -176,7 +176,7 @@ export class WritePKPContract{
 
         window.mint = res;
 
-        console.log("window.mint:", window.mint);
+        console.warn("[DEBUG] window.mint:", window.mint);
 
         let tokenIdFromEvent;
 

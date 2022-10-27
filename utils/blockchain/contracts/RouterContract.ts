@@ -95,39 +95,39 @@ export class ReadRouterContract{
     
     }
 
-    getPermittedAddresses = async (id: any) => {
+    // getPermittedAddresses = async (id: any) => {
 
-        console.log("[getPermittedAddresses] input<id>:", id);
+    //     console.log("[getPermittedAddresses] input<id>:", id);
         
-        let addresses;
+    //     let addresses;
         
-        try{
-            addresses = await this.contract.getPermittedAddresses(id)
-        }catch(e: any){
-            console.log("[getPermittedAddresses] error<e.message>:", e.message);
-            addresses = [];
-        }
+    //     try{
+    //         addresses = await this.contract.getPermittedAddresses(id)
+    //     }catch(e: any){
+    //         console.log("[getPermittedAddresses] error<e.message>:", e.message);
+    //         addresses = [];
+    //     }
 
-        return addresses;
+    //     return addresses;
 
-    }
+    // }
 
-    getPermittedActions = async (id: any) => {
+    // getPermittedActions = async (id: any) => {
 
-        const actions = await this.contract.getPermittedActions(id);
+    //     const actions = await this.contract.getPermittedActions(id);
 
-        return actions;
+    //     return actions;
 
-    }
+    // }
 
-    isPermittedAddress = async (pkpId: number, address: string) : Promise<boolean> => {
+    // isPermittedAddress = async (pkpId: number, address: string) : Promise<boolean> => {
 
-        const pkpId_hex = decimalTohex(pkpId);
+    //     const pkpId_hex = decimalTohex(pkpId);
 
-        const bool = await this.contract.isPermittedAddress(pkpId_hex, address);
+    //     const bool = await this.contract.isPermittedAddress(pkpId_hex, address);
         
-        return bool
-    }
+    //     return bool
+    // }
 
     /**
      * 
