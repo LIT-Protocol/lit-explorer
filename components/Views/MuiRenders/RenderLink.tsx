@@ -1,5 +1,6 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
+import { SupportedSearchTypes } from "../../../app_config";
 import { AppRouter } from "../../../utils/AppRouter";
 import { heyShorty } from "../../../utils/converter";
 import Copy from "../../UI/Copy";
@@ -15,7 +16,9 @@ const RenderLink = (props: GridRenderCellParams, options: MyOptions) => {
     // -- (render)
     const renderValue = (v: string) => {
 
-        v = toChecksumAddress(v)
+        if ( AppRouter.getSearchType(v) === SupportedSearchTypes.ETH_ADDRESS){
+            v = toChecksumAddress(v)
+        }
 
         return (
             <>

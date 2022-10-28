@@ -1,10 +1,8 @@
 import { Contract } from "ethers";
 import { ContractProps } from "./ContractI";
-import { APP_CONFIG, SupportedNetworks } from '../../../app_config';
+import { APP_CONFIG } from '../../../app_config';
 import { getContract } from './getContract';
-import { decimalTohex } from "../../converter";
 import { getBytes32FromMultihash, getIPFSIdFromBytes32, IPFSHash, ipfsIdToIpfsIdHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
-import { tryUntil } from "../../tryUntil";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -93,61 +91,6 @@ export class ReadRouterContract{
 
         return pubKey;
     
-    }
-
-    // getPermittedAddresses = async (id: any) => {
-
-    //     console.log("[getPermittedAddresses] input<id>:", id);
-        
-    //     let addresses;
-        
-    //     try{
-    //         addresses = await this.contract.getPermittedAddresses(id)
-    //     }catch(e: any){
-    //         console.log("[getPermittedAddresses] error<e.message>:", e.message);
-    //         addresses = [];
-    //     }
-
-    //     return addresses;
-
-    // }
-
-    // getPermittedActions = async (id: any) => {
-
-    //     const actions = await this.contract.getPermittedActions(id);
-
-    //     return actions;
-
-    // }
-
-    // isPermittedAddress = async (pkpId: number, address: string) : Promise<boolean> => {
-
-    //     const pkpId_hex = decimalTohex(pkpId);
-
-    //     const bool = await this.contract.isPermittedAddress(pkpId_hex, address);
-        
-    //     return bool
-    // }
-
-    /**
-     * 
-     * Check if an action is permitted given the pkpid and ipfsId
-     * 
-     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
-     * 
-     * @return { object } transaction 
-     */
-    isPermittedAction = async (pkpId: string, ipfsId: string) : Promise<boolean> => {
-        console.log("[isPermittedAction] input<pkpId>:", pkpId);
-        console.log("[isPermittedAction] input<ipfsId>:", ipfsId);
-
-        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
-        console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
-
-        const bool = await this.contract.isPermittedAction(pkpId, ipfsHash);
-        
-        return bool
     }
 
 

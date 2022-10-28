@@ -5,6 +5,7 @@ import { getContract } from './getContract';
 import { decimalTohex, hexToDecimal, MultiETHFormat, wei2eth } from "../../converter";
 import { asyncForEach } from "../../utils";
 import { Either } from "monet";
+import { ipfsIdToIpfsIdHash } from "../../ipfs/ipfsHashConverter";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -61,6 +62,15 @@ export class ReadPKPPermissionsContract{
         this.contract = contract;
     }
 
+    /** 
+     * 
+     * Check if an address is permitted 
+     * 
+     * @param { number } pkpId
+     * @param { string } address
+     * 
+     * @returns { Promise<boolean> }
+    */
     isPermittedAddress = async (pkpId: number, address: string) : Promise<boolean> => {
 
         const pkpId_hex = decimalTohex(pkpId);
@@ -70,7 +80,15 @@ export class ReadPKPPermissionsContract{
         return bool
     }
 
-    getPermittedAddresses = async (tokenId: any) => {
+    /** 
+     * 
+     * Get all permitted addresses
+     * 
+     * @param { any } tokenId
+     * 
+     * @returns { Promise<Array<string>> }
+    */
+    getPermittedAddresses = async (tokenId: any) : Promise<Array<string>> => {
 
         console.log("[getPermittedAddresses] input<tokenId>:", tokenId);
         
@@ -87,12 +105,42 @@ export class ReadPKPPermissionsContract{
 
     }
 
-    getPermittedActions = async (id: any) => {
+    /**
+     * 
+     * Get permitted action
+     * 
+     * @param { any } id
+     * 
+     * @returns { Promise<Array<any>> }
+     * 
+     */
+    getPermittedActions = async (id: any) : Promise<Array<any>>=> {
 
         const actions = await this.contract.getPermittedActions(id);
 
         return actions;
 
+    }
+
+    /**
+     * 
+     * Check if an action is permitted given the pkpid and ipfsId
+     * 
+     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
+     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * 
+     * @return { object } transaction 
+     */
+     isPermittedAction = async (pkpId: string, ipfsId: string) : Promise<boolean> => {
+        console.log("[isPermittedAction] input<pkpId>:", pkpId);
+        console.log("[isPermittedAction] input<ipfsId>:", ipfsId);
+
+        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
+        console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
+
+        const bool = await this.contract.isPermittedAction(pkpId, ipfsHash);
+        
+        return bool
     }
 
 }

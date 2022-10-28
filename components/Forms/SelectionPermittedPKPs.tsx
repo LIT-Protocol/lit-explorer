@@ -21,7 +21,7 @@ const SelectionPermittedPKPs = ({
 }) => {
 
     // -- (app context)
-    const { pkpContract, routerContract } = useAppContext();
+    const { pkpContract, pkpPermissionsContract } = useAppContext();
 
     // -- (state)
     const [tokens, setTokens] = useState<Array<string>>();
@@ -50,7 +50,7 @@ const SelectionPermittedPKPs = ({
         console.log("[fetchTokens] output<_tokens>:", _tokens);
         
         let permitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
-            return await routerContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? pkpId : null;
+            return await pkpPermissionsContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? pkpId : null;
         })
         permitted = permitted.filter((pkpId) => pkpId != null)
 

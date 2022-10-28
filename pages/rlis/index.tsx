@@ -34,7 +34,7 @@ const RLIsPage: NextPageWithLayout = () => {
   return (
     <>
       { renderDescription() }
-      { renderTotalSupply() }
+      {/* { renderTotalSupply() } */}
 
       <Refreshable refresh={refresh}>
         <FormMintRLI onMint={() => onRefresh(prev => prev + 1)}/>

@@ -22,7 +22,7 @@ const OwnersPageById: NextPageWithLayout = () => {
   return (
     <>
       <PKPsByOwnerAddress ownerAddress={_ownerAddress} />
-      <RLIsByOwnerAddress key={_ownerAddress} ownerAddress={_ownerAddress} />
+      {/* <RLIsByOwnerAddress key={_ownerAddress} ownerAddress={_ownerAddress} /> */}
     </>
   )
 }
