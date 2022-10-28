@@ -5,6 +5,7 @@ import PKPNFT from './ABIs/PKPNFT.json';
 import PKPPermissions from './ABIs/PKPPermissions.json';
 import PubkeyRouter from './ABIs/PubkeyRouter.json';
 import RateLimitNFT from './ABIs/RateLimitNFT.json';
+import { Alchemy, Network } from "alchemy-sdk";
 
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
@@ -103,89 +104,91 @@ export const DEFAULT_LIT_ACTION = `const go = async () => {
   go();`;
 
 
-/** ========== CONTRACT ADDRESSES ========== */
-const APP_CONFIGS = {
-    CELO: {
-        SITE: 'CELO',
-        ECDSA_KEY: 2,
-        IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
-        IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
-    
-        // --- Main contracts used in this explorer
-        PKP_NFT_CONTRACT_ADDRESS: "0x594E1dA675e2a17866B7E3D80c96Cb396f2A4ccD", 
-        RATE_LIMIT_CONTRACT_ADDRESS: "0xbd757dD9Bfba4Ac6df1E7e66B9C40486f4681f9B",
-        ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
-    
-        // -- only for display
-        ACCS_CONTRACT_ADDRESS: "0x156a99e169aAcaB8Cf5eA87D034664156Af4F0E6",
-        LIT_TOKEN_CONTRACT_ADDRESS: "0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b",
-        MULTI_SENDER_CONTRACT_ADDRESS: "0xe9e9613881F95987559ab943c539f256E582F839",
-        DEPLOYER_CONTRACT_ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
-        STAKED_NODE_CONTRACT_ADDRESS: "0xdbd360F30097fB6d938dcc8B7b62854B36160B45",
-    
-        // -- explorer address
-        EXPLORER: "https://polygonscan.com/address/",
-        NETWORK_NAME: SupportedNetworks.CELO_MAINNET,
-        NETWORK: SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET],
-    },
-    MUMBAI: {
-        NETWORK_LABEL: {
-            ENABLED: true,
-            NAME: 'MUMBAI TESTNET',
-        },
-        ECDSA_KEY: 2,
-        IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
-        IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
-
-
-        // --- Main contracts used in this explorer
-        PKP_NFT_CONTRACT: {
-            ADDRESS: deployedContracts.pkpNftContractAddress,
-            ABI: PKPNFT.abi,
-        }, 
-        RATE_LIMIT_CONTRACT: {
-            ADDRESS: deployedContracts.rateLimitNftContractAddress,
-            ABI: RateLimitNFT.abi,
-        },
-        ROUTER_CONTRACT: {
-            ADDRESS: deployedContracts.pubkeyRouterContractAddress,
-            ABI: PubkeyRouter.abi,
-        },
-
-        // -- (NEW) to be added to the explorer
-        PKP_HELPER_CONTRACT: {
-            ADDRESS: deployedContracts.pkpHelperContractAddress,
-            ABI: PKPHelper.abi,
-        },
-        PKP_PERMISSIONS_CONTRACT: {
-            ADDRESS: deployedContracts.pkpPermissionsContractAddress,
-            ABI: PKPPermissions.abi,
-        },
-    
-        // -- only for display
-        ACCS_CONTRACT: {
-            ADDRESS: deployedContracts.accessControlConditionsContractAddress,
-        },
-        LIT_TOKEN_CONTRACT: {
-            ADDRESS: deployedContracts.litTokenContractAddress,
-        },
-        MULTI_SENDER_CONTRACT: {
-            ADDRESS: deployedContracts.multisenderContractAddress,
-        },
-        DEPLOYER_CONTRACT: {
-            ADDRESS: "(??)0x50e2dac5e78B5905CB09495547452cEE64426db2",
-        },
-        STAKED_NODE_CONTRACT: {
-            ADDRESS: deployedContracts.stakingContractAddress,
-        },
-    
-        // -- explorer address
-        EXPLORER: "https://polygonscan.com/address/",
-        NETWORK_NAME: SupportedNetworks.MUMBAI_TESTNET,
-        NETWORK: SUPPORTED_CHAINS[SupportedNetworks.MUMBAI_TESTNET],
-    },
-}
+/** ========== CHANGE THIS INFORMATION FOR YOUR NETWORK! ========== */
 
 export const APP_CONFIG = {
-    ...APP_CONFIGS.MUMBAI,
+
+    // ---------- CELO ----------
+    // -- explorer address
+    // EXPLORER: "https://polygonscan.com/address/",
+    // NETWORK_NAME: SupportedNetworks.CELO_MAINNET,
+    // NETWORK: SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET],
+
+    // SITE: 'CELO',
+    // ECDSA_KEY: 2,
+    // IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
+    // IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
+
+    // // --- Main contracts used in this explorer
+    // PKP_NFT_CONTRACT_ADDRESS: "0x594E1dA675e2a17866B7E3D80c96Cb396f2A4ccD", 
+    // RATE_LIMIT_CONTRACT_ADDRESS: "0xbd757dD9Bfba4Ac6df1E7e66B9C40486f4681f9B",
+    // ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
+
+    // // -- only for display
+    // ACCS_CONTRACT_ADDRESS: "0x156a99e169aAcaB8Cf5eA87D034664156Af4F0E6",
+    // LIT_TOKEN_CONTRACT_ADDRESS: "0x8515B6c4Ce073CDEA3BB0C07DBA2B4413c11F97b",
+    // MULTI_SENDER_CONTRACT_ADDRESS: "0xe9e9613881F95987559ab943c539f256E582F839",
+    // DEPLOYER_CONTRACT_ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+    // STAKED_NODE_CONTRACT_ADDRESS: "0xdbd360F30097fB6d938dcc8B7b62854B36160B45",
+
+    // ---------- MUMBAI ----------
+    // -- explorer address
+    EXPLORER: "https://polygonscan.com/address/",
+    NETWORK_NAME: SupportedNetworks.MUMBAI_TESTNET,
+    NETWORK: SUPPORTED_CHAINS[SupportedNetworks.MUMBAI_TESTNET],
+    NETWORK_LABEL: {
+        ENABLED: true,
+        NAME: 'MUMBAI TESTNET',
+    },
+    ECDSA_KEY: 2,
+    IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
+    IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
+    ALCHEMY: {
+        API: 'https://polygon-mainnet.g.alchemy.com/v2/',
+        SETTINGS: {
+            apiKey: "1RhaaWmdAOzrjCMJV2aAawBCYXMoZL31", // !IMPORTANT! STORE IN PROCESS!
+            network: Network.MATIC_MUMBAI,
+        }
+    },
+
+    // --- Main contracts used in this explorer
+    PKP_NFT_CONTRACT: {
+        ADDRESS: deployedContracts.pkpNftContractAddress,
+        ABI: PKPNFT.abi,
+    }, 
+    RATE_LIMIT_CONTRACT: {
+        ADDRESS: deployedContracts.rateLimitNftContractAddress,
+        ABI: RateLimitNFT.abi,
+    },
+    ROUTER_CONTRACT: {
+        ADDRESS: deployedContracts.pubkeyRouterContractAddress,
+        ABI: PubkeyRouter.abi,
+    },
+
+    // -- (NEW) to be added to the explorer
+    PKP_HELPER_CONTRACT: {
+        ADDRESS: deployedContracts.pkpHelperContractAddress,
+        ABI: PKPHelper.abi,
+    },
+    PKP_PERMISSIONS_CONTRACT: {
+        ADDRESS: deployedContracts.pkpPermissionsContractAddress,
+        ABI: PKPPermissions.abi,
+    },
+
+    // -- (NOT IMPORTANT) Only for display
+    ACCS_CONTRACT: {
+        ADDRESS: deployedContracts.accessControlConditionsContractAddress,
+    },
+    LIT_TOKEN_CONTRACT: {
+        ADDRESS: deployedContracts.litTokenContractAddress,
+    },
+    MULTI_SENDER_CONTRACT: {
+        ADDRESS: deployedContracts.multisenderContractAddress,
+    },
+    DEPLOYER_CONTRACT: {
+        ADDRESS: "(??)0x50e2dac5e78B5905CB09495547452cEE64426db2",
+    },
+    STAKED_NODE_CONTRACT: {
+        ADDRESS: deployedContracts.stakingContractAddress,
+    },
 }

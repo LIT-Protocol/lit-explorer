@@ -159,6 +159,8 @@ export class ReadRouterContract{
      * @returns 
      */
     isActionRegistered = async (ipfsId: string) : Promise<boolean> => {
+
+        return true;
         console.log("[isActionRegistered] input<ipfsid>:", ipfsId);
         
         const ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
