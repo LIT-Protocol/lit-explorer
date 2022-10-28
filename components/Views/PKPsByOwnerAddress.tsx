@@ -11,6 +11,7 @@ import RenderPKPToPubKey from "./MuiRenders/RenderPKPToPubKey";
 interface PKPsByOwnerAddressOptions{
     title?: string,
     loadingMessage?: string,
+    errorMessage?: any,
     height?: number
 }
 
@@ -26,7 +27,7 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
             key={ownerAddress.toString()}
             debug={false}
             title={options?.title ?? `PKPs by a given address: ${heyShorty(ownerAddress, 4)}`}
-            errorMessage="No PKP owners found."
+            errorMessage={options?.errorMessage ?? 'No PKP owners found.'}
             loadingMessage={options?.loadingMessage ?? `Loading a list of PKPs by a given address...`}
             fetchPath={`/api/get-pkps-by-address/${ownerAddress}`}
             filter={(rawData: any) => {

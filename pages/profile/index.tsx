@@ -4,10 +4,23 @@ import PKPs from "../../components/Views/PKPs";
 import MyDescription from "../../components/UI/MyDescription";
 import { useAppContext } from "../../components/Contexts/AppContext";
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";
+import { ROUTES } from "../../app_config";
+import { useRouter } from "next/router";
+import { Button } from "@mui/material";
 
 const ProfilePage: NextPageWithLayout = () => {
   // -- (app context)
   const appContext = useAppContext();
+  const router = useRouter();
+
+  const renderButton = () => {
+    return (
+      <div>
+        You don't have any PKPs yet! 
+        <Button className="ml-12 btn-2" onClick={() => router.push(ROUTES.MINT_PKP)}>Mint one now!</Button>
+      </div>
+    );
+  };
 
   const renderDescription = () => {
     return (
@@ -31,6 +44,7 @@ const ProfilePage: NextPageWithLayout = () => {
           height: 500,
           title: `Your account: ${appContext.web3.ownerAddress}`,
           loadingMessage: "Finding your PKPs...",
+          errorMessage: renderButton(),
         }}
       />
     </>
