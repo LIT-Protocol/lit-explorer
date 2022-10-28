@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { APP_CONFIG, SupportedNetworks, SUPPORTED_CHAINS } from '../../../app_config';
+import { APP_CONFIG } from '../../../app_config';
+import { Alchemy } from "alchemy-sdk";
 
 type Data = {
   id?: string
@@ -14,17 +15,28 @@ export default async function handler(
 ) {
 
   const { id } = req.query;
-  const baseURL = APP_CONFIG.NETWORK.EXPLORER_API;
-  const query = `?module=account&action=tokentx&address=${id}`;
 
-  const dataRes = await fetch(`${baseURL}${query}`);
+  // -- validate
+  if ( ! id ){
+    res.status(500).json({ 
+      data: new Error("ID/Wallet address cannot be empty"),
+    })
 
-  let data = await dataRes.json();
+    throw new Error("ID/Wallet address cannot be empty");
+  }
 
-  console.log(data);
+  const walletAddress = id.toString()
+
+  const alchemy = new Alchemy(APP_CONFIG.ALCHEMY.SETTINGS); 
+
+  const nfts = await alchemy.nft.getNftsForOwner(walletAddress, {
+    contractAddresses: [APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS],
+  });
+
+  console.log("nfts:", nfts);
 
   res.status(200).json({ 
     id: id?.toString(),
-    data,
+    data: nfts,
   })
 }

@@ -32,14 +32,10 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
             fetchPath={`/api/get-pkps-by-address/${ownerAddress}`}
             filter={(rawData: any) => {
                 console.log("[PKPsByOwnerAddress] input<rawData>", rawData);
-                return rawData.data.result.filter(
-                (tx: any) => {
-                    return tx.contractAddress === APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS.toLowerCase() && 
-                    ownerAddress.toString().toLowerCase() == tx.to.toLowerCase();
-                }
-                );
+                return rawData.data.ownedNfts;
             } }
             renderCols={(width: any) => {
+                // return [];
                 return appendEvenWidths([
                     { headerName: "PKP Token ID", field: "tokenId", renderCell: (props: any) => {
                         return RenderLink(props, {short: true, copy: true})
@@ -54,7 +50,7 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
                         return RenderPKPToPubKey(props, {short: true, copy: true});
                     }},
                     { headerName:"Acquired Date", field: "date",  renderCell: RenderDate},
-                    { headerName:"From", field: "from"},
+                    // { headerName:"From", field: "from"},
                 ], width);
         
             } }
@@ -62,10 +58,10 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
                 return filteredData?.map((pkp: any, i: number) => {
                     return {
                         id: i + 1,
-                        tokenId: pkp.tokenID,
-                        address: pkp.tokenID,
-                        date: pkp.timeStamp,
-                        from: pkp.from === '0x0000000000000000000000000000000000000000' ? 'Minted' : pkp.from,
+                        tokenId: pkp.tokenId,
+                        address: pkp.tokenId,
+                        date: pkp.timeLastUpdated,
+                        // from: pkp.from === '0x0000000000000000000000000000000000000000' ? 'Minted' : pkp.from,
                     };
                 });
             } }    
