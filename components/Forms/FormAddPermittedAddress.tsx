@@ -19,7 +19,7 @@ const FormAddPermittedAddress = ({
 }) => {
 
     // -- (app context)
-    const { routerContract } = useAppContext();
+    const { routerContract, pkpPermissionsContract } = useAppContext();
 
     // -- (state)
     const [isActionRegistered, setIsActionRegisterd] = useState(false);
@@ -89,7 +89,7 @@ const [progress, setProgress] = useState<MyProgressI>();
         let tx: any;
         
         try{
-            tx = await routerContract.write.addPermittedAddress(_pkpId, _ownerAddress);
+            tx = await pkpPermissionsContract.write.addPermittedAddress(_pkpId, _ownerAddress, routerContract);
             console.log("[onSubmit]: output<tx>:", tx);
 
             setProgress({message: `Waiting for confirmation...`, progress: 75})

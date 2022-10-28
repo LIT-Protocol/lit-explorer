@@ -24,7 +24,7 @@ interface PKPOptionsModalProps{
 export default function PKPOptionsModal(props: PKPOptionsModalProps) {
 
   // -- (app context)
-  const { routerContract } = useAppContext();
+  const { pkpPermissionsContract, routerContract } = useAppContext();
 
   // -- prepare
   const pkpId = props.pkpId;
@@ -71,13 +71,13 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
     console.log("[handleClick] inputType:", inputType);
     
     setProgress(70);
-    const permittedAddressTx = await routerContract.write.addPermittedAddress(pkpId, user_address);
+    const permittedAddressTx = await pkpPermissionsContract.write.addPermittedAddress(pkpId, user_address, routerContract);
 
     console.log("[handleClick]:", permittedAddressTx);
     
     setProgress(90);
     const txConfirmed = await tryUntil({
-      onlyIf: async () => await routerContract.read.isPermittedAddress(pkpId, user_address),
+      onlyIf: async () => await pkpPermissionsContract.read.isPermittedAddress(pkpId, user_address),
       thenRun: async () => true,
       onTrying: (counter: number) => {
         console.log(`${counter} confirming transaction...`);

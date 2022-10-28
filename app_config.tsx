@@ -150,7 +150,6 @@ export const APP_CONFIG = {
             network: Network.MATIC_MUMBAI,
         }
     },
-
     // --- Main contracts used in this explorer
     PKP_NFT_CONTRACT: {
         ADDRESS: deployedContracts.pkpNftContractAddress,

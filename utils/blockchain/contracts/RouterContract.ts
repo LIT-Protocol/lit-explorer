@@ -103,6 +103,8 @@ export class ReadRouterContract{
      */
     isActionRegistered = async (ipfsId: string) : Promise<boolean> => {
 
+        console.warn("[*** DEPRECATED ***] isActionRegistered, this will always return true, there's no need to use this function anymore.");
+
         return true;
         console.log("[isActionRegistered] input<ipfsid>:", ipfsId);
         
@@ -155,74 +157,6 @@ export class WriteRouterContract{
     
     constructor(contract: Contract){
         this.contract = contract;
-    }
-
-
-    /**
-     * TODO: add transaction type
-     * Add permitted action to a given PKP id & ipfsId
-     * 
-     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ownerAddress @param { string } ownerAddress  0x3B5dD2605.....22aDC499A1
-     * 
-     * @return { object } transaction 
-     */
-     addPermittedAddress = async (pkpId: string, ownerAddress: string) : Promise<any> => {
-
-        console.log("[addPermittedAddress] input<pkpId>:", pkpId);
-        console.log("[addPermittedAddress] input<ownerAddress>:", ownerAddress);
-        
-        
-        const tx = await this.contract.addPermittedAddress(pkpId, ownerAddress);
-        
-        console.log("[addPermittedAddress] output<tx>:", tx);
-
-        return tx;
-    }
-
-    /**
-     * TODO: add transaction type
-     * Add permitted action to a given PKP id & ipfsId
-     * 
-     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
-     * 
-     * @return { object } transaction 
-     */
-    addPermittedAction = async (pkpId: string, ipfsId: string) : Promise<any> => {
-
-        console.log("[addPermittedAction] input<pkpId>:", pkpId);
-        console.log("[addPermittedAction] input<ipfsId>:", ipfsId);
-        
-        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
-        console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
-        
-        const tx = await this.contract.addPermittedAction(pkpId, ipfsHash);
-        console.log("[addPermittedAction] output<tx>:", tx);
-
-        return tx;
-    }
-
-    /**
-     * Revoke permitted action of a given PKP id & ipfsId
-     * 
-     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
-     * 
-     * @return { object } transaction 
-     */
-    revokePermittedAction = async (pkpId: string, ipfsId: string) : Promise<any> => {
-
-        console.log("[revokePermittedAction] input<pkpId>:", pkpId);
-        console.log("[revokePermittedAction] input<ipfsId>:", ipfsId);
-        
-        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
-        console.log("[revokePermittedAction] converted<ipfsHash>:", ipfsHash);
-        
-        const tx = await this.contract.removePermittedAction(pkpId, ipfsHash);
-        console.log("[revokePermittedAction] output<tx>:", tx);
-
-        return tx;
     }
 
     /**

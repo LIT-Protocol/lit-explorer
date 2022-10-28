@@ -5,7 +5,8 @@ import { getContract } from './getContract';
 import { decimalTohex, hexToDecimal, MultiETHFormat, wei2eth } from "../../converter";
 import { asyncForEach } from "../../utils";
 import { Either } from "monet";
-import { ipfsIdToIpfsIdHash } from "../../ipfs/ipfsHashConverter";
+import { getBytesFromMultihash, ipfsIdToIpfsIdHash } from "../../ipfs/ipfsHashConverter";
+import { RouterContract } from "./RouterContract";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -156,28 +157,94 @@ export class WritePKPPermissionsContract{
         this.contract = contract;
     }
 
-    mint = async (mintCost: {
-        value: any
-    }) => {
+    /**
+     * 
+     * Add permitted action to a given PKP id & ipfsId
+     * 
+     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
+     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * 
+     * @return { object } transaction 
+     */
+     addPermittedAction = async (pkpId: string, ipfsId: string, routerContract: RouterContract) : Promise<any> => {
+         
+        console.log("[addPermittedAction] input<pkpId>:", pkpId);
+        
+        const pubKey = await routerContract.read.getFullPubKey(pkpId);
+        console.log("[addPermittedAction] converted<pubKey>:", pubKey);
+        
+        const pubKeyHash = ethers.utils.keccak256(pubKey);
+        console.log("[addPermittedAction] converted<pubKeyHash>:", pubKeyHash);
+        
+        const tokenId = ethers.BigNumber.from(pubKeyHash);
+        console.log("[addPermittedAction] converted<tokenId>:", tokenId);
 
-        const tx = await this.contract.mintNext(APP_CONFIG.ECDSA_KEY, mintCost);
+        console.log("[addPermittedAction] input<ipfsId>:", ipfsId);
+        
+        // const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
+        // console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
 
-        const res = await tx.wait();
+        const ipfsIdBytes = getBytesFromMultihash(ipfsId);
+            
+        const tx = await this.contract.addPermittedAction(tokenId, ipfsIdBytes, []);
+        console.log("[addPermittedAction] output<tx>:", tx);
 
-        window.mint = res;
-
-        console.warn("[DEBUG] window.mint:", window.mint);
-
-        let tokenIdFromEvent;
-
-        // celo
-        // tokenIdFromEvent = res.events[0].topics[3]
-
-        // mumbai
-        tokenIdFromEvent = res.events[1].topics[3]
-        console.warn("tokenIdFromEvent:", tokenIdFromEvent)
-
-        return { tx, tokenId: tokenIdFromEvent};
-
+        return tx;
     }
+
+    /**
+     * TODO: add transaction type
+     * Add permitted action to a given PKP id & ipfsId
+     * 
+     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
+     * @param { string } ownerAddress @param { string } ownerAddress  0x3B5dD2605.....22aDC499A1
+     * 
+     * @return { object } transaction 
+     */
+     addPermittedAddress = async (pkpId: string, ownerAddress: string, routerContract: RouterContract) : Promise<any> => {
+
+        console.log("[addPermittedAddress] input<pkpId>:", pkpId);
+        console.log("[addPermittedAddress] input<ownerAddress>:", ownerAddress);
+
+        console.log("[addPermittedAction] input<pkpId>:", pkpId);
+        
+        const pubKey = await routerContract.read.getFullPubKey(pkpId);
+        console.log("[addPermittedAction] converted<pubKey>:", pubKey);
+        
+        const pubKeyHash = ethers.utils.keccak256(pubKey);
+        console.log("[addPermittedAction] converted<pubKeyHash>:", pubKeyHash);
+        
+        const tokenId = ethers.BigNumber.from(pubKeyHash);
+        console.log("[addPermittedAction] converted<tokenId>:", tokenId);
+        
+        
+        const tx = await this.contract.addPermittedAddress(tokenId, ownerAddress, []);
+        
+        console.log("[addPermittedAddress] output<tx>:", tx);
+
+        return tx;
+    }
+
+    /**
+     * Revoke permitted action of a given PKP id & ipfsId
+     * 
+     * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
+     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * 
+     * @return { object } transaction 
+     */
+    revokePermittedAction = async (pkpId: string, ipfsId: string) : Promise<any> => {
+
+        console.log("[revokePermittedAction] input<pkpId>:", pkpId);
+        console.log("[revokePermittedAction] input<ipfsId>:", ipfsId);
+        
+        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
+        console.log("[revokePermittedAction] converted<ipfsHash>:", ipfsHash);
+        
+        const tx = await this.contract.removePermittedAction(pkpId, ipfsHash);
+        console.log("[revokePermittedAction] output<tx>:", tx);
+
+        return tx;
+    }
+    
 }

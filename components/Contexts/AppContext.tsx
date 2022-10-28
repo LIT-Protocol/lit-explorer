@@ -125,7 +125,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
         await _routerContract.connect({ signer })
 
         await _rliContract.connect({ signer })
-
+ 
         setPkpContract(_pkpContract);
         setRouterContract(_routerContract);
         setRliContract(_rliContract);
