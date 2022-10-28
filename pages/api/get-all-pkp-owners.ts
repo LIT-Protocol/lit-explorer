@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { APP_CONFIG } from "../../app_config";
 import { Alchemy } from "alchemy-sdk";
+const { toChecksumAddress } = require('ethereum-checksum-address')
 
 type Data = {
   id?: string;
