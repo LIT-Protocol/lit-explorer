@@ -1,4 +1,5 @@
 import fs from 'fs';
+import fetch from 'node-fetch';
 
 /** ==================== Helper ==================== */
 export const writeToFile = (data, filename) => {

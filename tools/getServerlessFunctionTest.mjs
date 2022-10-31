@@ -4,7 +4,7 @@ import fs from 'fs';
 
 /** ==================== Main ==================== */
 const INPUT_ROOT = 'https://raw.githubusercontent.com/LIT-Protocol/js-serverless-function-test/main/js-sdkTests/';
-const OUTPUT_FOLDER = '../DEMOs/';
+const OUTPUT_FOLDER = './DEMOs/';
 
 const files = [
     'allTheParams.js',
