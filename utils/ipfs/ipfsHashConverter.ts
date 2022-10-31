@@ -90,3 +90,15 @@ export function parseMultihashContractResponse(response: any) {
 
   return multiHash;
 }
+
+/**
+ * Converts 32 byte hex string (initial 0x is removed) to Base58 IPFS content identifier version 0 address string (starts with Qm)
+ * @param str - The 32 byte long hex string to encode to IPFS CID V0 (without initial 0x).
+ * @returns string 
+ */
+export function convertByte32ToIpfsCidV0(str: string) {
+  if (str.indexOf('0x') === 0) {
+    str = str.slice(2)
+  }
+  return bs58.encode(Buffer.from(`1220${str}`, 'hex'));
+}

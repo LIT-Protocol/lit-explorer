@@ -17,7 +17,7 @@ const FormRevokePermittedAction = ({
 }) => {
 
     // -- (app context)
-    const { routerContract } = useAppContext();
+    const { routerContract, pkpPermissionsContract } = useAppContext();
 
     // -- (state)
     const [isActionRegistered, setIsActionRegisterd] = useState(false);
@@ -78,7 +78,7 @@ const FormRevokePermittedAction = ({
         let tx: any;
         
         try{
-            tx = await routerContract.write.revokePermittedAction(_pkpId, _ipfsId);
+            tx = await pkpPermissionsContract.write.revokePermittedAction(_pkpId, _ipfsId);
             console.log("[onSubmit]: output<tx>:", tx);
             setProgress({message: `Waiting for confirmation...`, progress: 75})
             const res = await tx.wait();

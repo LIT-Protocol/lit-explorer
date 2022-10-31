@@ -33,7 +33,7 @@ const PKPsPageById: NextPageWithLayout = () => {
       
       <PKPPermittedControllersByPKPId pkpId={pkpId}/>
 
-      <LoadData
+      {/* <LoadData
         debug={false}
         i18n={{
           titleId: 'authorised action - title',
@@ -58,7 +58,7 @@ const PKPsPageById: NextPageWithLayout = () => {
             };
           });
         } }    
-        />
+        /> */}
     </>
   )
 }

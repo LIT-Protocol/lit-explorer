@@ -1,8 +1,8 @@
-import { Contract } from "ethers";
+import { Contract, ethers } from "ethers";
 import { ContractProps } from "./ContractI";
 import { APP_CONFIG } from '../../../app_config';
 import { getContract } from './getContract';
-import { getBytes32FromMultihash, getIPFSIdFromBytes32, IPFSHash, ipfsIdToIpfsIdHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
+import { convertByte32ToIpfsCidV0, getBytes32FromMultihash, getIPFSIdFromBytes32, IPFSHash, ipfsIdToIpfsIdHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -131,17 +131,24 @@ export class ReadRouterContract{
     getIpfsIds = async (solidityIpfsId: string) : Promise<string> => {
 
         console.log("[getIpfsIds] input<solidityIpfsId>:", solidityIpfsId);
+        // const ketchup = ethers.utils.keccak256(solidityIpfsId);
         
-        const res = await this.contract.ipfsIds(solidityIpfsId)
-        console.log("[getIpfsIds] converted<res>:", res);
-        
-        const bytes32 = parseMultihashContractResponse(res);
-        console.log("[getIpfsIds] converted<bytes32>:", bytes32);
-        
-        const ipfsId = getIPFSIdFromBytes32(bytes32);
-        console.log("[getIpfsIds] converted<ipfsId>:", ipfsId);
+        // const ipfsId = convertByte32ToIpfsCidV0(ketchup);
+        // console.log("ipfsId:", ipfsId);
 
-        return (ipfsId as string);
+        return solidityIpfsId;
+        
+        // -- OLD
+        // const res = await this.contract.ipfsIds(solidityIpfsId)
+        // console.log("[getIpfsIds] converted<res>:", res);
+        
+        // const bytes32 = parseMultihashContractResponse(res);
+        // console.log("[getIpfsIds] converted<bytes32>:", bytes32);
+        
+        // const ipfsId = getIPFSIdFromBytes32(bytes32);
+        // console.log("[getIpfsIds] converted<ipfsId>:", ipfsId);
+
+        // return (ipfsId as string);
         
     }
     

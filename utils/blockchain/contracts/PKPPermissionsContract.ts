@@ -128,7 +128,7 @@ export class ReadPKPPermissionsContract{
      * Check if an action is permitted given the pkpid and ipfsId
      * 
      * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
      * 
      * @return { object } transaction 
      */
@@ -137,7 +137,7 @@ export class ReadPKPPermissionsContract{
         console.log("[isPermittedAction] input<ipfsId>:", ipfsId);
 
         const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
-        console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
+        console.log("[isPermittedAction] converted<ipfsHash>:", ipfsHash);
 
         const bool = await this.contract.isPermittedAction(pkpId, ipfsHash);
         
@@ -162,7 +162,7 @@ export class WritePKPPermissionsContract{
      * Add permitted action to a given PKP id & ipfsId
      * 
      * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
      * 
      * @return { object } transaction 
      */
@@ -178,14 +178,15 @@ export class WritePKPPermissionsContract{
         
         const tokenId = ethers.BigNumber.from(pubKeyHash);
         console.log("[addPermittedAction] converted<tokenId>:", tokenId);
-
+        
         console.log("[addPermittedAction] input<ipfsId>:", ipfsId);
         
         // const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
         // console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
-
+        
         const ipfsIdBytes = getBytesFromMultihash(ipfsId);
-            
+        console.log("[addPermittedAction] converted<ipfsIdBytes>:", ipfsIdBytes);
+        
         const tx = await this.contract.addPermittedAction(tokenId, ipfsIdBytes, []);
         console.log("[addPermittedAction] output<tx>:", tx);
 
@@ -197,7 +198,7 @@ export class WritePKPPermissionsContract{
      * Add permitted action to a given PKP id & ipfsId
      * 
      * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ownerAddress @param { string } ownerAddress  0x3B5dD2605.....22aDC499A1
+     * @param { string } ownerAddress  0x3B5dD2605.....22aDC499A1
      * 
      * @return { object } transaction 
      */
@@ -206,7 +207,7 @@ export class WritePKPPermissionsContract{
         console.log("[addPermittedAddress] input<pkpId>:", pkpId);
         console.log("[addPermittedAddress] input<ownerAddress>:", ownerAddress);
 
-        console.log("[addPermittedAction] input<pkpId>:", pkpId);
+        console.log("[addPermittedAddress] input<pkpId>:", pkpId);
         
         const tx = await this.contract.addPermittedAddress(pkpId, ownerAddress, []);
         
@@ -219,7 +220,7 @@ export class WritePKPPermissionsContract{
      * Revoke permitted action of a given PKP id & ipfsId
      * 
      * @param { string } pkpId 103309008291725705563022469659474510532358692659842796086905702509072063991354
-     * @param { string } ipfsId @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+     * @param { string } ipfsId  QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
      * 
      * @return { object } transaction 
      */

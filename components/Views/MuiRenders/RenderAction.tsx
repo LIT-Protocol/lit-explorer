@@ -24,6 +24,8 @@ const RenderAction = (props: GridRenderCellParams, options: MyOptions) => {
             const _solidityIpfsId = props.formattedValue;
 
             console.log("props.formattedValue:", props.formattedValue);
+            
+            console.warn("_solidityIpfsId:", _solidityIpfsId);
 
             const _ipfsId = await routerContract.read.getIpfsIds(_solidityIpfsId);
 
