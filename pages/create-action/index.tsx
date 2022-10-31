@@ -17,10 +17,6 @@ import * as demos from '../../DEMOs/index';
 
 const CreateAction: NextPageWithLayout = () => {
 
-  useEffect(() => {
-    console.log("demos:", Object.keys(demos));
-  })
-
   const router = useRouter();
 
   // -- (state)
