@@ -16,7 +16,7 @@ const ProfilePage: NextPageWithLayout = () => {
   const renderButton = () => {
     return (
       <div>
-        You don't have any PKPs yet! 
+        You don&apos;t have any PKPs yet! 
         <Button className="ml-12 btn-2" onClick={() => router.push(ROUTES.MINT_PKP)}>Mint one now!</Button>
       </div>
     );
