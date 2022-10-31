@@ -1,8 +1,8 @@
 import MainLayout from "../../components/Layouts/MainLayout"
 import { NextPageWithLayout } from "../_app"
 import MonacoEditor from '@monaco-editor/react';
-import { useState } from "react";
-import { Alert, Button, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Alert, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import uploadToIPFS from "../../utils/ipfs/upload";
 import throwError from "../../utils/throwError";
 import { useRouter } from "next/router";
@@ -12,10 +12,14 @@ import MyCard from "../../components/UI/MyCard";
 import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION } from "../../app_config";
 import { tryUntil } from "../../utils/tryUntil";
 import MyDescription from "../../components/UI/MyDescription";
-import ButtonActionRegisterByIPFSId from "../../components/Forms/ButtonActionRegisterByIPFSId";
 import { preventPageLeave } from "../../utils/utils";
+import * as demos from '../../DEMOs/index';
 
 const CreateAction: NextPageWithLayout = () => {
+
+  useEffect(() => {
+    console.log("demos:", Object.keys(demos));
+  })
 
   const router = useRouter();
 
@@ -25,6 +29,7 @@ const CreateAction: NextPageWithLayout = () => {
   const [progress, setProgress] = useState(0);
   const [ipfsId, setIpfsId] = useState<string | any>();
   const [completed, setCompleted] = useState(false);
+  const [demoIndex, setDemoIndex] = useState(8);
 
   /**
    * When code is being edited
@@ -93,6 +98,40 @@ const CreateAction: NextPageWithLayout = () => {
 
   }
 
+  const onSelectDemo = (demo: any) => {
+
+    const code = (demos as any)[demo.target.value];
+
+    setCode(code);
+    
+    // find index by value
+    const index = Object.keys(demos).findIndex((key) => (demos as any)[key] === code);
+    setDemoIndex(index);
+  }
+  /*
+  * (render) render lit action demo select
+  */
+ const renderDemoSelect = () => {
+    return (
+      <FormControl fullWidth>
+      <InputLabel id="demo-simple-select-label">Select Example</InputLabel>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={Object.keys(demos)[demoIndex]}
+        label="Select Example"
+        onChange={onSelectDemo}
+      >
+        {
+          Object.keys(demos).map((key) => {
+            return <MenuItem key={key} value={key}>{key}</MenuItem>
+          })
+        }
+      </Select>
+    </FormControl>
+    );
+ }
+
   /**
    * (render) render post upload
    */
@@ -145,16 +184,23 @@ const CreateAction: NextPageWithLayout = () => {
       <>
         <h1>Create Action</h1>
 
-        <div className="code-editor mt-12">
-            <MonacoEditor
-                language="javascript"
-                onChange={(code) => onEdit(code)}
-                value={code}
-                theme="vs-dark"
-                height="300px"
-            />
-        </div>
+        <div className="flex">
 
+        <div className="mr-12 w-240 mt-12">
+            { renderDemoSelect() }
+          </div>
+
+          <div className="code-editor mt-12 width-full">
+              <MonacoEditor
+                  language="javascript"
+                  onChange={(code) => onEdit(code)}
+                  value={code}
+                  theme="vs-dark"
+                  height="300px"
+              />
+          </div>
+
+        </div>
         <div className="mt-12 flex">
           <Button onClick={handleUpload} className="btn-2 ml-auto">Upload to IPFS</Button>
         </div>  

@@ -506,3 +506,13 @@ button#demo-customized-button {
 .ml-12{
 	margin-left: 12px
 }
+
+.width-full{
+	width: 100%;
+}
+.w-240{
+	width: 240px;
+}
+.mt-12{
+	margin-top: 12px;
+}
