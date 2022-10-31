@@ -125,6 +125,11 @@ export const AppContextProvider = ({children}: {children: any}) => {
         await _routerContract.connect({ signer })
 
         await _rliContract.connect({ signer })
+
+        // const PKP_TOKEN_ID = '97194107225080213901219764844025856477702741025523632755533808599240578068193';
+        // const TARGET_ADDRESS = '0x75EdCdfb5A678290A8654979703bdb75C683B3dD';
+    
+        // const tx = await _pkpPermissionsContract.write.addPermittedAddress(PKP_TOKEN_ID, TARGET_ADDRESS, _routerContract);
  
         setPkpContract(_pkpContract);
         setRouterContract(_routerContract);

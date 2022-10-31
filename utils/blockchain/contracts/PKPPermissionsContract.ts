@@ -208,17 +208,7 @@ export class WritePKPPermissionsContract{
 
         console.log("[addPermittedAction] input<pkpId>:", pkpId);
         
-        const pubKey = await routerContract.read.getFullPubKey(pkpId);
-        console.log("[addPermittedAction] converted<pubKey>:", pubKey);
-        
-        const pubKeyHash = ethers.utils.keccak256(pubKey);
-        console.log("[addPermittedAction] converted<pubKeyHash>:", pubKeyHash);
-        
-        const tokenId = ethers.BigNumber.from(pubKeyHash);
-        console.log("[addPermittedAction] converted<tokenId>:", tokenId);
-        
-        
-        const tx = await this.contract.addPermittedAddress(tokenId, ownerAddress, []);
+        const tx = await this.contract.addPermittedAddress(pkpId, ownerAddress, []);
         
         console.log("[addPermittedAddress] output<tx>:", tx);
 

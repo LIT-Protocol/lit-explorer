@@ -49,7 +49,7 @@ export const SUPPORTED_CHAINS = {
             chainId: "0x13881",
             chainName: "Mumbai",
             nativeCurrency: { name: "Matic", symbol: "MATIC", decimals: 18 },
-            rpcUrls: ["https://rpc-mumbai.maticvigil.com/v1/96bf5fa6e03d272fbd09de48d03927b95633726c"],
+            rpcUrls: ["https://polygon-mumbai.g.alchemy.com/v2/onvoLvV97DDoLkAmdi0Cj7sxvfglKqDh"],
             blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
             iconUrls: ["future"],
         }
