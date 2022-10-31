@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "yarn fetchContracts && next build",
-    "start": "yarn fetchContracts && next start",
+    "start": "next start",
     "lint": "next lint",
     "fetchContracts": "node ./tools/getDeployedContracts.mjs"
   },
