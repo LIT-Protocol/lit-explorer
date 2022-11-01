@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "fetchContracts": "node ./tools/getDeployedContracts.mjs",
-    "fetchDemos": "node ./tools/getServerlessFunctionTest.mjs",
-    "checksum": "node ./tools/getChecksum.mjs"
+    "fetchDemos": "node ./tools/getServerlessFunctionTest.mjs"
   },
   "dependencies": {
     "@celo-tools/celo-ethers-wrapper": "^0.3.0",
@@ -31,7 +30,6 @@
     "elliptic": "^6.5.4",
     "ethereum-checksum-address": "^0.0.8",
     "ethers": "^5.6.9",
-    "folder-hash": "^4.0.2",
     "hex2dec": "^1.1.2",
     "ipfs-core": "^0.15.4",
     "is-ipfs": "^6.0.2",
