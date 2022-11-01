@@ -50,9 +50,13 @@ const SelectionPermittedPKPs = ({
         console.log("[fetchTokens] output<_tokens>:", _tokens);
         
         let permitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
-            const isPermitted = await pkpPermissionsContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? pkpId : null;
-            console.log("[isPermitted] output<pkpId | isPermitted>:", pkpId, " | ", isPermitted);
-            return 
+            const isPermitted = await pkpPermissionsContract.read.isPermittedAction(pkpId, (ipfsId as string));
+            
+            console.log("isPermitted:", isPermitted);
+
+            const filteredTokens =  ! isPermitted ? null : pkpId;
+            
+            return filteredTokens;
         })
         permitted = permitted.filter((pkpId) => pkpId != null)
 

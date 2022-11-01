@@ -5,7 +5,7 @@ import { getContract } from './getContract';
 import { decimalTohex, hexToDecimal, MultiETHFormat, wei2eth } from "../../converter";
 import { asyncForEach } from "../../utils";
 import { Either } from "monet";
-import { getBytesFromMultihash, ipfsIdToIpfsIdHash } from "../../ipfs/ipfsHashConverter";
+import { getBytesFromMultihash } from "../../ipfs/ipfsHashConverter";
 import { RouterContract } from "./RouterContract";
 
 /**
@@ -136,7 +136,7 @@ export class ReadPKPPermissionsContract{
         console.log("[isPermittedAction] input<pkpId>:", pkpId);
         console.log("[isPermittedAction] input<ipfsId>:", ipfsId);
 
-        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
+        const ipfsHash = getBytesFromMultihash(ipfsId);
         console.log("[isPermittedAction] converted<ipfsHash>:", ipfsHash);
 
         const bool = await this.contract.isPermittedAction(pkpId, ipfsHash);
@@ -180,9 +180,6 @@ export class WritePKPPermissionsContract{
         console.log("[addPermittedAction] converted<tokenId>:", tokenId);
         
         console.log("[addPermittedAction] input<ipfsId>:", ipfsId);
-        
-        // const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
-        // console.log("[addPermittedAction] converted<ipfsHash>:", ipfsHash);
         
         const ipfsIdBytes = getBytesFromMultihash(ipfsId);
         console.log("[addPermittedAction] converted<ipfsIdBytes>:", ipfsIdBytes);
@@ -229,7 +226,7 @@ export class WritePKPPermissionsContract{
         console.log("[revokePermittedAction] input<pkpId>:", pkpId);
         console.log("[revokePermittedAction] input<ipfsId>:", ipfsId);
         
-        const ipfsHash = ipfsIdToIpfsIdHash(ipfsId);
+        const ipfsHash = getBytesFromMultihash(ipfsId);
         console.log("[revokePermittedAction] converted<ipfsHash>:", ipfsHash);
         
         const tx = await this.contract.removePermittedAction(pkpId, ipfsHash);

@@ -19,17 +19,31 @@ export const asyncForEach = async (array, callback) => {
 };
 
 export const runInputOutputs = async ({ IOs, ignoreProperties }) => {
-    await asyncForEach(IOs, async (item) => {
-        const data = await fetch(item.input).then((res) => res.text());
-    
+
+    let deployedContracts = {};
+
+    await asyncForEach(IOs, async (item, i) => {
+        
+        const { input, output, mappedKey } = item;
+        
+        const data = await fetch(input).then((res) => res.text());
+        
         const json = JSON.parse(data);
+
+        if( i <= 0 ){
+            deployedContracts = json;
+        }
     
         await asyncForEach(Object.keys(json), async (key) => {
             if (ignoreProperties.includes(key)) {
                 delete json[key];
             }
         });
+
+        if( mappedKey !== null ) {
+            json.address = deployedContracts[mappedKey];
+        }
     
-        writeToFile(JSON.stringify(json, null, 2), item.output);
+        writeToFile(JSON.stringify(json, null, 2), output);
     })
 }

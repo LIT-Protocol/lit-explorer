@@ -50,8 +50,16 @@ const SelectionUnpermittedPKPs = ({
         console.log("[fetchTokens] output<_tokens>:", _tokens);
         
         let _unpermitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
-            return await pkpPermissionsContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? null : pkpId;
+
+            const isPermitted = await pkpPermissionsContract.read.isPermittedAction(pkpId, (ipfsId as string));
+            
+            console.log("isPermitted:", isPermitted);
+
+            const filteredTokens =  isPermitted ? null : pkpId;
+            
+            return filteredTokens;
         })
+        
         _unpermitted = _unpermitted.filter((pkpId) => pkpId != null)
 
         console.log("[_unpermitted] output<_unpermitted>:", _unpermitted);

@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-import fs from 'fs';
 import { runInputOutputs } from './util.mjs';
 
 /** ==================== Main ==================== */
@@ -10,27 +8,33 @@ runInputOutputs({
     IOs: [
         {
             input: `${INPUT_ROOT}deployed_contracts_mumbai.json`,
-            output: `${OUTPUT_FOLDER}deployed-contracts.json`
+            output: `${OUTPUT_FOLDER}deployed-contracts.json`,
+            mappedKey: null,
         },
         {
             input: `${INPUT_ROOT}deployments/mumbai_80001/PKPHelper.json`,
-            output: `${OUTPUT_FOLDER}PKPHelper.json`
+            output: `${OUTPUT_FOLDER}PKPHelper.json`,
+            mappedKey: 'pkpHelperContractAddress',
         },
         {
             input: `${INPUT_ROOT}deployments/mumbai_80001/PKPNFT.json`,
-            output: `${OUTPUT_FOLDER}PKPNFT.json`
+            output: `${OUTPUT_FOLDER}PKPNFT.json`,
+            mappedKey: 'pkpNftContractAddress',
         },
         {
             input: `${INPUT_ROOT}deployments/mumbai_80001/PKPPermissions.json`,
-            output: `${OUTPUT_FOLDER}PKPPermissions.json`
+            output: `${OUTPUT_FOLDER}PKPPermissions.json`,
+            mappedKey: 'pkpPermissionsContractAddress',
         },
         {
             input: `${INPUT_ROOT}deployments/mumbai_80001/PubkeyRouter.json`,
-            output: `${OUTPUT_FOLDER}PubKeyRouter.json`
+            output: `${OUTPUT_FOLDER}PubKeyRouter.json`,
+            mappedKey: 'pubkeyRouterContractAddress',
         },
         {
             input: `${INPUT_ROOT}deployments/mumbai_80001/RateLimitNFT.json`,
-            output: `${OUTPUT_FOLDER}RateLimitNFT.json`
+            output: `${OUTPUT_FOLDER}RateLimitNFT.json`,
+            mappedKey: 'rateLimitNftContractAddress',
         }
     ],
     ignoreProperties: ["metadata", "bytecode", "deployedBytecode"]

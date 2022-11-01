@@ -1,5 +1,3 @@
-import bs58 from "bs58";
-
 export const asyncForEach = async (array: Array<any> | any, callback: Function) => {
   for (let index = 0; index < array.length; index++) {
       await callback(array[index], index, array)

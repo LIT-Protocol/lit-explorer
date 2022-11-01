@@ -51,16 +51,6 @@ export function getIPFSIdFromBytes32(multihash: IPFSHash) {
   return bs58.encode(multihashBytes);
 }
 
-export function ipfsIdToIpfsIdHash(ipfsId: string) {
-  const multihashStruct = getBytes32FromMultihash(ipfsId);
-  // console.log("multihashStruct", multihashStruct);
-  const packed = ethers.utils.solidityPack(
-    ["bytes32", "uint8", "uint8"],
-    [multihashStruct.digest, multihashStruct.hashFunction, multihashStruct.size]
-  );
-  return ethers.utils.keccak256(packed);
-}
-
 /**
  * Partition multihash string into object representing multihash
  *

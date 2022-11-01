@@ -2,7 +2,7 @@ import { Contract, ethers } from "ethers";
 import { ContractProps } from "./ContractI";
 import { APP_CONFIG } from '../../../app_config';
 import { getContract } from './getContract';
-import { getBytes32FromMultihash, getIPFSIdFromBytes32, getMultihashFromBytes, IPFSHash, ipfsIdToIpfsIdHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
+import { getBytes32FromMultihash, getIPFSIdFromBytes32, getMultihashFromBytes, IPFSHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -106,15 +106,15 @@ export class ReadRouterContract{
         console.warn("[*** DEPRECATED ***] isActionRegistered, this will always return true, there's no need to use this function anymore.");
 
         return true;
-        console.log("[isActionRegistered] input<ipfsid>:", ipfsId);
+        // console.log("[isActionRegistered] input<ipfsid>:", ipfsId);
         
-        const ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
-        console.log("[isActionRegistered] converted<ipfsMultiHash>:", ipfsMultiHash);
+        // const ipfsMultiHash = ipfsIdToIpfsIdHash(ipfsId);
+        // console.log("[isActionRegistered] converted<ipfsMultiHash>:", ipfsMultiHash);
         
-        const bool = await this.contract.isActionRegistered(ipfsMultiHash);
-        console.log("[isActionRegistered] output<bool>:", bool);
+        // const bool = await this.contract.isActionRegistered(ipfsMultiHash);
+        // console.log("[isActionRegistered] output<bool>:", bool);
 
-        return bool;
+        // return bool;
     }
 
 
