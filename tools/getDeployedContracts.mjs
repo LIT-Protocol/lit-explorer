@@ -7,7 +7,7 @@ const OUTPUT_FOLDER = './ABIs/';
 runInputOutputs({
     IOs: [
         {
-            input: `${INPUT_ROOT}deployed_contracts_mumbai.json`,
+            input: `${INPUT_ROOT}deployed_contracts_serrano.json`,
             output: `${OUTPUT_FOLDER}deployed-contracts.json`,
             mappedKey: null,
         },

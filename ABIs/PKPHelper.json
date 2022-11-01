@@ -1,5 +1,5 @@
 {
-  "address": "0xdE333aab950F1ef58F7c0745481328ff6Ea2bfB4",
+  "address": "0xDBc1F63645FDAa279854dDE26589f29806462419",
   "abi": [
     {
       "inputs": [
@@ -35,6 +35,55 @@
       ],
       "name": "OwnershipTransferred",
       "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "keyType",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "permittedAuthMethodTypes",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "permittedAuthMethodIds",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "bytes[]",
+          "name": "permittedAuthMethodPubkeys",
+          "type": "bytes[]"
+        },
+        {
+          "internalType": "uint256[][]",
+          "name": "permittedAuthMethodScopes",
+          "type": "uint256[][]"
+        },
+        {
+          "internalType": "bool",
+          "name": "addPkpEthAddressAsPermittedAddress",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "sendPkpToItself",
+          "type": "bool"
+        }
+      ],
+      "name": "mintNextAndAddAuthMethods",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
     },
     {
       "inputs": [
@@ -94,7 +143,7 @@
           "type": "bool"
         }
       ],
-      "name": "mintNextAndAddAuthMethods",
+      "name": "mintNextAndAddAuthMethodsWithTypes",
       "outputs": [
         {
           "internalType": "uint256",
