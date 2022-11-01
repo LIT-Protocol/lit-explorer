@@ -18,7 +18,7 @@ export const STORAGE_KEYS = {
 /** ========== LINKS ========== */
 export const APP_LINKS = {
     WHAT_IS_PKP: 'https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs',
-    WORKING_WITH_LIT_ACTIONS: 'https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions',
+    WORKING_WITH_LIT_ACTIONS: 'https://developer.litprotocol.com/SDK/Explanation/litActions',
     LIT_DISCORD: 'https://litgateway.com/discord',
     DOC: 'https://developer.litprotocol.com/',
 }
@@ -185,7 +185,7 @@ export const APP_CONFIG = {
         ADDRESS: deployedContracts.multisenderContractAddress,
     },
     DEPLOYER_CONTRACT: {
-        ADDRESS: "(??)0x50e2dac5e78B5905CB09495547452cEE64426db2",
+        ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
     },
     STAKED_NODE_CONTRACT: {
         ADDRESS: deployedContracts.stakingContractAddress,

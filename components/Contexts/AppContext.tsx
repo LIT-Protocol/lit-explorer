@@ -151,13 +151,26 @@ export const AppContextProvider = ({children}: {children: any}) => {
         // -- setup events you want to listen
         const walletEvents = {
             'accountsChanged': (accounts: Array<string>) => {
-                const newOwner = accounts[0];
-                console.warn('[walletEvent:accountsChanged] output<newOwner>:', newOwner);
-                setOwnerAddress(newOwner)
+                onLogout().then(() => {
+                    onLogin(); 
+
+                    const newOwner = accounts[0];
+                    console.warn('[walletEvent:accountsChanged] output<newOwner>:', newOwner);
+                    setOwnerAddress(newOwner)
+                });;
             },
-            'connect': (e: any) => console.warn("connect:", e),
+            'connect': (e: any) => {
+                console.warn("connect:", e);
+
+                if ( e.chainId !== APP_CONFIG.NETWORK.params.chainId){
+                    console.warn(`Expecting ${APP_CONFIG.NETWORK.params.chainName} but received something else.`);
+                    onLogout();
+                }
+            },
             'disconnect': (e: any) => console.warn("disconnect:", e),
-            'chainChanged': (e: any) => console.warn("chainChanged:", e),
+            'chainChanged': (e: any) => () => {                
+                console.warn("chainChanged:", e)
+            },
         }
 
         const keys = Object.keys(walletEvents);

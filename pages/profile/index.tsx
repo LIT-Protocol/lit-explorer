@@ -37,7 +37,7 @@ const ProfilePage: NextPageWithLayout = () => {
     <>
       {renderDescription()}
       {/* <PKPs/> */}
-
+      
       <PKPsByOwnerAddress
         ownerAddress={appContext.web3.ownerAddress}
         options={{
