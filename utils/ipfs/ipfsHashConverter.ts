@@ -74,6 +74,26 @@ export const getBytesFromMultihash = (multihash: string) => {
 };
 
 /**
+ * 
+ * Convert bytes32 to IPFS ID
+ * @param { string } byte32 0x1220baa0d1e91f2a22fef53659418ddc3ac92da2a76d994041b86ed62c0c999de477
+ * @returns { string } QmZKLGf3vgYsboM7WVUS9X56cJSdLzQVacNp841wmEDRkW
+ */
+export const getMultihashFromBytes = (byte32: string) : string => {
+
+  const text = byte32.replace('0x', '');
+
+  const hashFunction = parseInt(text.slice(0, 2), 16);
+  const digestSize = parseInt(text.slice(2, 4), 16);
+  const digest = text.slice(4, 4 + digestSize * 2);
+
+  const multihash = bs58.encode(Buffer.from(`1220${digest}`, 'hex'));
+
+  return multihash;
+
+}
+
+/**
  * Parse Solidity response in array to a Multihash object
  *
  * @param {array} response Response array from Solidity
@@ -89,16 +109,4 @@ export function parseMultihashContractResponse(response: any) {
   };
 
   return multiHash;
-}
-
-/**
- * Converts 32 byte hex string (initial 0x is removed) to Base58 IPFS content identifier version 0 address string (starts with Qm)
- * @param str - The 32 byte long hex string to encode to IPFS CID V0 (without initial 0x).
- * @returns string 
- */
-export function convertByte32ToIpfsCidV0(str: string) {
-  if (str.indexOf('0x') === 0) {
-    str = str.slice(2)
-  }
-  return bs58.encode(Buffer.from(`1220${str}`, 'hex'));
 }

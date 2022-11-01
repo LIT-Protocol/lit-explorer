@@ -9,6 +9,7 @@ import PubKeyByPKPId from "../../components/Views/Parts/PubKeyByPKPId";
 import ETHAddressByPKPId from "../../components/Views/Parts/ETHAddressByPKPId";
 import { appendEvenWidths } from "../../utils/mui/mui";
 
+
 declare global {
   interface Window{
     ethereum?:any
@@ -18,6 +19,7 @@ declare global {
 const PKPsPageById: NextPageWithLayout = () => {
 
   const router = useRouter();
+
   const { pkpId } = router.query;
 
   if( ! pkpId ) return <> Loading PKP id...</>
@@ -32,8 +34,8 @@ const PKPsPageById: NextPageWithLayout = () => {
       </MyCard>
       
       <PKPPermittedControllersByPKPId pkpId={pkpId}/>
-
-      {/* <LoadData
+      
+      <LoadData
         debug={false}
         i18n={{
           titleId: 'authorised action - title',
@@ -58,7 +60,7 @@ const PKPsPageById: NextPageWithLayout = () => {
             };
           });
         } }    
-        /> */}
+        />
     </>
   )
 }

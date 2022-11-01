@@ -2,7 +2,7 @@ import { Contract, ethers } from "ethers";
 import { ContractProps } from "./ContractI";
 import { APP_CONFIG } from '../../../app_config';
 import { getContract } from './getContract';
-import { convertByte32ToIpfsCidV0, getBytes32FromMultihash, getIPFSIdFromBytes32, IPFSHash, ipfsIdToIpfsIdHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
+import { getBytes32FromMultihash, getIPFSIdFromBytes32, getMultihashFromBytes, IPFSHash, ipfsIdToIpfsIdHash, parseMultihashContractResponse } from "../../ipfs/ipfsHashConverter";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -131,12 +131,11 @@ export class ReadRouterContract{
     getIpfsIds = async (solidityIpfsId: string) : Promise<string> => {
 
         console.log("[getIpfsIds] input<solidityIpfsId>:", solidityIpfsId);
-        // const ketchup = ethers.utils.keccak256(solidityIpfsId);
-        
-        // const ipfsId = convertByte32ToIpfsCidV0(ketchup);
-        // console.log("ipfsId:", ipfsId);
 
-        return solidityIpfsId;
+        const ipfsId = getMultihashFromBytes(solidityIpfsId);
+        console.log("[getIpfsIds] output<ipfsId>:", ipfsId);
+
+        return ipfsId;
         
         // -- OLD
         // const res = await this.contract.ipfsIds(solidityIpfsId)
