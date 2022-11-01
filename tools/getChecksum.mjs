@@ -23,7 +23,20 @@ const getChecksum = function (dir) {
     return shasum.digest('hex');
 }
 
-const checksum = getChecksum('./');
+const folders = ['./ABIs', './components', 'DEMOs', './pages', './public', './styles', './tools', './utils'];
+
+const checksums = folders.map(folder => {
+    return {
+        folder,
+        checksum: getChecksum(folder)
+    }
+});
+
+// combine all checksums into one
+const shasum = createHash('sha1');
+shasum.update(checksums.map(checksum => checksum.checksum).join(''));
+
+const checksum = shasum.digest('hex');
 
 writeToFile(checksum, './public/checksum.txt');
 
