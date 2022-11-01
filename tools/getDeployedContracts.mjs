@@ -4,10 +4,19 @@ import { runInputOutputs } from './util.mjs';
 const INPUT_ROOT = 'https://raw.githubusercontent.com/LIT-Protocol/LitNodeContracts/main/';
 const OUTPUT_FOLDER = './ABIs/';
 
+// -- explorer.litprotocol.com
+const SERRANO = 'deployed_contracts_serrano.json';
+
+// -- mumbai.explorer.litprotocol.com
+const COLLABLAND = 'deployed_contracts_mumbai.json';
+
+// -- CURRENT USING:
+const CURRENT = COLLABLAND;
+
 runInputOutputs({
     IOs: [
         {
-            input: `${INPUT_ROOT}deployed_contracts_serrano.json`,
+            input: `${INPUT_ROOT}${CURRENT}`,
             output: `${OUTPUT_FOLDER}deployed-contracts.json`,
             mappedKey: null,
         },

@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "yarn fetchContracts && yarn fetchDemos && next build",
+    "dev": "yarn checksum && next dev",
+    "build": "yarn fetchContracts && yarn fetchDemos && yarn checksum && next build",
     "start": "next start",
     "lint": "next lint",
     "fetchContracts": "node ./tools/getDeployedContracts.mjs",
-    "fetchDemos": "node ./tools/getServerlessFunctionTest.mjs"
+    "fetchDemos": "node ./tools/getServerlessFunctionTest.mjs",
+    "checksum": "node ./tools/getChecksum.mjs"
   },
   "dependencies": {
     "@celo-tools/celo-ethers-wrapper": "^0.3.0",

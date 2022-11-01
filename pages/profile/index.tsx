@@ -1,6 +1,5 @@
 import MainLayout from "../../components/Layouts/MainLayout";
 import { NextPageWithLayout } from "../_app";
-import PKPs from "../../components/Views/PKPs";
 import MyDescription from "../../components/UI/MyDescription";
 import { useAppContext } from "../../components/Contexts/AppContext";
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";

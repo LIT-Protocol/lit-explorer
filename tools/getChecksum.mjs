@@ -1,23 +1,30 @@
-// create a single hash of all files in a directory
-// this is used to check if the files have changed
-// and if the cache needs to be updated
-// this is a very simple hash, it is not cryptographically secure
-// it is only used to check if the files have changed
-
+import { readdirSync, statSync } from 'fs';
 import { createHash } from 'crypto';
-import { promises as fs } from 'fs';
 import { join } from 'path';
+import { writeToFile } from './util.mjs';
 
-export default async function getChecksum(dir) {
-    const files = await fs.readdir(dir);
-    const hash = createHash('sha1');
-    for (const file of files) {
-        const data = await fs.readFile(join(dir, file));
-        hash.update(data);
-    }
-    return hash.digest('hex');
-    }
+const getFiles = function (dir, files_ = []) {
+    readdirSync(dir).forEach(file => {
+        files_.push(join(dir, file));
+        if (statSync(join(dir, file)).isDirectory()) {
+            files_ = getFiles(join(dir, file), files_);
+        }
+    });
+    return files_;
+}
 
-// Path: tools/getChecksum.mjs
+const getChecksum = function (dir) {
 
-getChecksum('./').then(console.log);
+    const files = getFiles(dir);
+
+    const shasum = createHash('sha1');
+    shasum.update(files.join(''));
+
+    return shasum.digest('hex');
+}
+
+const checksum = getChecksum('./');
+
+writeToFile(checksum, './public/checksum.txt');
+
+console.log(checksum);
