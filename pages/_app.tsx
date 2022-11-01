@@ -8,6 +8,7 @@ import "nprogress/nprogress.css";
 import Router from 'next/router';
 import { AppContextProvider, useAppContext } from '../components/Contexts/AppContext';
 import { I18Provider, LOCALES } from '../components/Contexts/i18n';
+import { Analytics } from '@vercel/analytics/react';
 
 NProgress.configure({
   minimum: 0.3,
@@ -36,6 +37,7 @@ function MyApp({ Component, pageProps }: Props) {
   return getLayout(
       <AppContextProvider>          
         <Component {...pageProps} />
+        <Analytics />
       </AppContextProvider>
   )
 }
