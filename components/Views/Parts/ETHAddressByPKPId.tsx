@@ -22,7 +22,7 @@ const ETHAddressByPKPId = ({
     useEffect(() => {
 
         // -- validate
-        if( ! pkpId ) return;
+        if( ! pkpId || routerContract?.read === undefined ) return;
 
         (async() => {
 
@@ -36,7 +36,7 @@ const ETHAddressByPKPId = ({
 
         })();
 
-    }, [])
+    }, [routerContract?.read])
 
     // -- (validations)
     if( ! address ) return <>loading...</>

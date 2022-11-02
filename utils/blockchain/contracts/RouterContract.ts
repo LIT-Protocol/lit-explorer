@@ -80,8 +80,6 @@ export class ReadRouterContract{
      */
     getFullPubKey = async (tokenId: any) : Promise<any> => {
 
-        console.warn("--- getFullPubKey ---");
-
         let pubKey = await this.contract.getPubkey(tokenId);
 
         // Backward compatibility for CELO
