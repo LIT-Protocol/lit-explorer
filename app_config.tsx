@@ -5,7 +5,7 @@ import PKPNFT from './ABIs/PKPNFT.json';
 import PKPPermissions from './ABIs/PKPPermissions.json';
 import PubkeyRouter from './ABIs/PubkeyRouter.json';
 import RateLimitNFT from './ABIs/RateLimitNFT.json';
-import { Alchemy, Network } from "alchemy-sdk";
+import { Network } from "alchemy-sdk";
 
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
@@ -49,7 +49,7 @@ export const SUPPORTED_CHAINS = {
             chainId: "0x13881",
             chainName: "Mumbai",
             nativeCurrency: { name: "Matic", symbol: "MATIC", decimals: 18 },
-            rpcUrls: ["https://polygon-mumbai.g.alchemy.com/v2/onvoLvV97DDoLkAmdi0Cj7sxvfglKqDh"],
+            rpcUrls: ["https://rpc-mumbai.matic.today"],
             blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
             iconUrls: ["future"],
         }

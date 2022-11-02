@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Signer } from 'ethers';
-import { APP_CONFIG, SupportedNetworks, SUPPORTED_CHAINS } from "../../app_config";
+import { APP_CONFIG } from "../../app_config";
 
 interface Web3WalletProps{
     wallet: any,
