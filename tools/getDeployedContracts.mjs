@@ -11,7 +11,7 @@ const SERRANO = 'deployed_contracts_serrano.json';
 const COLLABLAND = 'deployed_contracts_mumbai.json';
 
 // -- CURRENT USING:
-const CURRENT = SERRANO;
+const CURRENT = COLLABLAND;
 
 runInputOutputs({
     IOs: [
