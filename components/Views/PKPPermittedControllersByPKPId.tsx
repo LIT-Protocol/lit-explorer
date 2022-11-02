@@ -22,6 +22,8 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: {
     
     useEffect(() => {
 
+        if( pkpPermissionsContract?.read === undefined ) return;
+
         (async () => {
             
             const { ownerAddress } = await getWeb3Wallet();

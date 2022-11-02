@@ -18,7 +18,7 @@ const PubKeyByPKPId = ({
     useEffect(() => {
 
         // -- validate
-        if( ! pkpId ) return;
+        if( ! pkpId || routerContract?.read === undefined) return;
 
         (async() => {
 
@@ -28,7 +28,7 @@ const PubKeyByPKPId = ({
 
         })();
 
-    }, [])
+    }, [routerContract?.read])
 
     // -- (validations)
     if( ! pubKey ) return <>loading...</>
