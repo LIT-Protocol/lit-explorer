@@ -28,8 +28,7 @@ export default async function handler(
     let addresses;
     let actions;
 
-    // try a few times before giving up
-    const maxTries = 3;
+    const maxTries = 5;
     let tries = 0;
 
     while (tries < maxTries) {
