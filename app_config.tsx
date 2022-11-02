@@ -138,7 +138,7 @@ export const APP_CONFIG = {
     NETWORK: SUPPORTED_CHAINS[SupportedNetworks.MUMBAI_TESTNET],
     NETWORK_LABEL: {
         ENABLED: true,
-        NAME: 'MUMBAI TESTNET',
+        NAME: '(COLLAB.LAND) MUMBAI TESTNET',
     },
     ECDSA_KEY: 2,
     IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
