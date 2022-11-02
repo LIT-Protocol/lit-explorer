@@ -19,6 +19,9 @@ const RenderAction = (props: GridRenderCellParams, options: MyOptions) => {
     const { value } = props;
 
     useEffect(() => {
+
+        if( routerContract?.read === undefined ) return;
+
         (async() => {
 
             const _solidityIpfsId = props.formattedValue;
@@ -33,7 +36,7 @@ const RenderAction = (props: GridRenderCellParams, options: MyOptions) => {
 
             setIpfsId(_ipfsId);
         })();
-    })
+    }, [routerContract?.read])
 
     // -- (render)
     const renderValue = () => {

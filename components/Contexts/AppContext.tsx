@@ -73,7 +73,6 @@ export const AppContextProvider = ({children}: {children: any}) => {
     const [web3Connected, setWeb3Connected] = useState(false);
     const [contractsLoaded, setContractsLoaded] = useState(false);
     const [clickedConnectWallet, setClickedConnectWallet] = useState(false);
-    const [loading, setLoading] = useState(true);
     
     const injectGlobalFunctions = () => {
 
@@ -279,6 +278,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             // -- trigger state change
             setWeb3Connected(MyWeb3().connected);
 
+
         })();
 
     }, [web3Connected, clickedConnectWallet]);
@@ -377,6 +377,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             </div>
         )
     }
+
 
     if ( ! web3Connected && ! contractsLoaded && ! clickedConnectWallet ) return renderNotLogged();
 
