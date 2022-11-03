@@ -56,9 +56,9 @@ export const Address = ({
 
         return (
             <>
-                <a href={`${AppRouter.getPage(address)}`} onClick={() => router.push(AppRouter.getPage(address))}>
+                <span id={`link-${address}`} className="link" onClick={() => router.push(AppRouter.getPage(address))}>
                 { options?.short ? heyShorty(address) : address }
-                </a>
+                </span>
                 { options?.copy ? <Copy value={address} /> : '' }
             </>
         )

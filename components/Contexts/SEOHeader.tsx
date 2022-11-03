@@ -26,6 +26,9 @@ export default function SEOHeader({
             <meta property="twitter:image" content={image} />
 
             <link rel="icon" href="/favicon.ico" />
+
+            <script defer data-domain="explorer.litprotocol.com" src="https://plausible.io/js/script.js"></script>
+            
         </Head>
     )
 }

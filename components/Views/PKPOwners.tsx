@@ -15,7 +15,7 @@ const PKPOwners = () => {
             }}
             renderCols={(width: any) => {
                 return appendEvenWidths([
-                    { headerName: "Address", field: 'address', renderCell: (props: any) => {
+                    { headerName: "ETH Address", field: 'address', renderCell: (props: any) => {
                         return RenderLink(props, {copy: true})
                     }},
                 ], width);
