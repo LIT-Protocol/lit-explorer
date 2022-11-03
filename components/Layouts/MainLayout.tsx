@@ -1,26 +1,20 @@
-import SearchBar from "../Forms/SearchBar";
 import SideNav from "../UI/SideNav";
-import throwError from '../../utils/throwError';
-import { useRouter } from "next/router";
-import { Alert, AlertTitle, Button, Chip, Snackbar, Stack } from '@mui/material'
-import NavPath from "../UI/NavPath";
-import { AppRouter } from "../../utils/AppRouter";
+import { Alert, AlertTitle,  Chip } from '@mui/material'
 import { I18Provider, LOCALES } from "../Contexts/i18n";
 import { APP_LINKS, STORAGE_KEYS } from "../../app_config";
 import SupportIcon from '@mui/icons-material/Support';
 import { useEffect, useState } from "react";
-import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
-import { AppContextProvider, useAppContext } from "../Contexts/AppContext";
 import SEOHeader from "../Contexts/SEOHeader";
 import CloseIcon from '@mui/icons-material/Close';
 
 interface MainLayoutProps {
-    children: any
+    children: any,
+    data?: any,
 }
 
 const MainLayout = (props: MainLayoutProps) => {
 
-    const router = useRouter();
+    // const router = useRouter();
 
     const [locale, setLocale] = useState(LOCALES.ENGLISH);
 
@@ -43,16 +37,16 @@ const MainLayout = (props: MainLayoutProps) => {
     }, [])
 
     // -- (event) on select language
-    const onSelectLanguage = (value: string) => {
+    // const onSelectLanguage = (value: string) => {
 
-        const lang : any = LOCALES;
-        const selectedLocale = lang[value];
+    //     const lang : any = LOCALES;
+    //     const selectedLocale = lang[value];
 
-        localStorage.setItem(STORAGE_KEYS.LANG, selectedLocale);
+    //     localStorage.setItem(STORAGE_KEYS.LANG, selectedLocale);
 
-        setLocale(selectedLocale);
+    //     setLocale(selectedLocale);
         
-    }
+    // }
 
     const clearMessage = () => {
         console.log("clear message");
@@ -136,4 +130,5 @@ const MainLayout = (props: MainLayoutProps) => {
         </>
       )
 }
+
 export default MainLayout;
