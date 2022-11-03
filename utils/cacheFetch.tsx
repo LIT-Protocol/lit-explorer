@@ -3,6 +3,8 @@ const fetchAndCache = async (url: string, callback: Function) => {
   console.warn(`[fetchAndCache] fetching new: ${url}`);
 
   fetch(url).then((res) => res.json()).then((data) => {
+
+    console.log("fetchAndCache data:", data);
     var date = new Date();
     var expires = new Date();
     expires.setTime(date.getTime() + (60 * 1000));
@@ -20,7 +22,7 @@ const fetchAndCache = async (url: string, callback: Function) => {
  * 
  * cacheFetch is like fetch but caching the first fetched data
  * into user's local storage for a minute to avoid user keep loading
- * the same data in a smart period of time
+ * the same data in a small period of time
  * 
  * @param url 
  * @param callback 

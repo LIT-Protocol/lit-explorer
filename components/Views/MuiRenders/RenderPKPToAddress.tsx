@@ -56,10 +56,12 @@ export const Address = ({
 
         return (
             <>
-                <span id={`link-${address}`} className="link" onClick={() => router.push(AppRouter.getPage(address))}>
-                { options?.short ? heyShorty(address) : address }
-                </span>
-                { options?.copy ? <Copy value={address} /> : '' }
+                <div className="flex justify-cell">
+                    <div id={`link-${address}`} className="flex-content link" onClick={() => router.push(AppRouter.getPage(address))}>
+                        { options?.short ? heyShorty(address) : address }
+                    </div>
+                    { options?.copy ? <Copy value={address} /> : '' }
+                </div>
             </>
         )
 

@@ -7,6 +7,7 @@ import { asyncForEach } from "../../utils";
 import { Either } from "monet";
 import { getBytesFromMultihash } from "../../ipfs/ipfsHashConverter";
 import { RouterContract } from "./RouterContract";
+import { tryUntil } from "../../tryUntil";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -94,16 +95,27 @@ export class ReadPKPPermissionsContract{
         console.log("[getPermittedAddresses] input<tokenId>:", tokenId);
         
         let addresses;
-        
-        try{
+    
+        const maxTries = 5;
+        let tries = 0;
+    
+        while (tries < maxTries) {
+          try {
             addresses = await this.contract.getPermittedAddresses(tokenId)
-        }catch(e: any){
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            if ( addresses.length <= 0){
+                tries++;
+                continue;
+            }else{
+                break;
+            }
+          } catch (e: any) {
             console.log("[getPermittedAddresses] error<e.message>:", e.message);
-            addresses = [];
+            tries++;
+          }
         }
 
         return addresses;
-
     }
 
     /**

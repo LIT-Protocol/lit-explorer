@@ -37,6 +37,8 @@ export default async function handler(
         actions = await pkpPermissionsContract.read.getPermittedActions(pkpId);
         console.log('[api/get-permitted-by-pkp] output<addresses>:', addresses);
         console.log('[api/get-permitted-by-pkp] output<actions>:', actions);
+        // await for 1 second
+        await new Promise(resolve => setTimeout(resolve, 1000));
         break;
       } catch (error) {
         console.log(`[api/get-permitted-by-pkp] error[${tries}]:`, error);
