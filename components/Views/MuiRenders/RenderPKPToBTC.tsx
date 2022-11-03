@@ -29,6 +29,8 @@ export const Address = ({
     // -- (mounted)
     useEffect(() => {
 
+        if( ! routerContract?.read ) return;
+
         (async() => {
 
             if( address ) return;
@@ -41,7 +43,7 @@ export const Address = ({
 
         })();
 
-    }, [])
+    }, [routerContract?.read])
 
     // -- (validation)
     if( ! address ) return <>Loading...</>
