@@ -7,7 +7,7 @@ const LitActionsByPKPId = ({ pkpId }: { pkpId: any }) => {
     <>
       <LoadData
         debug={false}
-        cache={false}
+        cache={true}
         i18n={{
           titleId: "authorised action - title",
           loadingId: "authorised action - loading",

@@ -23,7 +23,7 @@ const PKPsByOwnerAddress = ({ownerAddress, options} : {
     return (
         <LoadData
             height={options?.height}
-            cache={false}
+            cache={true}
             key={ownerAddress.toString()}
             debug={false}
             title={options?.title ?? `PKPs by a given address: ${heyShorty(ownerAddress, 4)}`}

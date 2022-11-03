@@ -35,6 +35,10 @@ export const cacheFetch = (url: string, callback: Function, useCache = true) => 
   let storage : any = localStorage.getItem(url);
   let isExpired = JSON.parse(storage)?.expire;
 
+  if( useCache){
+    console.log("USE CACHE:", url);
+  }
+
   // -- (cache not used) ignore using cache, using it like a normal fetch()
   if( ! useCache ){
     fetchAndCache(url, callback);
