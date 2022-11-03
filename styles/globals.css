@@ -522,3 +522,13 @@ button#demo-customized-button {
 .mt-12{
 	margin-top: 12px;
 }
+
+.link{
+	color: #0000EA;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.link:visited {
+	color: #491677;
+	text-decoration: underline;
+}

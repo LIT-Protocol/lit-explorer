@@ -23,9 +23,9 @@ const RenderLink = (props: GridRenderCellParams, options: MyOptions) => {
         return (
             <>
                 <div className="flex justify-cell">
-                    <a className="flex-content" href={`${AppRouter.getPage(value)}`} onClick={() => router.push(AppRouter.getPage(value))}>
+                    <span id={`link-${value}`} className="flex-content link" onClick={() => router.push(AppRouter.getPage(value))}>
                         { options?.short ? heyShorty(v) : v }
-                    </a>                    
+                    </span>                    
                     { options?.copy ? <Copy value={v} /> : '' }
                 </div>
             </>

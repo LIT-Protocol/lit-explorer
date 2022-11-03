@@ -18,7 +18,6 @@ import { AppRouter } from "../../utils/AppRouter";
 import { ABIS } from "../../ABIsFallback";
 import { PKPPermissionsContract } from "../../utils/blockchain/contracts/PKPPermissionsContract";
 import { PKPHelperContract } from "../../utils/blockchain/contracts/PKPHelperContract";
-import { withIronSessionSsr } from "iron-session/next";
 
 declare global {
     interface Window{
@@ -428,7 +427,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             login: onLogin,
             logout: onLogout,
             ownerAddress: ownerAddress,
-        }
+        },
     }
 
     return (
