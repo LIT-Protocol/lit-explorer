@@ -5,7 +5,8 @@ import RenderLink from "./MuiRenders/RenderLink";
 const PKPOwners = () => {
 
     return (
-        <LoadData 
+        <LoadData
+            height={500}
             debug={false}
             title="All Owners of PKPs:"
             errorMessage="No PKP owners found."
