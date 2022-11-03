@@ -10,7 +10,7 @@ declare global {
     }
 }
 
-const tests = ({ data } : { data: any }) => {
+const Tests = ({ data } : { data: any }) => {
 
   const [counter, setCounter] = useState(data);
 
@@ -44,10 +44,10 @@ const tests = ({ data } : { data: any }) => {
     </>
   );
 };
-export default tests;
+export default Tests;
 
 
-tests.getLayout = function getLayout(page: any) {
+Tests.getLayout = function getLayout(page: any) {
   
   return (
     <MainLayout>
