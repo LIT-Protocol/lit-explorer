@@ -53,10 +53,14 @@ export const Address = ({
 
         return (
             <>
-                {/* <a href={`${AppRouter.getPage(address)}`} onClick={() => router.push(AppRouter.getPage(address))}> */}
-                { options?.short ? heyShorty(address) : address }
-                {/* </a> */}
-                { options?.copy ? <Copy value={address} /> : '' }
+                <div className="flex justify-cell">
+                    {/* <a href={`${AppRouter.getPage(address)}`} onClick={() => router.push(AppRouter.getPage(address))}> */}
+                        <div className="flex-content">
+                        { options?.short ? heyShorty(address) : address }
+                        </div>
+                    {/* </a> */}
+                    { options?.copy ? <Copy value={address} /> : '' }
+                </div>
             </>
         )
 

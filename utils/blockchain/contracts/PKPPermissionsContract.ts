@@ -7,6 +7,7 @@ import { asyncForEach } from "../../utils";
 import { Either } from "monet";
 import { getBytesFromMultihash } from "../../ipfs/ipfsHashConverter";
 import { RouterContract } from "./RouterContract";
+import { tryUntil } from "../../tryUntil";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -94,16 +95,27 @@ export class ReadPKPPermissionsContract{
         console.log("[getPermittedAddresses] input<tokenId>:", tokenId);
         
         let addresses;
-        
-        try{
+    
+        const maxTries = 5;
+        let tries = 0;
+    
+        while (tries < maxTries) {
+          try {
             addresses = await this.contract.getPermittedAddresses(tokenId)
-        }catch(e: any){
-            console.log("[getPermittedAddresses] error<e.message>:", e.message);
-            addresses = [];
+            if ( addresses.length <= 0){
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                tries++;
+                continue;
+            }else{
+                break;
+            }
+          } catch (e: any) {
+            console.log(`[getPermittedAddresses] error<e.message | ${tries}>:`, e.message);
+            tries++;
+          }
         }
 
         return addresses;
-
     }
 
     /**
@@ -117,10 +129,32 @@ export class ReadPKPPermissionsContract{
      */
     getPermittedActions = async (id: any) : Promise<Array<any>>=> {
 
-        const actions = await this.contract.getPermittedActions(id);
+        // const actions = await this.contract.getPermittedActions(id);
+
+        let actions;
+    
+        const maxTries = 5;
+        let tries = 0;
+    
+        while (tries < maxTries) {
+          try {
+            actions = await this.contract.getPermittedActions(id)
+
+            if ( actions.length <= 0){
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                tries++;
+                continue;
+            }else{
+                break;
+            }
+          } catch (e: any) {
+            console.log(`[getPermittedActions] error<e.message | ${tries}>:`, e.message);
+            tries++;
+          }
+        }
 
         return actions;
-
+        
     }
 
     /**

@@ -25,24 +25,8 @@ export default async function handler(
     
     await pkpPermissionsContract.connect()
     
-    let addresses;
-    let actions;
-
-    const maxTries = 5;
-    let tries = 0;
-
-    while (tries < maxTries) {
-      try {
-        addresses = await pkpPermissionsContract.read.getPermittedAddresses(pkpId);
-        actions = await pkpPermissionsContract.read.getPermittedActions(pkpId);
-        console.log('[api/get-permitted-by-pkp] output<addresses>:', addresses);
-        console.log('[api/get-permitted-by-pkp] output<actions>:', actions);
-        break;
-      } catch (error) {
-        console.log(`[api/get-permitted-by-pkp] error[${tries}]:`, error);
-        tries++;
-      }
-    }
+    let addresses = await pkpPermissionsContract.read.getPermittedAddresses(pkpId);
+    let actions = await pkpPermissionsContract.read.getPermittedActions(pkpId);
 
     const data = { addresses, actions }
     

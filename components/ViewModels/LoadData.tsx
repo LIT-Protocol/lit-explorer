@@ -31,6 +31,7 @@ const LoadData = (props: LoadDataProps) => {
   const [rows, setRows] = useState([]);
   const [isLoading, setLoading] = useState(false)
   const [debug, setDebug] = useState(props?.debug ?? false);
+  const [cache, setCache] = useState(props?.cache ?? false);
 
 
   /**
@@ -87,9 +88,10 @@ const LoadData = (props: LoadDataProps) => {
 
     // -- if fetch path is provided
     if( ! props?.useData){
+      console.log("props.cache:", props);
       cacheFetch(`${props.fetchPath}`, async (rawData: any) => {
         preloadData(rawData);
-      }, props.cache ?? true);
+      }, cache);
       return;
     }
 

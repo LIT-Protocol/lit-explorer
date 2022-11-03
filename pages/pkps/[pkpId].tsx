@@ -8,6 +8,7 @@ import MyCard from "../../components/UI/MyCard";
 import PubKeyByPKPId from "../../components/Views/Parts/PubKeyByPKPId";
 import ETHAddressByPKPId from "../../components/Views/Parts/ETHAddressByPKPId";
 import { appendEvenWidths } from "../../utils/mui/mui";
+import LitActionsByPKPId from "../../components/Views/LitActionsByPKPId";
 
 declare global {
   interface Window{
@@ -33,33 +34,9 @@ const PKPsPageById: NextPageWithLayout = () => {
       </MyCard>
       
       <PKPPermittedControllersByPKPId pkpId={pkpId}/>
+
+      <LitActionsByPKPId pkpId={pkpId}/>
       
-      <LoadData
-        debug={false}
-        i18n={{
-          titleId: 'authorised action - title',
-          loadingId: 'authorised action - loading',
-          errorMessageId: 'authorised action - error',
-        }}
-        fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
-        filter={async (rawData: any) => {
-          console.log("[pkpId] input<rawData>", rawData);
-          return rawData?.data?.actions;
-        } }
-        renderCols={(width: number) => {
-          return appendEvenWidths([
-            { headerName: "IPFS ID", field: "action", renderCell: RenderAction}
-          ], width);
-        } }
-        renderRows={(filteredData: any) => {
-          return filteredData?.map((item: any, i: number) => {
-            return {
-              id: i + 1,
-              action: item,
-            };
-          });
-        } }    
-        />
     </>
   )
 }

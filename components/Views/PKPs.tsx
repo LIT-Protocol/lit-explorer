@@ -9,6 +9,7 @@ const PKPs = () => {
 
     return (
         <LoadData
+            height={500}
             debug={false}
             cache={true}
             title="10 Latest PKPs Minted by other users"

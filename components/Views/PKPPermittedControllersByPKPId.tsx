@@ -66,7 +66,7 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: {
         <LoadData
           key={pkpId?.toString()}
           debug={false}
-          cache={cache}
+          cache={true}
           title="Authorised PKP Controllers:"
           renderStatus={renderStatus()}
           errorMessage="No PKP owners found."
