@@ -6,7 +6,7 @@ import { NextPage } from 'next';
 import NProgress from 'nprogress';
 import "nprogress/nprogress.css";
 import Router from 'next/router';
-import { AppContextProvider, useAppContext } from '../components/Contexts/AppContext';
+import { AppContextProvider } from '../components/Contexts/AppContext';
 import { I18Provider, LOCALES } from '../components/Contexts/i18n';
 import { Analytics } from '@vercel/analytics/react';
 

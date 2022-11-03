@@ -30,11 +30,13 @@ export const Address = ({
     // -- (mounted)
     useEffect(() => {
 
+        if( ! routerContract?.read ) return;
+
         (async() => {
 
             if( address ) return;
 
-            const _pubKey = await routerContract.read.getFullPubKey(pkpId);
+            const _pubKey = await routerContract?.read.getFullPubKey(pkpId);
 
             const _address = '0x' + pub2Addr(_pubKey);
 
@@ -44,7 +46,7 @@ export const Address = ({
 
         })();
 
-    }, [])
+    }, [routerContract?.read])
 
     // -- (validation)
     if( ! address ) return <>Loading...</>

@@ -506,9 +506,15 @@ button#demo-customized-button {
 .ml-12{
 	margin-left: 12px
 }
-
-.width-full{
+.width-full, .w-full{
 	width: 100%;
+}
+.flex-content-x{
+	margin-left: auto;
+	margin-right: auto;
+}
+.h-full{
+	height: 100%;
 }
 .w-240{
 	width: 240px;

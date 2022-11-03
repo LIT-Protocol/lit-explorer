@@ -32,18 +32,41 @@ const ActionsPage: NextPageWithLayout = () => {
   const [refresh, setRefresh] = useState(0);
   const [hasPKPs, setHasPKPs] = useState(false);
   const [actionRegistered, setActionRegistered] = useState(false);
+  const [counter, setCounter] = useState(5);
 
   // -- (mounted)
   useEffect(() => {
     
     // -- param is not ready
-    if(!ipfsId) return;
+    if( ! ipfsId ) return;
 
     (async () => {
 
-      const code = await fetchActionCode((ipfsId as string));
+      const error = 'The owner of this gateway does not have this content pinned to their Pinata account. In order to view this content, please reach out to the owner. - ERR_ID:00006';
 
-      setCode(code);
+      let code : any = null;
+
+      if ( counter >= 5){
+        code = await fetchActionCode((ipfsId as string));
+      }
+
+      if ( code ===  error|| code === null){
+        setCode('404');
+
+        setTimeout(() => {
+          
+          setCounter(prev => prev - 1);
+
+          if( counter <= 0){
+            setCounter(5);
+          }
+
+        }, 1000);
+      }else{
+        setCode(code);
+        clearTimeout();
+      }
+
 
       // -- checks
       await checkifUserHasPKPs();
@@ -52,7 +75,11 @@ const ActionsPage: NextPageWithLayout = () => {
 
     })();
 
-  }, [ipfsId])
+    return () => {
+      clearTimeout();
+    }
+
+  }, [ipfsId, counter])
 
   // -- (void) check has PKP
   const checkifUserHasPKPs = async () => {
@@ -96,6 +123,17 @@ const ActionsPage: NextPageWithLayout = () => {
 
   // -- (render) content
   const renderCode = () => {
+
+    if( code === '404' ){
+      return (
+        <>
+          404 - Code is not ready or it does not exist. Please try again later. <br/>
+          { counter <= 0 ? <CircularProgress/> : `Refershing in ${counter} second${counter > 1 ? 's' : ''}...`}
+          
+        </>
+      )
+    }
+
     return (
       <div className="code-editor mt-12">
         <MonacoEditor
@@ -144,7 +182,7 @@ const ActionsPage: NextPageWithLayout = () => {
     if( ! hasPKPs && ! actionRegistered) return _renderLoading();
     if( ! hasPKPs ) return _renderNoPKPsFound();
     // if( ! actionRegistered ) return _renderActionNotRegistered();
-    
+    if ( code === '404' ) return <></>
     // -- (finally)
     return (
       <MyCard title={'PKP & Lit Action Settings'} className="mt-24">

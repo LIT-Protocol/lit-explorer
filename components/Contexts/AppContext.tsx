@@ -18,6 +18,7 @@ import { AppRouter } from "../../utils/AppRouter";
 import { ABIS } from "../../ABIsFallback";
 import { PKPPermissionsContract } from "../../utils/blockchain/contracts/PKPPermissionsContract";
 import { PKPHelperContract } from "../../utils/blockchain/contracts/PKPHelperContract";
+import { withIronSessionSsr } from "iron-session/next";
 
 declare global {
     interface Window{
@@ -73,6 +74,8 @@ export const AppContextProvider = ({children}: {children: any}) => {
     const [web3Connected, setWeb3Connected] = useState(false);
     const [contractsLoaded, setContractsLoaded] = useState(false);
     const [clickedConnectWallet, setClickedConnectWallet] = useState(false);
+    const [logged, setLogged] = useState<any>(null);
+    const [loading, setLoading] = useState<any>(false);
     
     const injectGlobalFunctions = () => {
 
@@ -232,9 +235,15 @@ export const AppContextProvider = ({children}: {children: any}) => {
         return { installed, walletConnected, eventsListened, connected, logged }
     }
 
-    useEffect(() => {
+    const delay = async () => new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(true);
+        }, 500);
+    });
 
-        // console.warn("...running useEffect");
+    useEffect(() => {
+        
+        console.warn("...running useEffect:");
 
         /**
          * Export bunch of functions so you can test on the browser
@@ -242,6 +251,19 @@ export const AppContextProvider = ({children}: {children: any}) => {
         injectGlobalFunctions();
 
         (async () => {
+
+            // -- session status
+            const status = await fetch('/api/sessions/status').then((res) => res.json());
+            const isLogged = status?.logged ?? false;
+
+            if( isLogged ){
+                setLoading(true);
+                await delay();
+                setLoading(false);
+            }
+            console.log("isLogged:", isLogged);
+
+            setLogged(isLogged);
 
             // -- If a web3 provider is installed && cache key is found in the local storage
             console.warn(`${MyWeb3().installed ? '✅ ' : '❌ '}MyWeb3().installed`)
@@ -314,6 +336,9 @@ export const AppContextProvider = ({children}: {children: any}) => {
     // -- (event) handle login
     const onLogin = async () => {
 
+        const session = await fetch('/api/sessions/login').then((res) => res.json());
+        console.log("Session:", session);
+
         setClickedConnectWallet(true);
 
         console.warn('[onLogin]')
@@ -354,20 +379,30 @@ export const AppContextProvider = ({children}: {children: any}) => {
 
     // -- (event) logout of web 3
     const onLogout = async () => {
+
+        const session = await fetch('/api/sessions/logout').then((res) => res.json());
+        console.log("Session:", session);
+
         console.log("onLogout:", onLogout);
         setClickedConnectWallet(false);
         setWeb3Connected(false);
         setContractsLoaded(false);
         localStorage.removeItem(STORAGE_KEYS.LOGGED)
         localStorage.removeItem(STORAGE_KEYS.WALLET_CONNECTED)
-        localStorage.removeItem(STORAGE_KEYS.WALLET_EVENTS)
+        localStorage.removeItem(STORAGE_KEYS.WALLET_EVENTS);
+
+        setLoading(false);
+        setLogged(false);
     }
 
     // -- (render) web3 not logged
     const renderNotLogged = () => {
 
+        if( logged || logged === null || loading) return <div className="w-full h-full flex"><CircularProgress className="flex-content flex-content-x"/></div>
+        
         return (
             <div className="flex login">
+
                 <div className="text-center m-auto">
                     <Typography variant="h4">Welcome to Lit Explorer! 👋🏻</Typography>
                     <p className="paragraph">Please sign-in to your web3 account and start the adventure.</p>
