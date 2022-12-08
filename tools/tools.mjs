@@ -42,7 +42,7 @@ if (OPTION === '--publish') {
 
     }
 
-    if( ENV === 'collabland') {
+    if (ENV === 'collabland') {
         greenLog('Switching to mumbai.explorer.litprotocol.com', true);
 
         const fileContent = await readFile('./tools/getDeployedContracts.mjs');
@@ -53,15 +53,35 @@ if (OPTION === '--publish') {
     }
 
     await childRunCommand('yarn build');
+
+    const ENV2 = args[2];
+
+    if( ! ENV2 || ENV2 === '' || ENV2 === '--help') {
+        greenLog(`
+            Usage: node tools/tools.mjs --publish [env] [option]
+            Options:
+                --prod: publish to production
+                --test: publish to test
+        `, true);
+    }
+
+    if (ENV2 === '--prod') {
+        await childRunCommand('vercel --prod');
+    }
+
+    if( ENV2 === '--test'){
+        await childRunCommand('vercel');
+    }
+
     exit();
 }
 
-if( OPTION === '--fetch-contracts'){
+if (OPTION === '--fetch-contracts') {
     await childRunCommand('node tools/getDeployedContracts.mjs');
     exit();
 }
 
-if( OPTION === '--fetch-demos'){
+if (OPTION === '--fetch-demos') {
     await childRunCommand('node tools/getServerlessFunctionTest.mjs');
     exit();
 }
