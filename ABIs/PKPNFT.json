@@ -1,5 +1,5 @@
 {
-  "address": "0x8BE80a3DFa4b82607F469bd0E63C9a4bc2b277A9",
+  "address": "0xD72599E5b5e618258d0C0eA1152f27Dfc8595a33",
   "abi": [
     {
       "inputs": [],
@@ -555,6 +555,19 @@
     },
     {
       "inputs": [],
+      "name": "pkpNftMetadata",
+      "outputs": [
+        {
+          "internalType": "contract PKPNFTMetadata",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "pkpPermissions",
       "outputs": [
         {
@@ -733,6 +746,19 @@
         }
       ],
       "name": "setMintCost",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "pkpNftMetadataAddress",
+          "type": "address"
+        }
+      ],
+      "name": "setPkpNftMetadataAddress",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

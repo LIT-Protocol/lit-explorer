@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "fetchContracts": "node ./tools/getDeployedContracts.mjs",
-    "fetchDemos": "node ./tools/getServerlessFunctionTest.mjs"
+    "fetchDemos": "node ./tools/getServerlessFunctionTest.mjs",
+    "tools": "node ./tools/tools.mjs"
   },
   "dependencies": {
     "@celo-tools/celo-ethers-wrapper": "^0.3.0",

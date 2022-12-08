@@ -15,7 +15,6 @@ import NavPath from "../UI/NavPath";
 import SearchBar from "../Forms/SearchBar";
 import router from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
-import { ABIS } from "../../ABIsFallback";
 import { PKPPermissionsContract } from "../../utils/blockchain/contracts/PKPPermissionsContract";
 import { PKPHelperContract } from "../../utils/blockchain/contracts/PKPHelperContract";
 
@@ -95,8 +94,7 @@ export const AppContextProvider = ({children}: {children: any}) => {
             SupportedSearchTypes,
             SEARCH_ROUTES,
             ROUTES,
-            DEFAULT_LIT_ACTION,
-            ABIS,
+            DEFAULT_LIT_ACTION
         }
     }
     

@@ -83,9 +83,9 @@ export class ReadRouterContract{
         let pubKey = await this.contract.getPubkey(tokenId);
 
         // Backward compatibility for CELO
-        if ( ! pubKey ){
-            pubKey = await this.contract.getFullPubKey(tokenId);
-        }
+        // if ( ! pubKey ){
+        //     pubKey = await this.contract.getFullPubKey(tokenId);
+        // }
 
         return pubKey;
     

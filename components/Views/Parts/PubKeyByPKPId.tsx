@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
@@ -22,7 +23,7 @@ const PubKeyByPKPId = ({
 
         (async() => {
 
-            const _pubKey = await routerContract.read.getFullPubKey(pkpId)
+            const _pubKey = await routerContract.read.getFullPubKey(pkpId);
 
             setPubKey(_pubKey);
 
