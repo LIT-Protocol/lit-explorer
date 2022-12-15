@@ -74,15 +74,15 @@ export const pub2Addr = (pubKey: string) => {
 
     // Decode public key
     const key = ec.keyFromPublic(_pubKey, "hex");
-    console.log("[pub2Addr] converted<key>:", key);
+    // console.log("[pub2Addr] converted<key>:", key);
 
     // Convert to uncompressed format
     const publicKey = key.getPublic().encode("hex").slice(2);
 
     // Now apply keccak
     address = keccak256(Buffer.from(publicKey, "hex")).slice(64 - 40);
-    console.log("[pub2Addr] converted<publicKey>:", publicKey);
-    console.log("[pub2Addr] converted<address>:", address);
+    // console.log("[pub2Addr] converted<publicKey>:", publicKey);
+    // console.log("[pub2Addr] converted<address>:", address);
 
     return address;
   } catch (err) {
@@ -95,13 +95,13 @@ export const pub2Addr = (pubKey: string) => {
 
 export const pub2BTC = (pubKey: string) => {
   const ECDSA_PUB_KEY = pubKey.replaceAll("0x", "");
-  console.log("[pub2BTC] input<ECDSA_PUB_KEY>:", ECDSA_PUB_KEY);
+  // console.log("[pub2BTC] input<ECDSA_PUB_KEY>:", ECDSA_PUB_KEY);
 
   const pubkey = Buffer.from(ECDSA_PUB_KEY, "hex");
 
   const { address } = bitcoinjs.payments.p2pkh({ pubkey });
 
-  console.log("[pub2BTC] converted<address>:", address);
+  // console.log("[pub2BTC] converted<address>:", address);
 
   return address;
 };

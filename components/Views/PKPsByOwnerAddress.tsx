@@ -25,7 +25,7 @@ const PKPsByOwnerAddress = ({
   return (
     <LoadData
       height={options?.height}
-      cache={true}
+      cache={false}
       key={ownerAddress.toString()}
       debug={false}
       title={

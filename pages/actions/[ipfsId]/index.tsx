@@ -12,7 +12,6 @@ import { useAppContext } from "../../../components/Contexts/AppContext";
 import getWeb3Wallet from "../../../utils/blockchain/getWeb3Wallet";
 import MyButton from "../../../components/UI/MyButton";
 import { ROUTES } from "../../../app_config";
-import ButtonActionRegisterByIPFSId from "../../../components/Forms/ButtonActionRegisterByIPFSId";
 import Refreshable from "../../../components/ViewModels/Refreshable";
 import MyDescription from "../../../components/UI/MyDescription";
 
@@ -64,7 +63,7 @@ const ActionsPage: NextPageWithLayout = () => {
         }, 1000);
       }else{
         setCode(code);
-        clearTimeout();
+        clearTimeout(0);
       }
 
 
@@ -76,7 +75,7 @@ const ActionsPage: NextPageWithLayout = () => {
     })();
 
     return () => {
-      clearTimeout();
+      clearTimeout(0);
     }
 
   }, [ipfsId, counter])

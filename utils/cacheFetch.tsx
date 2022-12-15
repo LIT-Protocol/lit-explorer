@@ -1,59 +1,94 @@
-const fetchAndCache = async (url: string, callback: Function) => {
-
-  console.warn(`[fetchAndCache] fetching new: ${url}`);
-
-  fetch(url).then((res) => res.json()).then((data) => {
-
-    console.log("fetchAndCache data:", data);
-    var date = new Date();
-    var expires = new Date();
-    expires.setTime(date.getTime() + (60 * 1000));
-
-    localStorage.setItem(url, JSON.stringify({
-      data,
-      expire: expires.getTime()
-    }));
-
-    callback(data);
-  })
-}
-
 /**
- * 
- * cacheFetch is like fetch but caching the first fetched data
- * into user's local storage for a minute to avoid user keep loading
- * the same data in a small period of time
- * 
- * @param url 
- * @param callback 
- * @param useCache 
- * @returns 
+ *
+ * CacheFetch will keep your data in local storage for a minute and avoid user keep loading it.
+ *
+ * @param url
+ * @param callback
+ * @param useCache
+ * @returns
  */
-export const cacheFetch = (url: string, callback: Function, useCache = true) => {
+export const cacheFetch = async (
+  url: string,
+  callback: Function,
+  useCache = true,
+  {
+    cacheExpire = 60 * 1000, // 1 minute
+  }
+) => {
+  console.log(`
+  // =================================
+  //          FETCHING DATA                                    
+  // =================================
+`);
+  let storageItem: any;
 
-  let data;
-  let storage : any = localStorage.getItem(url);
-  let isExpired = JSON.parse(storage)?.expire;
+  try {
+    storageItem = localStorage.getItem(url);
+    storageItem = JSON.parse(storageItem);
+  } catch (e) {
+    console.log("ERROR:", e);
+  }
 
-  if( useCache){
+  let expireDate = storageItem?.expire;
+  // turn timestamp into readable date
+  expireDate = new Date(expireDate);
+  let isExpired = new Date().getTime() > expireDate;
+
+  // create a console.log table for the data
+  console.table({
+    url,
+    useCache,
+    storageItem,
+    expireDate,
+    isExpired,
+  });
+
+  if (useCache) {
     console.log("USE CACHE:", url);
   }
 
+  // =================================================
+  //          FRESH FETCH - NOT USING CACHE
+  // =================================================
   // -- (cache not used) ignore using cache, using it like a normal fetch()
-  if( ! useCache ){
-    fetchAndCache(url, callback);
+  if (!useCache) {
+    const res = await fetch(url).then((res) => res.json());
+    callback(res);
     return;
   }
 
+  // ===========================================
+  //          USE CACHE & NOT EXPIRED
+  // ===========================================
   // -- (cached and not expired) check if exists in the storage or if the cache expires
-  if (storage && new Date().getTime() < isExpired){
+  if (storageItem && !isExpired) {
     console.warn(`[cacheFetch] using cache: ${url}`);
-    data = JSON.parse(storage);
-    callback(data.data);
+    callback(storageItem.data);
 
-  // -- (not cached and not expired) if it's expired or not in the storage, then run fetch() normally
-  }else{
-    fetchAndCache(url, callback)
+    // ==================================================
+    //          CACHE EXPIRED - SO FETCH AGAIN
+    // ==================================================
+    // -- (not cached and not expired) if it's expired or not in the storage, then run fetch() normally
+  } else {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("fetchAndCache data:", data);
+        var date = new Date();
+        var expires = new Date();
+
+        // expires in 1 minute
+        expires.setTime(date.getTime() + cacheExpire);
+
+        localStorage.setItem(
+          url,
+          JSON.stringify({
+            data,
+            expire: expires.getTime(),
+          })
+        );
+
+        callback(data);
+      });
   }
-
-}
+};

@@ -266,6 +266,10 @@ export const AppContextProvider = ({children}: {children: any}) => {
             console.warn(`${MyWeb3().installed ? '✅ ' : '❌ '}MyWeb3().installed`)
             console.warn(`${MyWeb3().walletConnected ? '✅ ' : '❌ '}MyWeb3().walletConnected`)
 
+            if( ! MyWeb3().walletConnected ){
+                setLogged(false);
+            }
+
             // -- If both web provider is installed and wallet is connected
             if ( MyWeb3().connected && !contractsLoaded ){
 
