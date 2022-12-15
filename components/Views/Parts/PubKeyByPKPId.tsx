@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
