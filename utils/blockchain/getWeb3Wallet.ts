@@ -26,13 +26,10 @@ const getWeb3Wallet = async (): Promise<Web3WalletProps | never> => {
     return defaultProps;
   }
 
-  // const web3ProviderRequest =
-
   try {
-    const res = await web3Provider.send("wallet_switchEthereumChain", [
+    await web3Provider.send("wallet_switchEthereumChain", [
       { chainId: APP_CONFIG.NETWORK.params.chainId },
     ]);
-    console.log("Switched:", res);
   } catch (e) {
     await web3Provider.request({
       method: "wallet_addEthereumChain",

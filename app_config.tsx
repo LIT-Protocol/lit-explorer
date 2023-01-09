@@ -49,7 +49,10 @@ export const SUPPORTED_CHAINS = {
             chainId: "0x13881",
             chainName: "Mumbai",
             nativeCurrency: { name: "Matic", symbol: "MATIC", decimals: 18 },
-            rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
+            rpcUrls: [
+                "https://matic-mumbai.chainstacklabs.com",
+                "https://matic-testnet-archive-rpc.bwarelabs.com",
+            ],
             blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
             iconUrls: ["future"],
         }
@@ -141,8 +144,8 @@ export const APP_CONFIG = {
         NAME: 'MUMBAI TESTNET',
     },
     ECDSA_KEY: 2,
-    IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
-    IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
+    IPFS_PIN_NAME: 'Lit Explorer v0.0.4',
+    IPFS_PATH: 'https://lit.mypinata.cloud/ipfs',
     ALCHEMY: {
         API: 'https://polygon-mainnet.g.alchemy.com/v2/',
         SETTINGS: {
