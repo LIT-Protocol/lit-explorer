@@ -29,7 +29,7 @@ export default async function handler(
   const API = process.env.PINATA_API ?? '';
   const SECRET = process.env.PINATA_SECRET ?? '';
 
-  const pinata = pinataSDK(API, SECRET);
+  const pinata = new pinataSDK(API, SECRET);
 
   let filters: any = {
     metadata: {
