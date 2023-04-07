@@ -100,7 +100,7 @@ export const DEFAULT_LIT_ACTION = `const go = async () => {
 export const APP_CONFIG = {
 	// ---------- MUMBAI ----------
 	// -- explorer address
-	EXPLORER: CURRENT_CHAIN.params.blockExplorerUrls[0],
+	EXPLORER: "https://lit-protocol.calderaexplorer.xyz/address/",
 	NETWORK_NAME: CURRENT_NETWORK,
 	NETWORK: CURRENT_CHAIN,
 	NETWORK_LABEL: {

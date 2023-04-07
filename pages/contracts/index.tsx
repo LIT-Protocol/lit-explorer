@@ -33,7 +33,7 @@ const rows = [
 const ContractsPage: NextPageWithLayout = () => {
 	return (
 		<>
-			<h1>On Mumbai:</h1>
+			<h1>Chronicle Testnet - Lit Protocol</h1>
 			<TableContainer component={Paper}>
 				<Table sx={{ minWidth: 650 }} aria-label="simple table">
 					<TableHead>
