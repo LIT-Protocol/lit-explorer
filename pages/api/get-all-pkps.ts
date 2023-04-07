@@ -16,7 +16,7 @@ export default async function handler(
 
 	await pkpContract.connect();
 
-	const tokens = await pkpContract.read.getTokens(1);
+	const tokens = await pkpContract.read.getTokens(10);
 	
 	const data = {
 		tokens,

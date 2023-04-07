@@ -61,7 +61,9 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 
 			const tokenId = mintRes.tokenId;
 
-			setMintedPKPId(hexToDecimal(tokenId));
+			console.log("XX tokenId:", tokenId);
+
+			setMintedPKPId(tokenId);
 
 			const isRouted = await tryUntil({
 				onlyIf: async () => await routerContract.read.isRouted(tokenId),
