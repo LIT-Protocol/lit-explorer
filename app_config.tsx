@@ -107,17 +107,10 @@ export const APP_CONFIG = {
 		ENABLED: true,
 		NAME: "Chronicle Testnet",
 	},
-    API_URL: "https://lit-protocol.calderaexplorer.xyz/api",
+	API_URL: "https://lit-protocol.calderaexplorer.xyz/api",
 	ECDSA_KEY: 2,
 	IPFS_PIN_NAME: "Lit Explorer v0.0.5",
 	IPFS_PATH: "https://lit.mypinata.cloud/ipfs",
-	// ALCHEMY: {
-	// 	API: "https://polygon-mainnet.g.alchemy.com/v2/",
-	// 	SETTINGS: {
-	// 		apiKey: "1RhaaWmdAOzrjCMJV2aAawBCYXMoZL31", // !IMPORTANT! STORE IN PROCESS!
-	// 		network: Network.MATIC_MUMBAI,
-	// 	},
-	// },
 	// --- Main contracts used in this explorer
 	PKP_NFT_CONTRACT: {
 		ADDRESS: deployedContracts.pkpNftContractAddress,
