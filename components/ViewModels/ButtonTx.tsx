@@ -5,83 +5,77 @@ import { MyProgressI } from "../Forms/FormInputFields";
 import MyButton from "../UI/MyButton";
 
 interface ButtonTxLabels {
-    default: string,
-    executing: string,
+	default: string;
+	executing: string;
 }
 
-const ButtonDynamic = (props : {
-    transaction() : any
-    onProgress?(progress: MyProgressI) : void,
-    onError(e: any) : void,
-    labels: ButtonTxLabels,
-    icon?: ReactElement,
-    defaultButton?: boolean 
+const ButtonDynamic = (props: {
+	transaction(): any;
+	onProgress?(progress: MyProgressI): void;
+	onError(e: any): void;
+	labels: ButtonTxLabels;
+	icon?: ReactElement;
+	defaultButton?: boolean;
 }) => {
+	// -- (state)
+	const [label, setLabel] = useState<string>(props.labels.default);
 
-    // -- (state)
-    const [label, setLabel] = useState<string>(props.labels.default);
+	// -- (callback) trigger callback
+	const updateProgress = (progress: number, message: string) => {
+		setLabel(message);
 
-    // -- (callback) trigger callback
-    const updateProgress = (progress: number, message: string) => {
+		if (props.onProgress) {
+			props.onProgress({
+				progress,
+				message,
+			});
+		}
+	};
 
-        setLabel(message);
+	// -- (void) reset progress
+	const resetProgress = () => {
+		updateProgress(0, props.labels.default);
+	};
 
-        if(props.onProgress){
-            props.onProgress({
-                progress,
-                message,
-            });
-        }
-    }
+	// -- (action) handle execution
+	const handleExecute = async () => {
+		console.log("[handleExecute]");
 
-    // -- (void) reset progress
-    const resetProgress = () => {
-        updateProgress(0, props.labels.default)
-    };
+		updateProgress(50, props.labels.executing);
 
-    // -- (action) handle execution
-    const handleExecute = async () => {
-        
-        console.log("[handleExecute]");
+		let tx: any;
 
-        updateProgress(50, props.labels.executing);
+		try {
+			tx = await props.transaction();
+		} catch (e: any) {
+			props.onError(e);
+			resetProgress();
+			return;
+		}
 
-        let tx : any;
+		console.log("[handleExecute] tx:", tx);
 
-        try{
-            tx = await props.transaction();
-        }catch(e: any){
-            props.onError(e);
-            resetProgress();
-            return;
-        }
+		updateProgress(75, "Waiting for confirmation...");
 
-        console.log("[handleExecute] tx:", tx);
+		const res = await tx.wait();
 
-        updateProgress(75, 'Waiting for confirmation...');
+		updateProgress(100, "Done!");
 
-        const res = await tx.wait();
+		console.log("[handleRegister] res:", res);
 
-        updateProgress(100, 'Done!');
+		await wait(5000);
 
-        console.log("[handleRegister] res:", res);
-        
-        await wait(5000);
+		resetProgress();
+	};
 
-        resetProgress();
-
-    }
-
-    return (
-
-        <>
-        {
-            ! props.defaultButton ?
-            <Chip onClick={ handleExecute } icon={props.icon} label={label} /> : 
-            <MyButton onClick={ handleExecute }>{ label }</MyButton>
-        }
-        
-        </>
-    )
-}
+	return (
+		<>
+			{!props.defaultButton ? (
+				<Chip onClick={handleExecute} icon={props.icon} label={label} />
+			) : (
+				<MyButton onClick={handleExecute}>{label}</MyButton>
+			)}
+		</>
+	);
+};
 export default ButtonDynamic;

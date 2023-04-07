@@ -4,57 +4,73 @@ import { withIronSessionSsr } from "iron-session/next";
 
 // write an interface for globalThis
 declare global {
-    interface Window {
-        test: any;
-        mint: any;
-    }
+	interface Window {
+		test: any;
+		mint: any;
+	}
 }
 
-const Tests = ({ data } : { data: any }) => {
+const Tests = ({ data }: { data: any }) => {
+	const [counter, setCounter] = useState(data);
 
-  const [counter, setCounter] = useState(data);
+	useEffect(() => {
+		console.log("counter:", counter);
+	}, [counter]);
 
-  useEffect(() => {
-    console.log("counter:", counter);
-  }, [counter])
+	return (
+		<>
+			Counter: {JSON.stringify(counter)} <br />
+			<br />
+			<button
+				onClick={async () => {
+					const login = await fetch("/api/sessions/login").then(
+						(res) => res.json()
+					);
+					const status = await fetch("/api/sessions/status").then(
+						(res) => res.json()
+					);
 
-  return (
-    <>
+					setCounter(status);
+				}}
+			>
+				Login
+			</button>
+			<br />
+			<br />
+			<button
+				onClick={async () => {
+					const logout = await fetch("/api/sessions/logout").then(
+						(res) => res.json()
+					);
+					const status = await fetch("/api/sessions/status").then(
+						(res) => res.json()
+					);
 
-    Counter: { JSON.stringify(counter) } <br/><br/>
-
-    <button onClick={async () => {
-      const login = await fetch('/api/sessions/login').then((res) => res.json());
-      const status = await fetch('/api/sessions/status').then((res) => res.json());
-
-      setCounter(status);
-    }}>Login</button>
-    <br/><br/>
-    <button onClick={async () => {
-      const logout = await fetch('/api/sessions/logout').then((res) => res.json());
-      const status = await fetch('/api/sessions/status').then((res) => res.json());
-
-      setCounter(status);
-    }}>Logout</button>
-    <br/><br/>
-    <button onClick={async () => {
-      const status = await fetch('/api/sessions/status').then((res) => res.json());
-      setCounter(status);
-    }}>Status</button>
-    </>
-  );
+					setCounter(status);
+				}}
+			>
+				Logout
+			</button>
+			<br />
+			<br />
+			<button
+				onClick={async () => {
+					const status = await fetch("/api/sessions/status").then(
+						(res) => res.json()
+					);
+					setCounter(status);
+				}}
+			>
+				Status
+			</button>
+		</>
+	);
 };
 export default Tests;
 
-
 Tests.getLayout = function getLayout(page: any) {
-  
-  return (
-    <MainLayout>
-      { page }
-    </MainLayout>
-  )
-}
+	return <MainLayout>{page}</MainLayout>;
+};
 
 // tests.getInitialProps = async (ctx: any) => {
 
@@ -73,23 +89,22 @@ Tests.getLayout = function getLayout(page: any) {
 // }
 
 export const getServerSideProps = withIronSessionSsr(
-  async function getServerSideProps({ req }) {
+	async function getServerSideProps({ req }) {
+		// @ts-ignore
+		console.log(req.session.logged);
 
-    // @ts-ignore
-    console.log(req.session.logged);
-
-    return {
-      props: {
-        data: req.session
-      },
-    };
-  },
-  {
-    cookieName: "is_logged",
-    password: "complex_password_at_least_32_characters_long",
-    // secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
-    cookieOptions: {
-      secure: process.env.NODE_ENV === "production",
-    },
-  },
+		return {
+			props: {
+				data: req.session,
+			},
+		};
+	},
+	{
+		cookieName: "is_logged",
+		password: "complex_password_at_least_32_characters_long",
+		// secure: true should be used in production (HTTPS) but can't be used in development (HTTP)
+		cookieOptions: {
+			secure: process.env.NODE_ENV === "production",
+		},
+	}
 );

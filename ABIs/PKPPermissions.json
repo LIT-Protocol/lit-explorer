@@ -1,795 +1,748 @@
 {
-  "address": "0x274d0C69fCfC40f71E57f81E8eA5Bd786a96B832",
-  "abi": [
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_pkpNft",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_router",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
-          "name": "userPubkey",
-          "type": "bytes"
-        }
-      ],
-      "name": "PermittedAuthMethodAdded",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        }
-      ],
-      "name": "PermittedAuthMethodRemoved",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "scopeId",
-          "type": "uint256"
-        }
-      ],
-      "name": "PermittedAuthMethodScopeAdded",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "scopeId",
-          "type": "uint256"
-        }
-      ],
-      "name": "PermittedAuthMethodScopeRemoved",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "ipfsCID",
-          "type": "bytes"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "scopes",
-          "type": "uint256[]"
-        }
-      ],
-      "name": "addPermittedAction",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "scopes",
-          "type": "uint256[]"
-        }
-      ],
-      "name": "addPermittedAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "internalType": "bytes",
-          "name": "userPubkey",
-          "type": "bytes"
-        },
-        {
-          "internalType": "uint256[]",
-          "name": "scopes",
-          "type": "uint256[]"
-        }
-      ],
-      "name": "addPermittedAuthMethod",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "internalType": "uint256",
-          "name": "scopeId",
-          "type": "uint256"
-        }
-      ],
-      "name": "addPermittedAuthMethodScope",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "authMethods",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "internalType": "bytes",
-          "name": "userPubkey",
-          "type": "bytes"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        }
-      ],
-      "name": "getAuthMethodId",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "pure",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getEthAddress",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getPermittedActions",
-      "outputs": [
-        {
-          "internalType": "bytes[]",
-          "name": "",
-          "type": "bytes[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getPermittedAddresses",
-      "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "",
-          "type": "address[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "internalType": "uint256",
-          "name": "maxScopeId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getPermittedAuthMethodScopes",
-      "outputs": [
-        {
-          "internalType": "bool[]",
-          "name": "",
-          "type": "bool[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getPermittedAuthMethods",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "authMethodType",
-              "type": "uint256"
-            },
-            {
-              "internalType": "bytes",
-              "name": "id",
-              "type": "bytes"
-            },
-            {
-              "internalType": "bytes",
-              "name": "userPubkey",
-              "type": "bytes"
-            }
-          ],
-          "internalType": "struct PKPPermissions.AuthMethod[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        }
-      ],
-      "name": "getPubkey",
-      "outputs": [
-        {
-          "internalType": "bytes",
-          "name": "",
-          "type": "bytes"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        }
-      ],
-      "name": "getTokenIdsForAuthMethod",
-      "outputs": [
-        {
-          "internalType": "uint256[]",
-          "name": "",
-          "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        }
-      ],
-      "name": "getUserPubkeyForAuthMethod",
-      "outputs": [
-        {
-          "internalType": "bytes",
-          "name": "",
-          "type": "bytes"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "ipfsCID",
-          "type": "bytes"
-        }
-      ],
-      "name": "isPermittedAction",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        }
-      ],
-      "name": "isPermittedAddress",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        }
-      ],
-      "name": "isPermittedAuthMethod",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "internalType": "uint256",
-          "name": "scopeId",
-          "type": "uint256"
-        }
-      ],
-      "name": "isPermittedAuthMethodScopePresent",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "pkpNFT",
-      "outputs": [
-        {
-          "internalType": "contract PKPNFT",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "ipfsCID",
-          "type": "bytes"
-        }
-      ],
-      "name": "removePermittedAction",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        }
-      ],
-      "name": "removePermittedAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        }
-      ],
-      "name": "removePermittedAuthMethod",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "tokenId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "authMethodType",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bytes",
-          "name": "id",
-          "type": "bytes"
-        },
-        {
-          "internalType": "uint256",
-          "name": "scopeId",
-          "type": "uint256"
-        }
-      ],
-      "name": "removePermittedAuthMethodScope",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "router",
-      "outputs": [
-        {
-          "internalType": "contract PubkeyRouter",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newPkpNftAddress",
-          "type": "address"
-        }
-      ],
-      "name": "setPkpNftAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newRouterAddress",
-          "type": "address"
-        }
-      ],
-      "name": "setRouterAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    }
-  ]
+	"address": "0x4aE1c599608586a4450652e1392CB5303ff170Cc",
+	"abi": [
+		{
+			"type": "constructor",
+			"stateMutability": "nonpayable",
+			"inputs": [
+				{
+					"type": "address",
+					"name": "_pkpNft",
+					"internalType": "address"
+				}
+			]
+		},
+		{
+			"type": "event",
+			"name": "OwnershipTransferred",
+			"inputs": [
+				{
+					"type": "address",
+					"name": "previousOwner",
+					"internalType": "address",
+					"indexed": true
+				},
+				{
+					"type": "address",
+					"name": "newOwner",
+					"internalType": "address",
+					"indexed": true
+				}
+			],
+			"anonymous": false
+		},
+		{
+			"type": "event",
+			"name": "PermittedAuthMethodAdded",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256",
+					"indexed": true
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256",
+					"indexed": false
+				},
+				{
+					"type": "bytes",
+					"name": "id",
+					"internalType": "bytes",
+					"indexed": false
+				},
+				{
+					"type": "bytes",
+					"name": "userPubkey",
+					"internalType": "bytes",
+					"indexed": false
+				}
+			],
+			"anonymous": false
+		},
+		{
+			"type": "event",
+			"name": "PermittedAuthMethodRemoved",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256",
+					"indexed": true
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256",
+					"indexed": false
+				},
+				{
+					"type": "bytes",
+					"name": "id",
+					"internalType": "bytes",
+					"indexed": false
+				}
+			],
+			"anonymous": false
+		},
+		{
+			"type": "event",
+			"name": "PermittedAuthMethodScopeAdded",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256",
+					"indexed": true
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256",
+					"indexed": false
+				},
+				{
+					"type": "bytes",
+					"name": "id",
+					"internalType": "bytes",
+					"indexed": false
+				},
+				{
+					"type": "uint256",
+					"name": "scopeId",
+					"internalType": "uint256",
+					"indexed": false
+				}
+			],
+			"anonymous": false
+		},
+		{
+			"type": "event",
+			"name": "PermittedAuthMethodScopeRemoved",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256",
+					"indexed": true
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256",
+					"indexed": false
+				},
+				{
+					"type": "bytes",
+					"name": "id",
+					"internalType": "bytes",
+					"indexed": false
+				},
+				{
+					"type": "uint256",
+					"name": "scopeId",
+					"internalType": "uint256",
+					"indexed": false
+				}
+			],
+			"anonymous": false
+		},
+		{
+			"type": "event",
+			"name": "RootHashUpdated",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256",
+					"indexed": true
+				},
+				{
+					"type": "uint256",
+					"name": "group",
+					"internalType": "uint256",
+					"indexed": true
+				},
+				{
+					"type": "bytes32",
+					"name": "root",
+					"internalType": "bytes32",
+					"indexed": false
+				}
+			],
+			"anonymous": false
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "addPermittedAction",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "ipfsCID", "internalType": "bytes" },
+				{
+					"type": "uint256[]",
+					"name": "scopes",
+					"internalType": "uint256[]"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "addPermittedAddress",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "address",
+					"name": "user",
+					"internalType": "address"
+				},
+				{
+					"type": "uint256[]",
+					"name": "scopes",
+					"internalType": "uint256[]"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "addPermittedAuthMethod",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "tuple",
+					"name": "authMethod",
+					"internalType": "struct PKPPermissions.AuthMethod",
+					"components": [
+						{
+							"type": "uint256",
+							"name": "authMethodType",
+							"internalType": "uint256"
+						},
+						{
+							"type": "bytes",
+							"name": "id",
+							"internalType": "bytes"
+						},
+						{
+							"type": "bytes",
+							"name": "userPubkey",
+							"internalType": "bytes"
+						}
+					]
+				},
+				{
+					"type": "uint256[]",
+					"name": "scopes",
+					"internalType": "uint256[]"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "addPermittedAuthMethodScope",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" },
+				{
+					"type": "uint256",
+					"name": "scopeId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" },
+				{
+					"type": "bytes",
+					"name": "userPubkey",
+					"internalType": "bytes"
+				}
+			],
+			"name": "authMethods",
+			"inputs": [
+				{ "type": "uint256", "name": "", "internalType": "uint256" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "pure",
+			"outputs": [
+				{ "type": "uint256", "name": "", "internalType": "uint256" }
+			],
+			"name": "getAuthMethodId",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "address", "name": "", "internalType": "address" }
+			],
+			"name": "getEthAddress",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "bytes[]", "name": "", "internalType": "bytes[]" }
+			],
+			"name": "getPermittedActions",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "address[]", "name": "", "internalType": "address[]" }
+			],
+			"name": "getPermittedAddresses",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "bool[]", "name": "", "internalType": "bool[]" }
+			],
+			"name": "getPermittedAuthMethodScopes",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" },
+				{
+					"type": "uint256",
+					"name": "maxScopeId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{
+					"type": "tuple[]",
+					"name": "",
+					"internalType": "struct PKPPermissions.AuthMethod[]",
+					"components": [
+						{
+							"type": "uint256",
+							"name": "authMethodType",
+							"internalType": "uint256"
+						},
+						{
+							"type": "bytes",
+							"name": "id",
+							"internalType": "bytes"
+						},
+						{
+							"type": "bytes",
+							"name": "userPubkey",
+							"internalType": "bytes"
+						}
+					]
+				}
+			],
+			"name": "getPermittedAuthMethods",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "bytes", "name": "", "internalType": "bytes" }
+			],
+			"name": "getPubkey",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "uint256[]", "name": "", "internalType": "uint256[]" }
+			],
+			"name": "getTokenIdsForAuthMethod",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "bytes", "name": "", "internalType": "bytes" }
+			],
+			"name": "getUserPubkeyForAuthMethod",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+			"name": "isPermittedAction",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "ipfsCID", "internalType": "bytes" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+			"name": "isPermittedAddress",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{ "type": "address", "name": "user", "internalType": "address" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+			"name": "isPermittedAuthMethod",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+			"name": "isPermittedAuthMethodScopePresent",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" },
+				{
+					"type": "uint256",
+					"name": "scopeId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{ "type": "address", "name": "", "internalType": "address" }
+			],
+			"name": "owner",
+			"inputs": []
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [
+				{
+					"type": "address",
+					"name": "",
+					"internalType": "contract PKPNFT"
+				}
+			],
+			"name": "pkpNFT",
+			"inputs": []
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "removePermittedAction",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "ipfsCID", "internalType": "bytes" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "removePermittedAddress",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{ "type": "address", "name": "user", "internalType": "address" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "removePermittedAuthMethod",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "removePermittedAuthMethodScope",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "authMethodType",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes", "name": "id", "internalType": "bytes" },
+				{
+					"type": "uint256",
+					"name": "scopeId",
+					"internalType": "uint256"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "renounceOwnership",
+			"inputs": []
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "setPkpNftAddress",
+			"inputs": [
+				{
+					"type": "address",
+					"name": "newPkpNftAddress",
+					"internalType": "address"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "setRootHash",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "group",
+					"internalType": "uint256"
+				},
+				{ "type": "bytes32", "name": "root", "internalType": "bytes32" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "nonpayable",
+			"outputs": [],
+			"name": "transferOwnership",
+			"inputs": [
+				{
+					"type": "address",
+					"name": "newOwner",
+					"internalType": "address"
+				}
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+			"name": "verifyState",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "group",
+					"internalType": "uint256"
+				},
+				{
+					"type": "bytes32[]",
+					"name": "proof",
+					"internalType": "bytes32[]"
+				},
+				{ "type": "bytes32", "name": "leaf", "internalType": "bytes32" }
+			]
+		},
+		{
+			"type": "function",
+			"stateMutability": "view",
+			"outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+			"name": "verifyStates",
+			"inputs": [
+				{
+					"type": "uint256",
+					"name": "tokenId",
+					"internalType": "uint256"
+				},
+				{
+					"type": "uint256",
+					"name": "group",
+					"internalType": "uint256"
+				},
+				{
+					"type": "bytes32[]",
+					"name": "proof",
+					"internalType": "bytes32[]"
+				},
+				{
+					"type": "bool[]",
+					"name": "proofFlags",
+					"internalType": "bool[]"
+				},
+				{
+					"type": "bytes32[]",
+					"name": "leaves",
+					"internalType": "bytes32[]"
+				}
+			]
+		}
+	]
 }

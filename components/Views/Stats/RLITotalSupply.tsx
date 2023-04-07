@@ -3,34 +3,34 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../../Contexts/AppContext";
 
 const RLITotalSupply = () => {
-    
-    // -- (app context)
-    const { rliContract } = useAppContext();
+	// -- (app context)
+	const { rliContract } = useAppContext();
 
-    // -- (states)
-    const [totalSupply, setTotalSupply] = useState<any>();
+	// -- (states)
+	const [totalSupply, setTotalSupply] = useState<any>();
 
-    // -- (mounted)
-    useEffect(() =>{
+	// -- (mounted)
+	useEffect(() => {
+		(async () => {
+			await fetchRLITotalSupply();
+		})();
+	}, []);
 
-        (async() => {
-            await fetchRLITotalSupply();
-        })();
+	// -- (fetch)
+	const fetchRLITotalSupply = async () => {
+		const _totalSupply = await rliContract.read.totalSupply();
 
-    }, [])
+		setTotalSupply(_totalSupply);
+	};
 
-    // -- (fetch)
-    const fetchRLITotalSupply = async() => {
+	// -- (validate)
+	if (!totalSupply)
+		return (
+			<span className="sm">
+				<CircularProgress />
+			</span>
+		);
 
-        const _totalSupply = await rliContract.read.totalSupply();
-
-        setTotalSupply(_totalSupply);
-
-    }
-
-    // -- (validate)
-    if( ! totalSupply ) return <span className="sm"><CircularProgress/></span>
-
-    return (<>{ totalSupply }</>)
-}
+	return <>{totalSupply}</>;
+};
 export default RLITotalSupply;

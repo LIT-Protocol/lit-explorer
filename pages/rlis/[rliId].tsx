@@ -1,8 +1,4 @@
 const RLIsByID = () => {
-    return (
-        <>
-            RLIsById unimplemented
-        </>
-    )
-}
+	return <>RLIsById unimplemented</>;
+};
 export default RLIsByID;

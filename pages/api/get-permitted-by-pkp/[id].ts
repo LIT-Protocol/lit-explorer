@@ -1,34 +1,35 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ethers } from 'ethers';
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { PKPPermissionsContract } from '../../../utils/blockchain/contracts/PKPPermissionsContract';
-import getWeb3Wallet from '../../../utils/blockchain/getWeb3Wallet';
+import { ethers } from "ethers";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { PKPPermissionsContract } from "../../../utils/blockchain/contracts/PKPPermissionsContract";
+import getWeb3Wallet from "../../../utils/blockchain/getWeb3Wallet";
 
 type Data = {
-  id?: string
-  body?: string,
-  data?: any
-}
+	id?: string;
+	body?: string;
+	data?: any;
+};
 // https://explorer.celo.org/api-docs
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
+	req: NextApiRequest,
+	res: NextApiResponse<Data>
 ) {
+	const { id } = req.query;
 
-    const { id } = req.query;
+	const pkpId = id;
 
-    const pkpId = id;
+	console.log("[api/get-permitted-by-pkp] input<pkpId>:", pkpId);
 
-    console.log('[api/get-permitted-by-pkp] input<pkpId>:', pkpId);
-    
-    const pkpPermissionsContract = new PKPPermissionsContract();
-    
-    await pkpPermissionsContract.connect()
-    
-    let addresses = await pkpPermissionsContract.read.getPermittedAddresses(pkpId);
-    let actions = await pkpPermissionsContract.read.getPermittedActions(pkpId);
+	const pkpPermissionsContract = new PKPPermissionsContract();
 
-    const data = { addresses, actions }
-    
-    res.status(200).json({ data })
+	await pkpPermissionsContract.connect();
+
+	let addresses = await pkpPermissionsContract.read.getPermittedAddresses(
+		pkpId
+	);
+	let actions = await pkpPermissionsContract.read.getPermittedActions(pkpId);
+
+	const data = { addresses, actions };
+
+	res.status(200).json({ data });
 }

@@ -3,52 +3,42 @@ import { pub2Addr } from "../../../utils/converter";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
 import GreenTick from "../../UI/GreenTick";
-const { toChecksumAddress } = require('ethereum-checksum-address')
+const { toChecksumAddress } = require("ethereum-checksum-address");
 
+const ETHAddressByPKPId = ({ pkpId }: { pkpId: string | any }) => {
+	// -- (app context)
+	const { routerContract } = useAppContext();
 
-const ETHAddressByPKPId = ({
-    pkpId
-} : {
-    pkpId: string | any 
-}) => {
+	// -- (state)
+	const [address, setAddress] = useState<any>();
 
-    // -- (app context)
-    const { routerContract } = useAppContext();
+	// -- (mounted)
+	useEffect(() => {
+		// -- validate
+		if (!pkpId || routerContract?.read === undefined) return;
 
-    // -- (state)
-    const [address, setAddress] = useState<any>();
-    
-    // -- (mounted)
-    useEffect(() => {
+		(async () => {
+			const _pubKey = await routerContract.read.getFullPubKey(pkpId);
 
-        // -- validate
-        if( ! pkpId || routerContract?.read === undefined ) return;
+			const _ethAddress = "0x" + pub2Addr(_pubKey);
 
-        (async() => {
+			const _checksummedAddress = toChecksumAddress(_ethAddress);
 
-            const _pubKey = await routerContract.read.getFullPubKey(pkpId);
+			setAddress(_checksummedAddress);
+		})();
+	}, [routerContract?.read]);
 
-            const _ethAddress = '0x' + pub2Addr(_pubKey);
+	// -- (validations)
+	if (!address) return <>loading...</>;
 
-            const _checksummedAddress = toChecksumAddress(_ethAddress);
-
-            setAddress(_checksummedAddress);
-
-        })();
-
-    }, [routerContract?.read])
-
-    // -- (validations)
-    if( ! address ) return <>loading...</>
-
-    return (
-        <div className="flex text-sm">
-            <div className="flex-content flex">
-                <div className="flex-content">ETH Address: { address }</div>
-                <GreenTick message="Checksummed"/>
-            </div> 
-            <Copy value={address} />
-        </div>
-    )
-}
+	return (
+		<div className="flex text-sm">
+			<div className="flex-content flex">
+				<div className="flex-content">ETH Address: {address}</div>
+				<GreenTick message="Checksummed" />
+			</div>
+			<Copy value={address} />
+		</div>
+	);
+};
 export default ETHAddressByPKPId;

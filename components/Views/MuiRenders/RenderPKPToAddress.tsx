@@ -5,83 +5,78 @@ import { AppRouter } from "../../../utils/AppRouter";
 import { heyShorty, pub2Addr } from "../../../utils/converter";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
-const { toChecksumAddress } = require('ethereum-checksum-address')
+const { toChecksumAddress } = require("ethereum-checksum-address");
 
 export interface MyOptions {
-    copy?: boolean,
-    short?: boolean,
+	copy?: boolean;
+	short?: boolean;
 }
 
 export const Address = ({
-    pkpId,
-    options
-} : {
-    pkpId: number,
-    options: MyOptions
+	pkpId,
+	options,
+}: {
+	pkpId: number;
+	options: MyOptions;
 }) => {
+	// -- (app context)
+	const { routerContract } = useAppContext();
+	const router = useRouter();
 
-    // -- (app context)
-    const { routerContract } = useAppContext();
-    const router = useRouter();
+	// -- (states)
+	const [address, setAddress] = useState<string>();
 
-    // -- (states)
-    const [address, setAddress] = useState<string>();
-    
-    // -- (mounted)
-    useEffect(() => {
+	// -- (mounted)
+	useEffect(() => {
+		if (!routerContract?.read) return;
 
-        if( ! routerContract?.read ) return;
+		(async () => {
+			if (address) return;
 
-        (async() => {
+			const _pubKey = await routerContract?.read.getFullPubKey(pkpId);
 
-            if( address ) return;
+			const _address = "0x" + pub2Addr(_pubKey);
 
-            const _pubKey = await routerContract?.read.getFullPubKey(pkpId);
+			console.log("_address:", _address)
 
-            const _address = '0x' + pub2Addr(_pubKey);
+			const _checksummed = toChecksumAddress(_address);
 
-            const _checksummed = toChecksumAddress(_address);
-            
-            setAddress(_checksummed);
+			setAddress(_checksummed);
+		})();
+	}, [routerContract?.read]);
 
-        })();
+	// -- (validation)
+	if (!address) return <>Loading...</>;
 
-    }, [routerContract?.read])
+	// -- (render) render value
+	const renderValue = (address: string) => {
+		return (
+			<>
+				<div className="flex justify-cell">
+					<div
+						id={`link-${address}`}
+						className="flex-content link"
+						onClick={() => router.push(AppRouter.getPage(address))}
+					>
+						{options?.short ? heyShorty(address) : address}
+					</div>
+					{options?.copy ? <Copy value={address} /> : ""}
+				</div>
+			</>
+		);
+	};
 
-    // -- (validation)
-    if( ! address ) return <>Loading...</>
+	// -- (finally)
+	return <div className="flex justify-cell">{renderValue(address)}</div>;
+};
 
-    // -- (render) render value
-    const renderValue = (address: string) => {
+const RenderPKPToAddress = (
+	props: GridRenderCellParams,
+	options: MyOptions
+) => {
+	const pkpId = props.row.tokenId;
 
-        return (
-            <>
-                <div className="flex justify-cell">
-                    <div id={`link-${address}`} className="flex-content link" onClick={() => router.push(AppRouter.getPage(address))}>
-                        { options?.short ? heyShorty(address) : address }
-                    </div>
-                    { options?.copy ? <Copy value={address} /> : '' }
-                </div>
-            </>
-        )
-
-    }
-
-    // -- (finally)
-    return (
-        <div className="flex justify-cell">
-            { renderValue(address) }
-        </div>
-    )
-}
-
-const RenderPKPToAddress = (props: GridRenderCellParams, options: MyOptions) => {
-
-    const pkpId = props.row.tokenId;
-
-    return (
-        <Address pkpId={pkpId} options={options}/>
-    )
-}
+	return <Address pkpId={pkpId} options={options} />;
+};
 
 export default RenderPKPToAddress;

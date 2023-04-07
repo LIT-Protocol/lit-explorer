@@ -1,35 +1,28 @@
-import MainLayout from "../../components/Layouts/MainLayout"
-import MyDescription from "../../components/UI/MyDescription"
-import PKPOwners from "../../components/Views/PKPOwners"
-import { NextPageWithLayout } from "../_app"
+import MainLayout from "../../components/Layouts/MainLayout";
+import MyDescription from "../../components/UI/MyDescription";
+import PKPOwners from "../../components/Views/PKPOwners";
+import { NextPageWithLayout } from "../_app";
 
 const OwnersPage: NextPageWithLayout = () => {
+	const renderDescription = () => {
+		return (
+			<MyDescription
+				titleId="owners page - title"
+				paragraphs={[{ id: "owners page" }]}
+			/>
+		);
+	};
 
-  const renderDescription = () => {
+	return (
+		<>
+			{renderDescription()}
+			<PKPOwners />
+		</>
+	);
+};
 
-    return (
-      <MyDescription titleId="owners page - title" paragraphs={[
-        { id: 'owners page' },
-      ]}/>
-    )
-
-  }
-  
-
-  return (
-    <>
-      { renderDescription() }
-      <PKPOwners />
-    </>
-  )
-}
-
-export default OwnersPage
+export default OwnersPage;
 
 OwnersPage.getLayout = function getLayout(page: any) {
-  return (
-    <MainLayout>
-      { page }
-    </MainLayout>
-  )
-}
+	return <MainLayout>{page}</MainLayout>;
+};

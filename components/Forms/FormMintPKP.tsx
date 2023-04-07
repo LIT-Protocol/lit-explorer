@@ -1,5 +1,5 @@
-import { NextPageWithLayout } from "../../pages/_app"
-import FormInputFields, { MyFormData, MyProgressI } from "./FormInputFields"
+import { NextPageWithLayout } from "../../pages/_app";
+import FormInputFields, { MyFormData, MyProgressI } from "./FormInputFields";
 import throwError from "../../utils/throwError";
 import { useState } from "react";
 import { newObjectState } from "../../utils/clone";
@@ -10,119 +10,129 @@ import { useAppContext } from "../Contexts/AppContext";
 import { hexToDecimal } from "../../utils/converter";
 
 const FormMintNewPKP: NextPageWithLayout = () => {
+	// -- app context
+	const appContext = useAppContext();
+	const { pkpContract, routerContract } = appContext;
 
-  // -- app context
-  const appContext = useAppContext();
-  const { pkpContract, routerContract } = appContext;
+	const router = useRouter();
 
-  const router = useRouter();
+	// -- states
+	const [mintProgress, setMintProgress] = useState<MyProgressI>({
+		progress: 0,
+		message: "",
+	});
+	const [mintButtonText, setMintButtonText] = useState("Mint");
+	const [mintedPKPId, setMintedPKPId] = useState<any>();
 
-  // -- states
-  const [mintProgress, setMintProgress] = useState<MyProgressI>({progress: 0, message: ''})
-  const [mintButtonText, setMintButtonText] = useState('Mint');
-  const [mintedPKPId, setMintedPKPId] = useState<any>();
-  
-  // -- (void) redirect
-  const redirect = async () => {
-    const page = AppRouter.getPage(mintedPKPId);
-    router.push(page);
-    return;
-  }
+	// -- (void) redirect
+	const redirect = async () => {
+		const page = AppRouter.getPage(mintedPKPId);
+		router.push(page);
+		return;
+	};
 
-  // -- (void) mint
-  const mint = async (formData: MyFormData) => {
-    console.log("[mint] formData:", formData)
+	// -- (void) mint
+	const mint = async (formData: MyFormData) => {
+		console.log("[mint] formData:", formData);
 
-    // ===== STEP =====
-    setMintProgress(newObjectState(mintProgress, {
-      progress: 50,
-      message: 'Getting mint cost...'
-    }))
+		// ===== STEP =====
+		setMintProgress(
+			newObjectState(mintProgress, {
+				progress: 50,
+				message: "Getting mint cost...",
+			})
+		);
 
-    const mintCost = await pkpContract.read.mintCost();
-    console.log("mintCost:", mintCost);
+		const mintCost = await pkpContract.read.mintCost();
+		console.log("mintCost:", mintCost);
 
-    // ===== STEP =====
-    try{
-      setMintProgress(newObjectState(mintProgress, {
-        progress: 75,
-        message: `Cost ${mintCost.eth} to mint, minting...`
-      }))
-      
-      const mintRes = await pkpContract.write.mint({
-        value: mintCost.arg
-      });
+		// ===== STEP =====
+		try {
+			setMintProgress(
+				newObjectState(mintProgress, {
+					progress: 75,
+					message: `Cost ${mintCost.eth} to mint, minting...`,
+				})
+			);
 
-      const tokenId = mintRes.tokenId;
+			const mintRes = await pkpContract.write.mint({
+				value: mintCost.arg,
+			});
 
-      setMintedPKPId(hexToDecimal(tokenId));
-  
-      const isRouted = await tryUntil({
-        onlyIf: async () => await routerContract.read.isRouted(tokenId),
-        thenRun: async () => true,
-        onTrying: (counter: number) => {
-          setMintProgress(newObjectState(mintProgress, {
-            progress: 75 + counter,
-            message: `${counter} waiting for confirmation...`
-          }))
-        },
-        onError: (props: TryUntilProp) => {
-          throwError(`Failed to execute: ${JSON.stringify(props)}`);
-        },
-        interval: 3000,
-      });
+			const tokenId = mintRes.tokenId;
 
-      console.log("isRouted:", isRouted)
+			setMintedPKPId(hexToDecimal(tokenId));
 
-      setMintProgress(newObjectState(mintProgress, {
-        progress: 100,
-        message: 'Congratulation! You have minted a PKP!'
-      }))
-  
-      setMintButtonText("Go view your PKP!");
+			const isRouted = await tryUntil({
+				onlyIf: async () => await routerContract.read.isRouted(tokenId),
+				thenRun: async () => true,
+				onTrying: (counter: number) => {
+					setMintProgress(
+						newObjectState(mintProgress, {
+							progress: 75 + counter,
+							message: `${counter} waiting for confirmation...`,
+						})
+					);
+				},
+				onError: (props: TryUntilProp) => {
+					throwError(`Failed to execute: ${JSON.stringify(props)}`);
+				},
+				interval: 3000,
+			});
 
-    }catch(e: any){
-      setMintProgress(newObjectState(mintProgress, {
-        progress: 0,
-        message: ''
-      }))
-      throwError(e.message)
-      return;
-    }
+			console.log("isRouted:", isRouted);
 
-    return;
-  }
-  
-  /**
-   * -- (void) when submit button is clicked, decide which 
-   * action to perform based on the mint progress
-   * 
-   * @param { MyFormData } formData 
-   * @returns { void }
-   */
-  const onSubmit = async (formData: MyFormData) : Promise<void> => {
+			setMintProgress(
+				newObjectState(mintProgress, {
+					progress: 100,
+					message: "Congratulation! You have minted a PKP!",
+				})
+			);
 
-    const progress = mintProgress?.progress ?? 0;
+			setMintButtonText("Go view your PKP!");
+		} catch (e: any) {
+			setMintProgress(
+				newObjectState(mintProgress, {
+					progress: 0,
+					message: "",
+				})
+			);
+			throwError(e.message);
+			return;
+		}
 
-    // when progress is 100%
-    if( progress >= 100){
-      await redirect();
-      return;
-    }
+		return;
+	};
 
-    await mint(formData);
-  }
+	/**
+	 * -- (void) when submit button is clicked, decide which
+	 * action to perform based on the mint progress
+	 *
+	 * @param { MyFormData } formData
+	 * @returns { void }
+	 */
+	const onSubmit = async (formData: MyFormData): Promise<void> => {
+		const progress = mintProgress?.progress ?? 0;
 
-  return (
-    <FormInputFields
-      title={'Mint New PKP'}
-      buttonText={mintButtonText}
-      // fields={FormMintNewPKPFields}
-      onSubmit={onSubmit}
-      progress={mintProgress}
-      fullWidth={true}
-    />
-  )
-}
+		// when progress is 100%
+		if (progress >= 100) {
+			await redirect();
+			return;
+		}
 
-export default FormMintNewPKP
+		await mint(formData);
+	};
+
+	return (
+		<FormInputFields
+			title={"Mint New PKP"}
+			buttonText={mintButtonText}
+			// fields={FormMintNewPKPFields}
+			onSubmit={onSubmit}
+			progress={mintProgress}
+			fullWidth={true}
+		/>
+	);
+};
+
+export default FormMintNewPKP;

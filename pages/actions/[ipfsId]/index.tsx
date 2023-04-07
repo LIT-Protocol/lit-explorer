@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import MainLayout from "../../../components/Layouts/MainLayout"
-import { NextPageWithLayout } from "../../_app"
-import MonacoEditor from '@monaco-editor/react';
+import MainLayout from "../../../components/Layouts/MainLayout";
+import { NextPageWithLayout } from "../../_app";
+import MonacoEditor from "@monaco-editor/react";
 import { fetchActionCode } from "../../../utils/fetch";
 import FormAddPermittedAction from "../../../components/Forms/FormAddPermittedAction";
 import FormRevokePermittedAction from "../../../components/Forms/FormRevokePermittedAction";
@@ -16,213 +16,219 @@ import Refreshable from "../../../components/ViewModels/Refreshable";
 import MyDescription from "../../../components/UI/MyDescription";
 
 const ActionsPage: NextPageWithLayout = () => {
+	// -- (app context)
+	const { pkpContract, routerContract } = useAppContext();
 
-  // -- (app context)
-  const { pkpContract, routerContract } = useAppContext();
+	// -- (router)
+	const router = useRouter();
 
-  // -- (router)
-  const router = useRouter();
+	// -- (param)
+	const { ipfsId } = router.query;
 
-  // -- (param)
-  const { ipfsId } = router.query;
+	// -- (state)
+	const [code, setCode] = useState("");
+	const [refresh, setRefresh] = useState(0);
+	const [hasPKPs, setHasPKPs] = useState(false);
+	const [actionRegistered, setActionRegistered] = useState(false);
+	const [counter, setCounter] = useState(5);
 
-  // -- (state)
-  const [code, setCode] = useState('');
-  const [refresh, setRefresh] = useState(0);
-  const [hasPKPs, setHasPKPs] = useState(false);
-  const [actionRegistered, setActionRegistered] = useState(false);
-  const [counter, setCounter] = useState(5);
+	// -- (mounted)
+	useEffect(() => {
+		// -- param is not ready
+		if (!ipfsId) return;
 
-  // -- (mounted)
-  useEffect(() => {
-    
-    // -- param is not ready
-    if( ! ipfsId ) return;
+		(async () => {
+			const error =
+				"The owner of this gateway does not have this content pinned to their Pinata account. In order to view this content, please reach out to the owner. - ERR_ID:00006";
 
-    (async () => {
+			let code: any = null;
 
-      const error = 'The owner of this gateway does not have this content pinned to their Pinata account. In order to view this content, please reach out to the owner. - ERR_ID:00006';
+			if (counter >= 5) {
+				code = await fetchActionCode(ipfsId as string);
+			}
 
-      let code : any = null;
+			if (code === error || code === null) {
+				setCode("404");
 
-      if ( counter >= 5){
-        code = await fetchActionCode((ipfsId as string));
-      }
+				setTimeout(() => {
+					setCounter((prev) => prev - 1);
 
-      if ( code ===  error|| code === null){
-        setCode('404');
+					if (counter <= 0) {
+						setCounter(5);
+					}
+				}, 1000);
+			} else {
+				setCode(code);
+				clearTimeout(0);
+			}
 
-        setTimeout(() => {
-          
-          setCounter(prev => prev - 1);
+			// -- checks
+			await checkifUserHasPKPs();
+			await checkIfActionRegistered();
+		})();
 
-          if( counter <= 0){
-            setCounter(5);
-          }
+		return () => {
+			clearTimeout(0);
+		};
+	}, [ipfsId, counter]);
 
-        }, 1000);
-      }else{
-        setCode(code);
-        clearTimeout(0);
-      }
+	// -- (void) check has PKP
+	const checkifUserHasPKPs = async () => {
+		const { ownerAddress } = await getWeb3Wallet();
 
+		const tokens = await pkpContract.read.getTokensByAddress(ownerAddress);
 
-      // -- checks
-      await checkifUserHasPKPs();
-      await checkIfActionRegistered();
+		setHasPKPs(tokens.length > 0);
+	};
 
+	// -- (void) check if action is registered
+	const checkIfActionRegistered = async () => {
+		const _isRegistered = await routerContract.read.isActionRegistered(
+			ipfsId as string
+		);
+		setActionRegistered(_isRegistered);
+	};
 
-    })();
+	// -- (render) render description
+	const renderDescription = () => {
+		return (
+			<MyDescription
+				titleId={"action page - title"}
+				paragraphs={[{ id: "action page" }]}
+			/>
+		);
+	};
 
-    return () => {
-      clearTimeout(0);
-    }
+	// -- (render) header
+	const renderHeader = () => {
+		const title = "Your Lit Action Code";
 
-  }, [ipfsId, counter])
-
-  // -- (void) check has PKP
-  const checkifUserHasPKPs = async () => {
-
-    const { ownerAddress } = await getWeb3Wallet();
-    
-    const tokens = await pkpContract.read.getTokensByAddress(ownerAddress);
-
-    setHasPKPs(tokens.length > 0);
-    
-  }
-
-  // -- (void) check if action is registered
-  const checkIfActionRegistered = async () => {
-    const _isRegistered = await routerContract.read.isActionRegistered((ipfsId as string));
-    setActionRegistered(_isRegistered);
-  }
-
-  // -- (render) render description
-  const renderDescription = () => {
-    return <MyDescription 
-      titleId={'action page - title'} 
-      paragraphs={[{id: 'action page'}]}      
-    />
-  }
-
-  // -- (render) header
-  const renderHeader = () => {
-
-    const title = 'Your Lit Action Code';
-
-    return (
-      <div className="flex">
-        <h2>{ title }</h2> 
-        {/* <div className="flex-content">
+		return (
+			<div className="flex">
+				<h2>{title}</h2>
+				{/* <div className="flex-content">
           <ButtonActionRegisterByIPFSId ipfsId={ipfsId} onDone={reRender}/>
         </div> */}
-      </div>
-    )
-  }
+			</div>
+		);
+	};
 
-  // -- (render) content
-  const renderCode = () => {
+	// -- (render) content
+	const renderCode = () => {
+		if (code === "404") {
+			return (
+				<>
+					404 - Code is not ready or it does not exist. Please try
+					again later. <br />
+					{counter <= 0 ? (
+						<CircularProgress />
+					) : (
+						`Refershing in ${counter} second${
+							counter > 1 ? "s" : ""
+						}...`
+					)}
+				</>
+			);
+		}
 
-    if( code === '404' ){
-      return (
-        <>
-          404 - Code is not ready or it does not exist. Please try again later. <br/>
-          { counter <= 0 ? <CircularProgress/> : `Refershing in ${counter} second${counter > 1 ? 's' : ''}...`}
-          
-        </>
-      )
-    }
+		return (
+			<div className="code-editor mt-12">
+				<MonacoEditor
+					language="javascript"
+					value={code}
+					theme="vs-dark"
+					height="300px"
+				/>
+			</div>
+		);
+	};
 
-    return (
-      <div className="code-editor mt-12">
-        <MonacoEditor
-          language="javascript"
-          value={code}
-          theme="vs-dark"
-          height="300px"
-        />
-      </div>
-    )
-  }
+	// -- (render) forms
+	const renderForms = () => {
+		// -- (inner render)
+		const _renderLoading = () => {
+			return (
+				<MyCard title={"Loading action settings..."} className="mt-24">
+					<CircularProgress />
+				</MyCard>
+			);
+		};
 
-  // -- (render) forms
-  const renderForms = () => {
+		// -- (inner render) else render when user has no PKPs
+		const _renderNoPKPsFound = () => {
+			return (
+				<MyCard
+					title={"Oops.. It seems like you don't have any PKPs.."}
+					className="mt-24"
+				>
+					<MyButton
+						onClick={() => {
+							router.push(ROUTES.MINT_PKP);
+						}}
+					>
+						Click here to mint one!
+					</MyButton>
+				</MyCard>
+			);
+		};
 
-    // -- (inner render)
-    const _renderLoading = () => {
-      return (
-        <MyCard title={'Loading action settings...'} className="mt-24">
-          <CircularProgress/>
-        </MyCard>
-      )
-    }
+		// -- (inner render) render when action is not registered
+		const _renderActionNotRegistered = () => {
+			return (
+				<MyCard className="mt-24" title="Action is not registered!">
+					<Alert severity="info">
+						Registering your code allows you to set/unset which PKP
+						and addresses that have permission to execute this code.{" "}
+					</Alert>
+				</MyCard>
+			);
+		};
 
-    // -- (inner render) else render when user has no PKPs
-    const _renderNoPKPsFound = () => {
-      return (
-        <MyCard title={'Oops.. It seems like you don\'t have any PKPs..'} className="mt-24">
-          <MyButton onClick={() => { router.push(ROUTES.MINT_PKP); }}>Click here to mint one!</MyButton> 
-        </MyCard>
-      )
-    }
+		// -- (validations)
+		if (!hasPKPs && !actionRegistered) return _renderLoading();
+		if (!hasPKPs) return _renderNoPKPsFound();
+		// if( ! actionRegistered ) return _renderActionNotRegistered();
+		if (code === "404") return <></>;
+		// -- (finally)
+		return (
+			<MyCard title={"PKP & Lit Action Settings"} className="mt-24">
+				<FormAddPermittedAction
+					ipfsId={ipfsId as string}
+					onDone={reRender}
+				/>
 
-    // -- (inner render) render when action is not registered
-    const _renderActionNotRegistered = () => {
-        
-      return (
-        <MyCard className="mt-24" title="Action is not registered!">
-          <Alert severity="info">Registering your code allows you to set/unset which PKP and addresses that have permission to execute this code. </Alert>
-        </MyCard>
-      )
-    }
+				<FormRevokePermittedAction
+					ipfsId={ipfsId as string}
+					onDone={reRender}
+				/>
 
+				{/* <FormAddPermittedAddress ipfsId={(ipfsId as string)}  />     */}
+			</MyCard>
+		);
+	};
 
-    // -- (validations)
-    if( ! hasPKPs && ! actionRegistered) return _renderLoading();
-    if( ! hasPKPs ) return _renderNoPKPsFound();
-    // if( ! actionRegistered ) return _renderActionNotRegistered();
-    if ( code === '404' ) return <></>
-    // -- (finally)
-    return (
-      <MyCard title={'PKP & Lit Action Settings'} className="mt-24">
+	const reRender = async () => {
+		console.log("[reRender]");
+		setRefresh((prev) => prev + 1);
+		await checkifUserHasPKPs();
+		await checkIfActionRegistered();
+	};
 
-          <FormAddPermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
+	if (!ipfsId) return <p>ipfsId is not ready</p>;
+	if (!code) return <p>Loading action code...</p>;
 
-          <FormRevokePermittedAction ipfsId={(ipfsId as string)} onDone={reRender} />
-          
-          {/* <FormAddPermittedAddress ipfsId={(ipfsId as string)}  />     */}
-      </MyCard>
-    )
-  }
+	return (
+		<>
+			{renderDescription()}
+			{renderHeader()}
+			{renderCode()}
+			<Refreshable refresh={refresh}>{renderForms()}</Refreshable>
+		</>
+	);
+};
 
-  const reRender = async () => {
-    console.log("[reRender]");
-    setRefresh(prev => prev + 1)
-    await checkifUserHasPKPs();
-    await checkIfActionRegistered();
-  }
-
-  if ( ! ipfsId ) return <p>ipfsId is not ready</p>
-  if ( ! code ) return <p>Loading action code...</p>
-
-  return (
-    <>      
-      { renderDescription() }
-      { renderHeader() }
-      { renderCode() }
-      <Refreshable refresh={refresh} >
-        { renderForms() }
-      </Refreshable>
-    </>
-  )
-}
-
-export default ActionsPage
+export default ActionsPage;
 
 ActionsPage.getLayout = function getLayout(page: any) {
-  return (
-    <MainLayout>
-      { page }
-    </MainLayout>
-  )
-}
+	return <MainLayout>{page}</MainLayout>;
+};

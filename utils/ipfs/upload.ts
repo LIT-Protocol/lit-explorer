@@ -2,8 +2,8 @@ import * as IPFS from "ipfs-core";
 import { APP_CONFIG } from "../../app_config";
 
 interface IPFSData {
-  path: string;
-  url: string;
+	path: string;
+	url: string;
 }
 /**
    * 
@@ -26,18 +26,18 @@ interface IPFSData {
   * @returns { IPFSData } 
   */
 const uploadToIPFS = async (code: string): Promise<IPFSData> => {
-  const ipfs = await IPFS.create({ repo: "ok" + Math.random() });
+	const ipfs = await IPFS.create({ repo: "ok" + Math.random() });
 
-  const { path } = await ipfs.add(code);
+	const { path } = await ipfs.add(code);
 
-  const data: IPFSData = {
-    path: path,
-    url: `${APP_CONFIG.IPFS_PATH}/${path}`,
-  };
+	const data: IPFSData = {
+		path: path,
+		url: `${APP_CONFIG.IPFS_PATH}/${path}`,
+	};
 
-  console.log("[uploadToIPFS] data: ", data);
+	console.log("[uploadToIPFS] data: ", data);
 
-  return data;
+	return data;
 };
 
 export default uploadToIPFS;

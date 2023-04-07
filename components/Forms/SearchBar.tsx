@@ -1,38 +1,42 @@
 import { Button, Input } from "@mui/material";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import BtnLogout from "../UI/BtnLogout";
 
 const SearchBar = (props: {
-  onSearch: (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement> ) => void,
-  placeholder?: string,
-  imgSrc?: string
+	onSearch: (
+		event:
+			| React.MouseEvent<HTMLButtonElement>
+			| React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => void;
+	placeholder?: string;
+	imgSrc?: string;
 }) => {
-  
-    // -- (config)
-    const config = {
-      placeholder : props?.placeholder ?? 'Search by Address / PKP Token ID / RFI Token ID / IPFS ID / ',
-      imgSrc: props?.imgSrc ?? '/svg/search.svg',
-    }
+	// -- (config)
+	const config = {
+		placeholder:
+			props?.placeholder ??
+			"Search by Address / PKP Token ID / RFI Token ID / IPFS ID / ",
+		imgSrc: props?.imgSrc ?? "/svg/search.svg",
+	};
 
-    // -- (finally)
-    return (
-        <div className="search-bar">
+	// -- (finally)
+	return (
+		<div className="search-bar">
+			<Button onClick={props.onSearch} className="btn-clear">
+				<SearchIcon className="search-icon" />
+			</Button>
 
-          <Button onClick={props.onSearch} className='btn-clear'>
-            <SearchIcon className="search-icon"/>
-          </Button>
+			<Input
+				id="search-bar"
+				onKeyDown={props.onSearch}
+				className="input-bright"
+				type="search"
+				placeholder={config.placeholder}
+			/>
 
-          <Input id="search-bar" 
-            onKeyDown={props.onSearch} 
-            className="input-bright" 
-            type="search" 
-            placeholder={config.placeholder} 
-          />
-
-          <BtnLogout/>
-
-        </div>
-    )
-}
+			<BtnLogout />
+		</div>
+	);
+};
 
 export default SearchBar;

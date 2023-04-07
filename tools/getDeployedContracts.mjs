@@ -10,6 +10,9 @@ const SERRANO = 'deployed_contracts_serrano.json';
 // -- mumbai.explorer.litprotocol.com
 const COLLABLAND = 'deployed_contracts_mumbai.json';
 
+// -- https://lit-protocol.caldera.dev/
+const CALDERA = 'deployed_contracts_caldera.json';
+
 // -- CURRENT USING:
 const CURRENT = SERRANO;
 

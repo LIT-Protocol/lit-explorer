@@ -10,6 +10,19 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newAdditionalRequestsPerKilosecondCost",
+          "type": "uint256"
+        }
+      ],
+      "name": "AdditionalRequestsPerKilosecondCostSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "internalType": "address",
           "name": "owner",
@@ -62,6 +75,32 @@
         {
           "indexed": true,
           "internalType": "address",
+          "name": "newFreeMintSigner",
+          "type": "address"
+        }
+      ],
+      "name": "FreeMintSignerSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newFreeRequestsPerRateLimitWindow",
+          "type": "uint256"
+        }
+      ],
+      "name": "FreeRequestsPerRateLimitWindowSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
           "name": "previousOwner",
           "type": "address"
         },
@@ -73,6 +112,32 @@
         }
       ],
       "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newRLIHolderRateLimitWindowSeconds",
+          "type": "uint256"
+        }
+      ],
+      "name": "RLIHolderRateLimitWindowSecondsSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newRateLimitWindowSeconds",
+          "type": "uint256"
+        }
+      ],
+      "name": "RateLimitWindowSecondsSet",
       "type": "event"
     },
     {
@@ -101,8 +166,21 @@
       "type": "event"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "Withdrew",
+      "type": "event"
+    },
+    {
       "inputs": [],
-      "name": "RLIHolderRateLimitWindowMilliseconds",
+      "name": "RLIHolderRateLimitWindowSeconds",
       "outputs": [
         {
           "internalType": "uint256",
@@ -115,7 +193,7 @@
     },
     {
       "inputs": [],
-      "name": "additionalRequestsPerMillisecondCost",
+      "name": "additionalRequestsPerKilosecondCost",
       "outputs": [
         {
           "internalType": "uint256",
@@ -180,7 +258,7 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "requestsPerMillisecond",
+          "name": "requestsPerKilosecond",
           "type": "uint256"
         },
         {
@@ -213,7 +291,7 @@
           "type": "uint256"
         }
       ],
-      "name": "calculateRequestsPerSecond",
+      "name": "calculateRequestsPerKilosecond",
       "outputs": [
         {
           "internalType": "uint256",
@@ -236,7 +314,7 @@
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "requestsPerMillisecond",
+          "name": "requestsPerKilosecond",
           "type": "uint256"
         },
         {
@@ -250,20 +328,7 @@
     },
     {
       "inputs": [],
-      "name": "contractBalance",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "defaultRateLimitWindowMilliseconds",
+      "name": "defaultRateLimitWindowSeconds",
       "outputs": [
         {
           "internalType": "uint256",
@@ -283,7 +348,7 @@
         },
         {
           "internalType": "uint256",
-          "name": "requestsPerMillisecond",
+          "name": "requestsPerKilosecond",
           "type": "uint256"
         },
         {
@@ -308,7 +373,13 @@
         }
       ],
       "name": "freeMint",
-      "outputs": [],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -321,7 +392,7 @@
         },
         {
           "internalType": "uint256",
-          "name": "requestsPerMillisecond",
+          "name": "requestsPerKilosecond",
           "type": "uint256"
         },
         {
@@ -447,7 +518,13 @@
         }
       ],
       "name": "mint",
-      "outputs": [],
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
       "stateMutability": "payable",
       "type": "function"
     },
@@ -596,11 +673,11 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "newAdditionalRequestsPerMillisecondCost",
+          "name": "newAdditionalRequestsPerKilosecondCost",
           "type": "uint256"
         }
       ],
-      "name": "setAdditionalRequestsPerSecondCost",
+      "name": "setAdditionalRequestsPerKilosecondCost",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -653,11 +730,11 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "newRLIHolderRateLimitWindowMilliseconds",
+          "name": "newRLIHolderRateLimitWindowSeconds",
           "type": "uint256"
         }
       ],
-      "name": "setRLIHolderRateLimitWindowMilliseconds",
+      "name": "setRLIHolderRateLimitWindowSeconds",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -666,11 +743,11 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "newRateLimitWindowMilliseconds",
+          "name": "newRateLimitWindowSeconds",
           "type": "uint256"
         }
       ],
-      "name": "setRateLimitWindowMilliseconds",
+      "name": "setRateLimitWindowSeconds",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

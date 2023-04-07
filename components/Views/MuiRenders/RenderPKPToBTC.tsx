@@ -7,80 +7,66 @@ import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
 
 export interface MyOptions {
-    copy?: boolean,
-    short?: boolean,
+	copy?: boolean;
+	short?: boolean;
 }
 
 export const Address = ({
-    pkpId,
-    options
-} : {
-    pkpId: number,
-    options: MyOptions
+	pkpId,
+	options,
+}: {
+	pkpId: number;
+	options: MyOptions;
 }) => {
+	// -- (app context)
+	const { routerContract } = useAppContext();
+	const router = useRouter();
 
-    // -- (app context)
-    const { routerContract } = useAppContext();
-    const router = useRouter();
+	// -- (states)
+	const [address, setAddress] = useState<string>();
 
-    // -- (states)
-    const [address, setAddress] = useState<string>();
-    
-    // -- (mounted)
-    useEffect(() => {
+	// -- (mounted)
+	useEffect(() => {
+		if (!routerContract?.read) return;
 
-        if( ! routerContract?.read ) return;
+		(async () => {
+			if (address) return;
 
-        (async() => {
+			const _pubKey = await routerContract.read.getFullPubKey(pkpId);
 
-            if( address ) return;
+			const _address = pub2BTC(_pubKey);
 
-            const _pubKey = await routerContract.read.getFullPubKey(pkpId);
+			setAddress(_address);
+		})();
+	}, [routerContract?.read]);
 
-            const _address = pub2BTC(_pubKey);
-            
-            setAddress(_address);
+	// -- (validation)
+	if (!address) return <>Loading...</>;
 
-        })();
+	// -- (render) render value
+	const renderValue = (address: string) => {
+		return (
+			<>
+				<div className="flex justify-cell">
+					{/* <a href={`${AppRouter.getPage(address)}`} onClick={() => router.push(AppRouter.getPage(address))}> */}
+					<div className="flex-content">
+						{options?.short ? heyShorty(address) : address}
+					</div>
+					{/* </a> */}
+					{options?.copy ? <Copy value={address} /> : ""}
+				</div>
+			</>
+		);
+	};
 
-    }, [routerContract?.read])
-
-    // -- (validation)
-    if( ! address ) return <>Loading...</>
-
-    // -- (render) render value
-    const renderValue = (address: string) => {
-
-        return (
-            <>
-                <div className="flex justify-cell">
-                    {/* <a href={`${AppRouter.getPage(address)}`} onClick={() => router.push(AppRouter.getPage(address))}> */}
-                        <div className="flex-content">
-                        { options?.short ? heyShorty(address) : address }
-                        </div>
-                    {/* </a> */}
-                    { options?.copy ? <Copy value={address} /> : '' }
-                </div>
-            </>
-        )
-
-    }
-
-    // -- (finally)
-    return (
-        <div className="flex justify-cell">
-            { renderValue(address) }
-        </div>
-    )
-}
+	// -- (finally)
+	return <div className="flex justify-cell">{renderValue(address)}</div>;
+};
 
 const RenderPKPToBTC = (props: GridRenderCellParams, options: MyOptions) => {
+	const pkpId = props.row.tokenId;
 
-    const pkpId = props.row.tokenId;
-
-    return (
-        <Address pkpId={pkpId} options={options}/>
-    )
-}
+	return <Address pkpId={pkpId} options={options} />;
+};
 
 export default RenderPKPToBTC;
