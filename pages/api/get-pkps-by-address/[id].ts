@@ -1,6 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { APP_CONFIG } from "../../../app_config";
+import { RouterContract } from "../../../utils/blockchain/contracts/RouterContract";
+import { decimalTohex, pub2Addr } from "../../../utils/converter";
+import { asyncForEach } from "../../../utils/utils";
 
 type Data = {
 	id?: string;
@@ -29,10 +32,18 @@ export default async function handler(
 
 	const data = await dataRes.json();
 
-	console.log("[get-pkps-by-address] data:", data);
+	let pkps = data.result
+		.filter((item: any) => item.tokenSymbol === "PKP")
+		.filter(
+			(item: any) =>
+				item.contractAddress ===
+				APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS.toLowerCase()
+		);
+
+	console.log("pkps", pkps);
 
 	res.status(200).json({
 		id: id?.toString(),
-		data,
+		data: pkps,
 	});
 }

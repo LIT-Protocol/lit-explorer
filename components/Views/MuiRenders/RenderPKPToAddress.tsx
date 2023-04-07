@@ -37,7 +37,7 @@ export const Address = ({
 
 			const _address = "0x" + pub2Addr(_pubKey);
 
-			console.log("_address:", _address)
+			console.log("_address:", _address);
 
 			const _checksummed = toChecksumAddress(_address);
 

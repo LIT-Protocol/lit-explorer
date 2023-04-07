@@ -40,7 +40,7 @@ const PKPsByOwnerAddress = ({
 			fetchPath={`/api/get-pkps-by-address/${ownerAddress}`}
 			filter={(rawData: any) => {
 				console.log("[PKPsByOwnerAddress] input<rawData>", rawData);
-				return rawData.data.ownedNfts;
+				return rawData.data;
 			}}
 			renderCols={(width: any) => {
 				// return [];
@@ -66,16 +66,16 @@ const PKPsByOwnerAddress = ({
 								});
 							},
 						},
-						{
-							headerName: "BTC Address",
-							field: "btc",
-							renderCell: (props: any) => {
-								return RenderPKPToBTC(props, {
-									short: true,
-									copy: true,
-								});
-							},
-						},
+						// {
+						// 	headerName: "BTC Address",
+						// 	field: "btc",
+						// 	renderCell: (props: any) => {
+						// 		return RenderPKPToBTC(props, {
+						// 			short: true,
+						// 			copy: true,
+						// 		});
+						// 	},
+						// },
 						{
 							headerName: "Public Key",
 							field: "copy",
@@ -86,24 +86,25 @@ const PKPsByOwnerAddress = ({
 								});
 							},
 						},
-						{
-							headerName: "Acquired Date",
-							field: "date",
-							renderCell: RenderDate,
-						},
+						// {
+						// 	headerName: "Acquired Date",
+						// 	field: "date",
+						// 	renderCell: RenderDate,
+						// },
 						// { headerName:"From", field: "from"},
 					],
 					width
 				);
 			}}
 			renderRows={(filteredData: any) => {
-				return filteredData?.map((pkp: any, i: number) => {
+				// return filteredData;
+				return filteredData?.map((item: any, i: number) => {
 					return {
 						id: i + 1,
-						tokenId: pkp.tokenId,
-						address: pkp.tokenId,
-						date: pkp.timeLastUpdated,
-						// from: pkp.from === '0x0000000000000000000000000000000000000000' ? 'Minted' : pkp.from,
+						tokenId: item.tokenID,
+						address: item.tokenID,
+						// date: item.timeLastUpdated,
+						// from: item.from === '0x0000000000000000000000000000000000000000' ? 'Minted' : pkp.from,
 					};
 				});
 			}}
