@@ -29,18 +29,15 @@ export const APP_LINKS = {
 export const CURRENT_NETWORK = "LIT_PROTOCOL";
 export const CURRENT_CHAIN = {
 	params: {
-		chainId: "0x2AC49", // 175177 in hex is 0x2a7d9
-		chainName: "lit-protocol",
+		chainId: "0x2AC49",
+		chainName: "Chronicle - Lit Protocol Testnet",
 		nativeCurrency: {
-			name: "Lit Protocol",
+			name: "LIT",
 			symbol: "LIT",
 			decimals: 18,
 		},
-		rpcUrls: [
-			// "https://chain-rpc.litprotocol.com/http",
-			"https://lit-protocol.calderachain.xyz/http",
-		],
-		blockExplorerUrls: ["https://lit-protocol.calderaexplorer.xyz/"],
+		rpcUrls: ["https://chain-rpc.litprotocol.com/http"],
+		blockExplorerUrls: ["https://chain.litprotocol.com"],
 	},
 };
 
