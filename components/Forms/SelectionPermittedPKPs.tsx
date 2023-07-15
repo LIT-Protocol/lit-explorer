@@ -5,107 +5,120 @@ import { asyncForEachReturn } from "../../utils/utils";
 import { useAppContext } from "../Contexts/AppContext";
 import Copy from "../UI/Copy";
 
-const SelectionPermittedPKPs = ({ 
-    title,
-    onSelect,
-    refresh,
-    ipfsId,
-    onDefaultToken,
- }: {
-    title?: string,
-    label?: string,
-    onSelect?(data: any): void,
-    refresh?: number,
-    ipfsId?: string,
-    onDefaultToken?(token: string): void,
+const SelectionPermittedPKPs = ({
+	title,
+	onSelect,
+	refresh,
+	ipfsId,
+	onDefaultToken,
+}: {
+	title?: string;
+	label?: string;
+	onSelect?(data: any): void;
+	refresh?: number;
+	ipfsId?: string;
+	onDefaultToken?(token: string): void;
 }) => {
+	// -- (app context)
+	const { pkpContract, pkpPermissionsContract } = useAppContext();
 
-    // -- (app context)
-    const { pkpContract, routerContract } = useAppContext();
+	// -- (state)
+	const [tokens, setTokens] = useState<Array<string>>();
+	const [selectedToken, setSelectedToken] = useState<string>();
 
-    // -- (state)
-    const [tokens, setTokens] = useState<Array<string>>();
-    const [selectedToken, setSelectedToken] = useState<string>();
+	// -- (mounted)
+	useEffect(() => {
+		// -- debug
+		if (refresh) {
+			console.log("[SelectionPermittedPKPs] refresh:", refresh);
+		}
 
-    // -- (mounted)
-    useEffect(() => {
+		(async () => {
+			await fetchTokens();
+		})();
+	}, [refresh]);
 
-        // -- debug
-        if(refresh){
-            console.log("[SelectionPermittedPKPs] refresh:", refresh);
-        }
-        
-        (async() => {
-            await fetchTokens();
-        })();
+	// -- (void)
+	const fetchTokens = async () => {
+		const { ownerAddress } = await getWeb3Wallet();
 
-    }, [refresh]);
+		const _tokens: Array<string> =
+			await pkpContract.read.getTokensByAddress(ownerAddress);
+		console.log("[fetchTokens] output<_tokens>:", _tokens);
 
-    // -- (void)
-    const fetchTokens = async () => {
+		let permitted = await asyncForEachReturn(
+			_tokens,
+			async (pkpId: string) => {
+				const isPermitted =
+					await pkpPermissionsContract.read.isPermittedAction(
+						pkpId,
+						ipfsId as string
+					);
 
-        const { ownerAddress } = await getWeb3Wallet();
+				console.log("isPermitted:", isPermitted);
 
-        const _tokens : Array<string> = await pkpContract.read.getTokensByAddress(ownerAddress);
-        console.log("[fetchTokens] output<_tokens>:", _tokens);
-        
-        let permitted = await asyncForEachReturn(_tokens, async (pkpId: string) => {
-            return await routerContract.read.isPermittedAction(pkpId, (ipfsId as string)) ? pkpId : null;
-        })
-        permitted = permitted.filter((pkpId) => pkpId != null)
+				const filteredTokens = !isPermitted ? null : pkpId;
 
-        console.log("[permitted] output<permitted>:", permitted);
+				return filteredTokens;
+			}
+		);
+		permitted = permitted.filter((pkpId) => pkpId != null);
 
-        setTokens(permitted);
+		console.log("[permitted] output<permitted>:", permitted);
 
-        // -- only run the first time
-        if( ! refresh ){
-            setSelectedToken(permitted[0])
+		setTokens(permitted);
 
-            if( onDefaultToken ){
-                onDefaultToken(permitted[0]);
-            }
-        }
-    }
+		// -- only run the first time
+		if (!refresh) {
+			setSelectedToken(permitted[0]);
 
-    // -- (event)
-    const handleChange = (e: any) => {
+			if (onDefaultToken) {
+				onDefaultToken(permitted[0]);
+			}
+		}
+	};
 
-        const _token = e.target.value;
+	// -- (event)
+	const handleChange = (e: any) => {
+		const _token = e.target.value;
 
-        setSelectedToken(_token);
-        
-        // -- callback
-        if(onSelect){
-            onSelect(_token);
-        }
-    }
+		setSelectedToken(_token);
 
-    // -- (validations)
-    if( ! tokens ) return <>No PKPs found.</>
-    if( ! ipfsId ) return <>No ipfsId found.</>
+		// -- callback
+		if (onSelect) {
+			onSelect(_token);
+		}
+	};
 
-    return (
-        <div className="flex">
-            <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">{ title ?? 'TITLE' }</InputLabel>
-                
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={selectedToken}
-                    label={ title ?? 'TITLE' }
-                    onChange={handleChange}
-                >
-                    {
-                        tokens.map((pkpId) => {
-                            return <MenuItem key={pkpId} value={pkpId}>{pkpId}</MenuItem>;
-                        })
-                    }
-                </Select>
-            </FormControl>
-            <Copy value={(selectedToken as any)}/>
-        </div>
-    )
-}
+	// -- (validations)
+	if (!tokens) return <>No PKPs found.</>;
+	if (!ipfsId) return <>No ipfsId found.</>;
+
+	return (
+		<div className="flex">
+			<FormControl fullWidth>
+				<InputLabel id="demo-simple-select-label">
+					{title ?? "TITLE"}
+				</InputLabel>
+
+				<Select
+					labelId="demo-simple-select-label"
+					id="demo-simple-select"
+					value={selectedToken}
+					label={title ?? "TITLE"}
+					onChange={handleChange}
+				>
+					{tokens.map((pkpId) => {
+						return (
+							<MenuItem key={pkpId} value={pkpId}>
+								{pkpId}
+							</MenuItem>
+						);
+					})}
+				</Select>
+			</FormControl>
+			<Copy value={selectedToken as any} />
+		</div>
+	);
+};
 export default SelectionPermittedPKPs;

@@ -1,8 +1,16 @@
-import MainLayout from "../../components/Layouts/MainLayout"
-import { NextPageWithLayout } from "../_app"
-import MonacoEditor from '@monaco-editor/react';
-import { useState } from "react";
-import { Alert, Button, TextField } from "@mui/material";
+import MainLayout from "../../components/Layouts/MainLayout";
+import { NextPageWithLayout } from "../_app";
+import MonacoEditor from "@monaco-editor/react";
+import { useEffect, useState } from "react";
+import {
+	Alert,
+	Button,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+} from "@mui/material";
 import uploadToIPFS from "../../utils/ipfs/upload";
 import throwError from "../../utils/throwError";
 import { useRouter } from "next/router";
@@ -12,186 +20,264 @@ import MyCard from "../../components/UI/MyCard";
 import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION } from "../../app_config";
 import { tryUntil } from "../../utils/tryUntil";
 import MyDescription from "../../components/UI/MyDescription";
-import ButtonActionRegisterByIPFSId from "../../components/Forms/ButtonActionRegisterByIPFSId";
 import { preventPageLeave } from "../../utils/utils";
+import * as demos from "../../DEMOs/index";
 
 const CreateAction: NextPageWithLayout = () => {
+	const router = useRouter();
 
-  const router = useRouter();
+	// -- (state)
+	const [code, setCode] = useState(DEFAULT_LIT_ACTION);
+	const [msg, setMsg] = useState("Loading...");
+	const [progress, setProgress] = useState(0);
+	const [ipfsId, setIpfsId] = useState<string | any>();
+	const [completed, setCompleted] = useState(false);
+	const [demoIndex, setDemoIndex] = useState(8);
 
-  // -- (state)
-  const [code, setCode] = useState(DEFAULT_LIT_ACTION);
-  const [msg, setMsg] = useState('Loading...');
-  const [progress, setProgress] = useState(0);
-  const [ipfsId, setIpfsId] = useState<string | any>();
-  const [completed, setCompleted] = useState(false);
+	/**
+	 * When code is being edited
+	 * @param code
+	 */
+	const onEdit = (code: any) => {
+		setCode(code);
+	};
 
-  /**
-   * When code is being edited
-   * @param code 
-   */
-  const onEdit = (code: any) => {
-    setCode(code);
-  }
+	/**
+	 * (event) Upload the code to IPFS
+	 */
+	const handleUpload = async () => {
+		preventPageLeave();
 
-  /**
-   * (event) Upload the code to IPFS 
-   */
-  const handleUpload = async () => {
+		setProgress(20);
+		setMsg("Uploading to IPFS & pinning...");
 
-    preventPageLeave();
-    
-    setProgress(20);
-    setMsg('Uploading to IPFS...');
-    const ipfsData = await uploadToIPFS(code);
-    console.log("[handleUpload] ipfsData:", ipfsData)
-    
-    setProgress(40);
-    setMsg('Requesting data to be pinned...');
-    const data = await fetch(`/api/pinata/${ipfsData.path}`).then((res) => res.json());
-    console.log("[handleUpload] data:", data);
+		const res = await fetch("/api/pinata/upload", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ code }),
+		});
 
-    setProgress(60);
-    setMsg('Data uploaded! waiting for it to be pinned...');
-    setIpfsId(data.data.ipfsHash);
+		const ipfsData = await res.json();
 
-    const isPinned = await tryUntil({
-      onlyIf: async () => (await fetch(`${APP_CONFIG.IPFS_PATH}/${data.data.ipfsHash}`)).status !== 404,
-      thenRun: async () => true,
-      onTrying: (counter: number) => {
-        setCompleted(true);
-        setProgress(60 + counter);
-        setMsg(`Pinning...`);
-      },
-      onError: (_: any) => {
-        throwError("Failed to check the pinning status, maybe check again in 5 mins");
-        return;
-      },
-      max: 40,
-      interval: 3000,
-    })
+		console.log("ipfsData:", ipfsData);
 
-    
-    console.log("[handleUpload] isPinned:", isPinned);
-    
-    setMsg('Done!');
-    setProgress(100);
-    preventPageLeave({ reset: true });
+		const cid = ipfsData.IpfsHash;
 
-  }
+		// console.log("ipfsData:", ipfsData)
+		// return;
 
-  /**
-   * (render) render progress UI
-   */
-  const renderProgress = () => {
+		// setProgress(20);
+		// setMsg('Uploading to IPFS...');
+		// console.warn("Uploading to IPFS");
+		// const ipfsData = await uploadToIPFS(code);
+		// console.log("[handleUpload] ipfsData:", ipfsData)
 
-    // -- validate
-    if(progress <= 0 || progress >= 100) return <></>
+		// wait for 2 seconds
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+		// setProgress(40);
+		// setMsg('Requesting data to be pinned...');
+		// console.warn("Pinning data");
+		// const data = await fetch(`/api/pinata/${ipfsData.path}`).then((res) => res.json());
+		// console.log("[handleUpload] data:", data);
 
-    // -- finally
-    return <MyProgress value={progress} message={msg} />
+		setProgress(60);
+		setMsg("Data uploaded! waiting for it to be pinned...");
+		console.log("cid:", cid);
+		setIpfsId(cid);
 
-  }
+		// const isPinned = await tryUntil({
+		//   onlyIf: async () => (await fetch(`${APP_CONFIG.IPFS_PATH}/${data.data.ipfsHash}`)).status !== 404,
+		//   thenRun: async () => true,
+		//   onTrying: (counter: number) => {
+		setCompleted(true);
+		//     setProgress(60 + counter);
+		//     setMsg(`Pinning...`);
+		//   },
+		//   onError: (_: any) => {
+		//     throwError("Failed to check the pinning status, maybe check again in 5 mins");
+		//     return;
+		//   },
+		//   max: 40,
+		//   interval: 3000,
+		// })
 
-  /**
-   * (render) render post upload
-   */
-  const renderPostUpload = () => {
+		// console.log("[handleUpload] isPinned:", isPinned);
 
-    // (inner event) handleViewCode
-    const _handleViewCode = () => {
-      const page = AppRouter.getPage(ipfsId);
-      router.push(page);
-    }
+		setMsg("Done!");
+		setProgress(100);
+		preventPageLeave({ reset: true });
+	};
 
-    // (inner render) render status
-    const _renderStatus = () => {
-      if (progress < 100) return '';
-      return <Alert severity="success">Successfully uploaded to IPFS!</Alert>;
-    }
+	/**
+	 * (render) render progress UI
+	 */
+	const renderProgress = () => {
+		// -- validate
+		if (progress <= 0 || progress >= 100) return <></>;
 
-    // (inner render) render view code button
-    const _renderViewCodeButton = () => {
-      if (progress < 100) return <Button disabled className="btn-2 ml-auto">View Code</Button>;
+		// -- finally
+		return <MyProgress value={progress} message={msg} />;
+	};
 
-      return <Button onClick={_handleViewCode} className="btn-2 ml-auto">View Code</Button>
-    }
+	const onSelectDemo = (demo: any) => {
+		const code = (demos as any)[demo.target.value];
 
-    // -- validate
-    if ( ! completed ) return <></>
+		setCode(code);
 
-    // -- finally
-    return (
-      <MyCard className="mt-12">
-        
-        { _renderStatus() }
-        
-        <TextField className="mt-12 textfield" fullWidth label="IPFS ID" value={ipfsId} />
-        <div className="mt-12 flex">
-          <div className="ml-auto flex">
-            { _renderViewCodeButton() }
-          </div>
-        </div>
-      </MyCard>
-    )
-  }
+		// find index by value
+		const index = Object.keys(demos).findIndex(
+			(key) => (demos as any)[key] === code
+		);
+		setDemoIndex(index);
+	};
+	/*
+	 * (render) render lit action demo select
+	 */
+	const renderDemoSelect = () => {
+		return (
+			<FormControl fullWidth>
+				<InputLabel id="demo-simple-select-label">
+					Select Example
+				</InputLabel>
+				<Select
+					labelId="demo-simple-select-label"
+					id="demo-simple-select"
+					value={Object.keys(demos)[demoIndex]}
+					label="Select Example"
+					onChange={onSelectDemo}
+				>
+					{Object.keys(demos).map((key) => {
+						return (
+							<MenuItem key={key} value={key}>
+								{key}
+							</MenuItem>
+						);
+					})}
+				</Select>
+			</FormControl>
+		);
+	};
 
-  /**
-   * (render) render content
-   */
-  const renderContent = () => {
+	/**
+	 * (render) render post upload
+	 */
+	const renderPostUpload = () => {
+		// (inner event) handleViewCode
+		const _handleViewCode = () => {
+			const page = AppRouter.getPage(ipfsId);
+			router.push(page);
+		};
 
-    return (
-      <>
-        <h1>Create Action</h1>
+		// (inner render) render status
+		const _renderStatus = () => {
+			if (progress < 100) return "";
+			return (
+				<Alert severity="success">Successfully uploaded to IPFS!</Alert>
+			);
+		};
 
-        <div className="code-editor mt-12">
-            <MonacoEditor
-                language="javascript"
-                onChange={(code) => onEdit(code)}
-                value={code}
-                theme="vs-dark"
-                height="300px"
-            />
-        </div>
+		// (inner render) render view code button
+		const _renderViewCodeButton = () => {
+			if (progress < 100)
+				return (
+					<Button disabled className="btn-2 ml-auto">
+						View Code
+					</Button>
+				);
 
-        <div className="mt-12 flex">
-          <Button onClick={handleUpload} className="btn-2 ml-auto">Upload to IPFS</Button>
-        </div>  
-      </>
-    )
+			return (
+				<Button onClick={_handleViewCode} className="btn-2 ml-auto">
+					View Code
+				</Button>
+			);
+		};
 
-  }
+		// -- validate
+		if (!completed) return <></>;
 
-  const renderDescription = () => {
+		// -- finally
+		return (
+			<MyCard className="mt-12">
+				{_renderStatus()}
 
-    return (
-      <MyDescription titleId="what are lit actions - title" paragraphs={[
-        { id: 'what are lit actions' },
-        { id: 'read more', link: APP_LINKS.WORKING_WITH_LIT_ACTIONS },
-      ]}/>
-    )
+				<TextField
+					className="mt-12 textfield"
+					fullWidth
+					label="IPFS ID"
+					value={ipfsId}
+				/>
+				<div className="mt-12 flex">
+					<div className="ml-auto flex">
+						{_renderViewCodeButton()}
+					</div>
+				</div>
+			</MyCard>
+		);
+	};
 
-  }
+	/**
+	 * (render) render content
+	 */
+	const renderContent = () => {
+		return (
+			<>
+				<h1>Create Action</h1>
 
-  // (validations)
+				<div className="flex">
+					<div className="mr-12 w-240 mt-12">
+						{renderDemoSelect()}
+					</div>
 
-  return (
-    <>
-      { renderDescription() }
-      { renderProgress() }
-      { renderPostUpload() }
-      { renderContent() }      
-    </>
-  )
-}
+					<div className="code-editor mt-12 width-full">
+						<MonacoEditor
+							language="javascript"
+							onChange={(code) => onEdit(code)}
+							value={code}
+							theme="vs-dark"
+							height="300px"
+						/>
+					</div>
+				</div>
+				<div className="mt-12 flex">
+					<Button onClick={handleUpload} className="btn-2 ml-auto">
+						Upload to IPFS
+					</Button>
+				</div>
+			</>
+		);
+	};
 
-export default CreateAction
+	const renderDescription = () => {
+		return (
+			<MyDescription
+				titleId="what are lit actions - title"
+				paragraphs={[
+					{ id: "what are lit actions" },
+					{
+						id: "read more",
+						link: APP_LINKS.WORKING_WITH_LIT_ACTIONS,
+					},
+				]}
+			/>
+		);
+	};
+
+	// (validations)
+
+	return (
+		<>
+			{renderDescription()}
+			{renderProgress()}
+			{renderPostUpload()}
+			{renderContent()}
+		</>
+	);
+};
+
+export default CreateAction;
 
 CreateAction.getLayout = function getLayout(page: any) {
-  return (
-    <MainLayout>
-      { page }
-    </MainLayout>
-  )
-}
+	return <MainLayout>{page}</MainLayout>;
+};

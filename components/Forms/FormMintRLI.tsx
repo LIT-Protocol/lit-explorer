@@ -7,102 +7,105 @@ import { useState } from "react";
 import { wait } from "../../utils/utils";
 
 const FormMintRLI = ({
-    onMint
+	onMint,
 }: {
-    onMint?(cost: MultiETHFormat, tx: any): void
+	onMint?(cost: MultiETHFormat, tx: any): void;
 }) => {
+	// (app context)
+	const { rliContract } = useAppContext();
 
-    // (app context)
-    const { rliContract } = useAppContext();
+	const [progress, setProgress] = useState<MyProgressI>({
+		progress: 0,
+		message: "",
+	});
 
-    const [ progress, setProgress] = useState<MyProgressI>({progress: 0, message: ''});
+	// (event) handle click
+	const handleClick = async (res: any): Promise<void> => {
+		// -- validate
+		if (res.length < 2) {
+			throwError("You must fill in all fields.");
+			return;
+		}
 
-    // (event) handle click
-    const handleClick = async (res: any) : Promise<void> => {
+		console.log("HandleClick:", res);
 
-        // -- validate
-        if(res.length < 2) {
-            throwError("You must fill in all fields.");
-            return;
-        }
+		const requests = parseInt(res[0].data);
+		const timestamp = moment(res[1].data).unix();
 
-        console.log("HandleClick:", res);
+		console.log("requests:", requests);
+		console.log("timestamp:", timestamp);
 
-        const requests = parseInt(res[0].data)
-        const timestamp = moment(res[1].data).unix();
+		setProgress({
+			progress: 50,
+			message: "Calculating cost...",
+		});
+		let cost;
 
-        console.log("requests:", requests);
-        console.log("timestamp:", timestamp);
+		try {
+			cost = await rliContract.read.costOfRequestsPerSecond(
+				requests,
+				timestamp
+			);
+		} catch (e: any) {
+			setProgress({
+				progress: 0,
+				message: "",
+			});
+			throwError(e.message);
+			return;
+		}
 
-        setProgress({
-            progress: 50,
-            message: 'Calculating cost...',
-        })
-        let cost;
+		console.log("cost:", cost);
 
-        try{
-            cost = await rliContract.read.costOfRequestsPerSecond(requests, timestamp);
-        }catch(e: any){
-            setProgress({
-                progress: 0,
-                message: '',
-            })
-            throwError(e.message);
-            return;
-        }
-        
-        console.log("cost:", cost);
+		setProgress({
+			progress: 75,
+			message: "Minting...",
+		});
 
-        setProgress({
-            progress: 75,
-            message: 'Minting...',
-        })
-        
-        // -- mint
-        const mintTx = await rliContract.write.mint({
-            mintCost: {
-                value: cost.arg
-            },
-            timestamp
-        });
+		// -- mint
+		const mintTx = await rliContract.write.mint({
+			mintCost: {
+				value: cost.arg,
+			},
+			timestamp,
+		});
 
-        setProgress({
-            progress: 100,
-            message: 'Done',
-        })
-        
-        await wait(1000);
-        
-        setProgress({
-            progress: 0,
-            message: '',
-        })
+		setProgress({
+			progress: 100,
+			message: "Done",
+		});
 
-        if( onMint ){
-            onMint(cost, mintTx);
-        }
-        
-    }
+		await wait(1000);
 
-    return (
-        <div className="mt-12 mb-12">
-            <FormInputFields 
-                title="Mint a Rate Limit Increase NFT"
-                fields={[
-                    {
-                        title: "Requests/millisecond",
-                        label: "",
-                    },
-                    {
-                        title: MyFieldType.DATE_TIME_PICKER,
-                        type: MyFieldType.DATE_TIME_PICKER
-                    }
-                ]}
-                buttonText="MINT RLI NFT"
-                onSubmit={handleClick}
-                progress={progress}
-            />
-        </div>
-    )
-}
+		setProgress({
+			progress: 0,
+			message: "",
+		});
+
+		if (onMint) {
+			onMint(cost, mintTx);
+		}
+	};
+
+	return (
+		<div className="mt-12 mb-12">
+			<FormInputFields
+				title="Mint a Rate Limit Increase NFT"
+				fields={[
+					{
+						title: "Requests/millisecond",
+						label: "",
+					},
+					{
+						title: MyFieldType.DATE_TIME_PICKER,
+						type: MyFieldType.DATE_TIME_PICKER,
+					},
+				]}
+				buttonText="MINT RLI NFT"
+				onSubmit={handleClick}
+				progress={progress}
+			/>
+		</div>
+	);
+};
 export default FormMintRLI;

@@ -1,79 +1,81 @@
-/** ========== CONTRACT ADDRESSES ========== */
-export const APP_CONFIG = {
-    PKP_NFT_CONTRACT_ADDRESS: "0x594E1dA675e2a17866B7E3D80c96Cb396f2A4ccD", 
-    RATE_LIMIT_CONTRACT_ADDRESS: "0xbd757dD9Bfba4Ac6df1E7e66B9C40486f4681f9B",
-    ROUTER_CONTRACT_ADDRESS: "0x9a640Cae460A869b964ecAe7417cc30377E80968",
-    ECDSA_KEY: 2,
-    IPFS_PIN_NAME: 'Lit Explorer v0.0.2',
-    IPFS_PATH: 'https://ipfs.litgateway.com/ipfs',
-}
+// import json
+import deployedContracts from "./ABIs/deployed-contracts.json";
+import PKPHelper from "./ABIs/PKPHelper.json";
+import PKPNFT from "./ABIs/PKPNFT.json";
+import PKPPermissions from "./ABIs/PKPPermissions.json";
+import PubkeyRouter from "./ABIs/PubkeyRouter.json";
+import RateLimitNFT from "./ABIs/RateLimitNFT.json";
+// import { Network } from "alchemy-sdk";
 
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
-    WALLET_CONNECTED : 'lit-explorer-wallet-connected',
-    LANG: 'lit-explorer-i18n-lang',
-    WALLET_EVENTS: 'lit-explorer-wallet-events',
-}   
+	WALLET_CONNECTED: "lit-explorer-wallet-connected",
+	LANG: "lit-explorer-i18n-lang",
+	WALLET_EVENTS: "lit-explorer-wallet-events",
+	LOGGED: "lit-logged",
+};
 
 /** ========== LINKS ========== */
 export const APP_LINKS = {
-    WHAT_IS_PKP: 'https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs',
-    WORKING_WITH_LIT_ACTIONS: 'https://developer.litprotocol.com/LitActionsAndPKPs/workingWithLitActions',
-    // LIT_DISCORD: 'https://discord.com/channels/896185694857343026/1002588409153458228',
-    LIT_DISCORD: 'https://litgateway.com/discord',
-    DOC: 'https://developer.litprotocol.com/',
-}
+	WHAT_IS_PKP:
+		"https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs",
+	WORKING_WITH_LIT_ACTIONS:
+		"https://developer.litprotocol.com/SDK/Explanation/litActions",
+	LIT_DISCORD: "https://litgateway.com/discord",
+	DOC: "https://developer.litprotocol.com/",
+};
 
-/** ========== SUPPORTED NETWORKS ========== */
-export enum SupportedNetworks{
-    CELO_MAINNET = 'CELO_MAINNET'
-}
+/** ========== CURRENT NETWORK ========== */
+export const CURRENT_NETWORK = "LIT_PROTOCOL";
+export const CURRENT_CHAIN = {
+	params: {
+		chainId: "0x2AC49",
+		chainName: "Chronicle - Lit Protocol Testnet",
+		nativeCurrency: {
+			name: "LIT",
+			symbol: "LIT",
+			decimals: 18,
+		},
+		rpcUrls: ["https://chain-rpc.litprotocol.com/http"],
+		blockExplorerUrls: ["https://chain.litprotocol.com"],
+	},
+};
 
-export const SUPPORTED_CHAINS = {
-    [SupportedNetworks.CELO_MAINNET]: {
-        ABI_API: "https://api.celoscan.io/api?module=contract&action=getabi&address=",
-        EXPLORER_API: "https://explorer.celo.org/api",
-        params: {
-            chainId: "0xa4ec",
-            chainName: "Celo",
-            nativeCurrency: { name: "Celo", symbol: "CELO", decimals: 18 },
-            rpcUrls: ["https://forno.celo.org"],
-            blockExplorerUrls: ["https://explorer.celo.org/"],
-            iconUrls: ["future"],
-        }
-    }
+export enum SupportedNetworks {
+	LIT_PROTOCOL = "LIT_PROTOCOL",
 }
 
 /** ========== APP ROUTES ========== */
-export enum SupportedSearchTypes{
-    ETH_ADDRESS = "ETH_ADDRESS",
-    IPFS_ID = "IPFS_ID",
-    PKP_TOKEN_ID = "PKP_TOKEN_ID"
+export enum SupportedSearchTypes {
+	ETH_ADDRESS = "ETH_ADDRESS",
+	IPFS_ID = "IPFS_ID",
+	PKP_TOKEN_ID = "PKP_TOKEN_ID",
 }
 
 export const SEARCH_ROUTES = {
-    [SupportedSearchTypes.ETH_ADDRESS]:{
-        getRoute: (id : string) => `/owners/${id}`
-    },
-    [SupportedSearchTypes.PKP_TOKEN_ID]:{
-        getRoute: (id : string) => `/pkps/${id}`
-    },
-    [SupportedSearchTypes.IPFS_ID]:{
-        getRoute: (id : string) => `/actions/${id}`
-    }
-}
+	[SupportedSearchTypes.ETH_ADDRESS]: {
+		getRoute: (id: string) => `/owners/${id}`,
+	},
+	[SupportedSearchTypes.PKP_TOKEN_ID]: {
+		getRoute: (id: string) => `/pkps/${id}`,
+	},
+	[SupportedSearchTypes.IPFS_ID]: {
+		getRoute: (id: string) => `/actions/${id}`,
+	},
+};
 
 export const ROUTES = {
-    HOME: '/',
-    MINT_PKP: '/mint-pkp',
-    CREATE_ACTION: '/create-action',
-    OWNERS: '/owners',
-    PKPS: '/pkps',
-    ACTIONS: '/actions',
-    RLIS: '/rlis',
-    CONTRACTS: '/contracts',
-    DOCUMENTATION: '/documentation',
-}
+	HOME: "/",
+	PROFILE: "/profile",
+	MINT_PKP: "/mint-pkp",
+	CREATE_ACTION: "/create-action",
+	OWNERS: "/owners",
+	PKPS: "/pkps",
+	ACTIONS: "/actions",
+	RLIS: "/rlis",
+	CONTRACTS: "/contracts",
+	DOCUMENTATION: "/documentation",
+};
 
 // ========== Lit Action Code ==========
 export const DEFAULT_LIT_ACTION = `const go = async () => {
@@ -83,9 +85,66 @@ export const DEFAULT_LIT_ACTION = `const go = async () => {
     // the signature share will be automatically returned in the HTTP response from the node
     const sigShare = await LitActions.signEcdsa({
       toSign,
-      publicKey: "0x03...e127",
+      publicKey, // <-- You should pass this in jsParam
       sigName: "sig1",
     });
   };
   
   go();`;
+
+/** ========== CHANGE THIS INFORMATION FOR YOUR NETWORK! ========== */
+
+export const APP_CONFIG = {
+	// ---------- MUMBAI ----------
+	// -- explorer address
+	EXPLORER: "https://lit-protocol.calderaexplorer.xyz/address/",
+	NETWORK_NAME: CURRENT_NETWORK,
+	NETWORK: CURRENT_CHAIN,
+	NETWORK_LABEL: {
+		ENABLED: true,
+		NAME: "Chronicle Testnet",
+	},
+	API_URL: "https://lit-protocol.calderaexplorer.xyz/api",
+	ECDSA_KEY: 2,
+	IPFS_PIN_NAME: "Lit Explorer v0.0.5",
+	IPFS_PATH: "https://lit.mypinata.cloud/ipfs",
+	// --- Main contracts used in this explorer
+	PKP_NFT_CONTRACT: {
+		ADDRESS: deployedContracts.pkpNftContractAddress,
+		ABI: PKPNFT.abi,
+	},
+	RATE_LIMIT_CONTRACT: {
+		ADDRESS: deployedContracts.rateLimitNftContractAddress,
+		ABI: RateLimitNFT.abi,
+	},
+	ROUTER_CONTRACT: {
+		ADDRESS: deployedContracts.pubkeyRouterContractAddress,
+		ABI: PubkeyRouter.abi,
+	},
+
+	PKP_HELPER_CONTRACT: {
+		ADDRESS: deployedContracts.pkpHelperContractAddress,
+		ABI: PKPHelper.abi,
+	},
+	PKP_PERMISSIONS_CONTRACT: {
+		ADDRESS: deployedContracts.pkpPermissionsContractAddress,
+		ABI: PKPPermissions.abi,
+	},
+
+	// -- (NOT IMPORTANT) Only for display
+	ACCS_CONTRACT: {
+		ADDRESS: deployedContracts.accessControlConditionsContractAddress,
+	},
+	LIT_TOKEN_CONTRACT: {
+		ADDRESS: deployedContracts.litTokenContractAddress,
+	},
+	MULTI_SENDER_CONTRACT: {
+		ADDRESS: deployedContracts.multisenderContractAddress,
+	},
+	DEPLOYER_CONTRACT: {
+		ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+	},
+	STAKED_NODE_CONTRACT: {
+		ADDRESS: deployedContracts.stakingContractAddress,
+	},
+};

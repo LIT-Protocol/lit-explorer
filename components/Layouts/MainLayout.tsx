@@ -1,119 +1,147 @@
-import SearchBar from "../Forms/SearchBar";
 import SideNav from "../UI/SideNav";
-import throwError from '../../utils/throwError';
-import { useRouter } from "next/router";
-import { Alert, AlertTitle, Button, Chip, Snackbar, Stack } from '@mui/material'
-import NavPath from "../UI/NavPath";
-import { AppRouter } from "../../utils/AppRouter";
+import { Alert, AlertTitle, Chip } from "@mui/material";
 import { I18Provider, LOCALES } from "../Contexts/i18n";
 import { APP_LINKS, STORAGE_KEYS } from "../../app_config";
-import SupportIcon from '@mui/icons-material/Support';
+import SupportIcon from "@mui/icons-material/Support";
 import { useEffect, useState } from "react";
-import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
-import { AppContextProvider, useAppContext } from "../Contexts/AppContext";
 import SEOHeader from "../Contexts/SEOHeader";
-
+import CloseIcon from "@mui/icons-material/Close";
 
 interface MainLayoutProps {
-    children: any
+	children: any;
+	data?: any;
 }
 
 const MainLayout = (props: MainLayoutProps) => {
+	// const router = useRouter();
 
-    const router = useRouter();
+	const [locale, setLocale] = useState(LOCALES.ENGLISH);
 
-    const [locale, setLocale] = useState(LOCALES.ENGLISH);
+	useEffect(() => {
+		/**
+		 * Select default language
+		 */
+		const key = STORAGE_KEYS.LANG;
+		console.log("[locale] state<locale>:", locale);
+		console.log(
+			`[localStorage.getItem('${key}')]:`,
+			localStorage.getItem(key)
+		);
 
-    useEffect(() => {
+		if (!localStorage.getItem(key)) {
+			localStorage.setItem(key, LOCALES.ENGLISH);
+			setLocale(LOCALES.ENGLISH);
+		} else {
+			setLocale(localStorage.getItem(key) as string);
+		}
+	}, []);
 
-        /**
-         * Select default language
-         */
-        const key = STORAGE_KEYS.LANG;
-        console.log("[locale] state<locale>:", locale);
-        console.log(`[localStorage.getItem('${key}')]:`, localStorage.getItem(key));
+	// -- (event) on select language
+	// const onSelectLanguage = (value: string) => {
 
-        if( ! localStorage.getItem(key) ){
-            localStorage.setItem(key, LOCALES.ENGLISH);
-            setLocale(LOCALES.ENGLISH)
-        }else{
-            setLocale((localStorage.getItem(key) as string))
-        }
+	//     const lang : any = LOCALES;
+	//     const selectedLocale = lang[value];
 
-    }, [])
+	//     localStorage.setItem(STORAGE_KEYS.LANG, selectedLocale);
 
-    // -- (event) on select language
-    const onSelectLanguage = (value: string) => {
+	//     setLocale(selectedLocale);
 
-        const lang : any = LOCALES;
-        const selectedLocale = lang[value];
+	// }
 
-        localStorage.setItem(STORAGE_KEYS.LANG, selectedLocale);
+	const clearMessage = () => {
+		console.log("clear message");
 
-        setLocale(selectedLocale);
-        
-    }
+		const globalMessage = document.getElementById(
+			"global-message-success"
+		) as HTMLDivElement;
 
-    return (
-        <>
-            <SEOHeader/>
-            <I18Provider locale={locale}>
-                
-                <div className="app-context">
+		const globalMessageTitle = document.getElementById(
+			"global-message-success-title"
+		) as HTMLDivElement;
 
-                    {/* <Snackbar open={true} autoHideDuration={6000} onClose={() => {}}
+		const globalMessageContent = document.getElementById(
+			"global-message-success-content"
+		) as HTMLDivElement;
+
+		clearTimeout(window.messageTimeout);
+
+		globalMessage.style.display = "none";
+		globalMessageTitle.innerText = "";
+		globalMessageContent.innerText = "";
+	};
+
+	return (
+		<>
+			<SEOHeader />
+			<I18Provider locale={locale}>
+				<div className="app-context">
+					{/* <Snackbar open={true} autoHideDuration={6000} onClose={() => {}}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
                         <Alert onClose={() => {}} severity="success" sx={{ width: '100%' }}>
                         This is a success message!
                         </Alert>
                     </Snackbar> */}
 
-                    {/* ----- Error message ----- */}
-                    <div id="global-message">
-                        <Alert severity="error">
-                            <AlertTitle id="global-message-title">Error</AlertTitle>
-                            <div id="global-message-content">123</div>
-                        </Alert>
-                    </div>
+					{/* ----- Error message ----- */}
+					<div id="global-message">
+						<CloseIcon
+							className="closeBtn"
+							onClick={clearMessage}
+						/>
+						<Alert severity="error">
+							<AlertTitle id="global-message-title">
+								Error
+							</AlertTitle>
+							<div id="global-message-content">123</div>
+						</Alert>
+					</div>
 
-                    {/* ----- Info Message ----- */}
-                    <div id="global-message-success">
-                        <Alert severity="success">
-                            <AlertTitle id="global-message-success-title"></AlertTitle>
-                            <div id="global-message-success-content"></div>
-                        </Alert>
-                    </div>
+					{/* ----- Info Message ----- */}
+					<div id="global-message-success">
+						<CloseIcon
+							className="closeBtn"
+							onClick={clearMessage}
+						/>
+						<Alert severity="success">
+							<AlertTitle id="global-message-success-title"></AlertTitle>
+							<div id="global-message-success-content"></div>
+						</Alert>
+					</div>
 
-                    <div className="layout-wrapper">
-                
-                        {/* ----- Left Side ----- */}
-                        <div className="side-wrapper">
-                            <SideNav/>
-                        </div>
-                        {/* ----- ... Left Side ----- */}
-                    
-                        {/*  ----- Content Wrapper -----*/}
-                        <div className="content-wrapper">
-                            { props.children }
-                        </div>
-                        {/*  ----- ...Content Wrapper -----*/}
-                        
-                    </div>
-                    
-                    {/* ----- Floating Footer ------ */}
-                    <div className="support flex">
-                        {/* <LanguagePickerModal onSelectLanguage={onSelectLanguage}/> */}
-                        
-                        <div className="ml-auto flex">
-                            <a target="_blank" rel="noreferrer" href={APP_LINKS.LIT_DISCORD}>
-                                <Chip onClick={ () => {} } icon={<SupportIcon />} label="Support"/>
-                            </a>
-                        </div>
-                    </div>
-                    
-                </div>
-            </I18Provider>
-        </>
-      )
-}
+					<div className="layout-wrapper">
+						{/* ----- Left Side ----- */}
+						<div className="side-wrapper">
+							<SideNav />
+						</div>
+						{/* ----- ... Left Side ----- */}
+
+						{/*  ----- Content Wrapper -----*/}
+						<div className="content-wrapper">{props.children}</div>
+						{/*  ----- ...Content Wrapper -----*/}
+					</div>
+
+					{/* ----- Floating Footer ------ */}
+					<div className="support flex">
+						{/* <LanguagePickerModal onSelectLanguage={onSelectLanguage}/> */}
+
+						<div className="ml-auto flex">
+							<a
+								target="_blank"
+								rel="noreferrer"
+								href={APP_LINKS.LIT_DISCORD}
+							>
+								<Chip
+									onClick={() => {}}
+									icon={<SupportIcon />}
+									label="Support"
+								/>
+							</a>
+						</div>
+					</div>
+				</div>
+			</I18Provider>
+		</>
+	);
+};
+
 export default MainLayout;

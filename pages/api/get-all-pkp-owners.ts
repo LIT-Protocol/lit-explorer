@@ -1,25 +1,32 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { APP_CONFIG, SupportedNetworks, SUPPORTED_CHAINS } from '../../app_config';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { APP_CONFIG } from "../../app_config";
+// import { Alchemy } from "alchemy-sdk";
+const { toChecksumAddress } = require("ethereum-checksum-address");
 
 type Data = {
-  id?: string
-  body?: string,
-  data?: any
-}
-// https://explorer.celo.org/api-docs
+	id?: string;
+	body?: string;
+	data?: any;
+	error?: Error;
+};
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
+	req: NextApiRequest,
+	res: NextApiResponse<Data>
 ) {
+	const baseURL = APP_CONFIG.API_URL;
+	const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS;
+	const query = `?module=token&action=getTokenHolders&contractaddress=${contractAddressHash}`;
 
-  const baseURL = SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].EXPLORER_API;
-  const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT_ADDRESS;
-  const query = `?module=token&action=getTokenHolders&contractaddress=${contractAddressHash}`;
+	const url = `${baseURL}${query}`;
 
-  const dataRes = await fetch(`${baseURL}${query}`);
+	console.log("url", url);
 
-  let data = await dataRes.json();
+	const dataRes = await fetch(url);
 
-  res.status(200).json({ data })
+	const data = await dataRes.json();
+
+	console.log("[get-all-pkp-owners] data:", data);
+
+	res.status(200).json({ data: data.result });
 }

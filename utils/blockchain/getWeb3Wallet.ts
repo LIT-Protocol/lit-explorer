@@ -1,48 +1,53 @@
 import { ethers } from "ethers";
-import { Signer } from 'ethers';
-import { SupportedNetworks, SUPPORTED_CHAINS } from "../../app_config";
+import { Signer } from "ethers";
+import { APP_CONFIG } from "../../app_config";
 
-interface Web3WalletProps{
-    wallet: any,
-    signer: any,
-    addresses: any,
-    ownerAddress: any,
+interface Web3WalletProps {
+	wallet: any;
+	signer: any;
+	addresses: any;
+	ownerAddress: any;
 }
 
 const defaultProps = {
-    wallet: null, 
-    signer: null, 
-    addresses: null,
-    ownerAddress: null,
-}
+	wallet: null,
+	signer: null,
+	addresses: null,
+	ownerAddress: null,
+};
 
-const getWeb3Wallet = async () : Promise<Web3WalletProps | never> => {
-    
-    const web3Provider = window.ethereum;
+const getWeb3Wallet = async (): Promise<Web3WalletProps | never> => {
+	const web3Provider = window.ethereum;
 
-    if( ! web3Provider ){
-        alert("Please install web3 wallet like Metamask/Brave.");
-        return defaultProps;
-    }
+	console.warn("web3Provider:", web3Provider);
 
-    const web3ProviderRequest = {
-        method: 'wallet_addEthereumChain',
-        params: [SUPPORTED_CHAINS[SupportedNetworks.CELO_MAINNET].params],
-    }
-    
-    await web3Provider.request(web3ProviderRequest)
+	if (!web3Provider) {
+		alert("Please install web3 wallet like Metamask/Brave.");
+		return defaultProps;
+	}
 
-    const wallet = new ethers.providers.Web3Provider(web3Provider);
+	try {
+		await web3Provider.send("wallet_switchEthereumChain", [
+			{ chainId: APP_CONFIG.NETWORK.params.chainId },
+		]);
+	} catch (e) {
+		await web3Provider.request({
+			method: "wallet_addEthereumChain",
+			params: [APP_CONFIG.NETWORK.params],
+		});
+	}
 
-    await wallet.send("eth_requestAccounts", []);
+	const wallet = new ethers.providers.Web3Provider(web3Provider);
 
-    const signer : Signer = wallet.getSigner();
+	await wallet.send("eth_requestAccounts", []);
 
-    const addresses = await wallet.listAccounts();
+	const signer: Signer = wallet.getSigner();
 
-    const ownerAddress = addresses[0];
+	const addresses = await wallet.listAccounts();
 
-    return { wallet, signer, addresses, ownerAddress };
-}
+	const ownerAddress = addresses[0];
+
+	return { wallet, signer, addresses, ownerAddress };
+};
 
 export default getWeb3Wallet;

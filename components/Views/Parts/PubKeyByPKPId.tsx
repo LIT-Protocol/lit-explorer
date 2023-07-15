@@ -2,42 +2,33 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
 
-const PubKeyByPKPId = ({
-    pkpId
-} : {
-    pkpId: string | any 
-}) => {
+const PubKeyByPKPId = ({ pkpId }: { pkpId: string | any }) => {
+	// -- (app context)
+	const { routerContract } = useAppContext();
 
-    // -- (app context)
-    const { routerContract } = useAppContext();
+	// -- (state)
+	const [pubKey, setPubKey] = useState();
 
-    // -- (state)
-    const [ pubKey, setPubKey] = useState();
-    
-    // -- (mounted)
-    useEffect(() => {
+	// -- (mounted)
+	useEffect(() => {
+		// -- validate
+		if (!pkpId || routerContract?.read === undefined) return;
 
-        // -- validate
-        if( ! pkpId ) return;
+		(async () => {
+			const _pubKey = await routerContract.read.getFullPubKey(pkpId);
 
-        (async() => {
+			setPubKey(_pubKey);
+		})();
+	}, [routerContract?.read]);
 
-            const _pubKey = await routerContract.read.getFullPubKey(pkpId)
+	// -- (validations)
+	if (!pubKey) return <>loading...</>;
 
-            setPubKey(_pubKey);
-
-        })();
-
-    }, [])
-
-    // -- (validations)
-    if( ! pubKey ) return <>loading...</>
-
-    return (
-        <div className="flex text-sm">
-            <div className="flex-content">PKP Public Key: { pubKey }</div> 
-            <Copy value={pubKey} />
-        </div>
-    )
-}
+	return (
+		<div className="flex text-sm">
+			<div className="flex-content">PKP Public Key: {pubKey}</div>
+			<Copy value={pubKey} />
+		</div>
+	);
+};
 export default PubKeyByPKPId;

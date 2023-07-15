@@ -8,51 +8,54 @@ import Copy from "../../UI/Copy";
 import { MyOptions } from "./RenderPKPToAddress";
 
 const RenderAction = (props: GridRenderCellParams, options: MyOptions) => {
+	// -- (app context)
+	const { routerContract } = useAppContext();
 
-    // -- (app context)
-    const { routerContract } = useAppContext();
+	const router = useRouter();
 
-    const router = useRouter();
+	const [ipfsId, setIpfsId] = useState<any>();
 
-    const [ipfsId, setIpfsId] = useState<any>();
+	const { value } = props;
 
-    const { value } = props;
+	useEffect(() => {
+		if (routerContract?.read === undefined) return;
 
-    useEffect(() => {
-        (async() => {
+		(async () => {
+			const _solidityIpfsId = props.formattedValue;
 
-            const _solidityIpfsId = props.formattedValue;
+			console.log("props.formattedValue:", props.formattedValue);
 
-            console.log("props.formattedValue:", props.formattedValue);
+			console.warn("_solidityIpfsId:", _solidityIpfsId);
 
-            const _ipfsId = await routerContract.read.getIpfsIds(_solidityIpfsId);
+			const _ipfsId = await routerContract.read.getIpfsIds(
+				_solidityIpfsId
+			);
 
-            console.log("[_ipfsId]:", _ipfsId);
+			console.log("[_ipfsId]:", _ipfsId);
 
-            setIpfsId(_ipfsId);
-        })();
-    })
+			setIpfsId(_ipfsId);
+		})();
+	}, [routerContract?.read]);
 
-    // -- (render)
-    const renderValue = () => {
+	// -- (render)
+	const renderValue = () => {
+		return (
+			<div className="flex">
+				<a
+					className="flex-content"
+					href={`${AppRouter.getPage(ipfsId)}`}
+					onClick={() => router.push(AppRouter.getPage(ipfsId))}
+				>
+					{options?.short ? heyShorty(ipfsId) : ipfsId}
+				</a>
+				{options?.copy ? <Copy value={ipfsId} /> : ""}
+			</div>
+		);
+	};
 
-        return (
-            <div className="flex">
-                <a className="flex-content" href={`${AppRouter.getPage(ipfsId)}`} onClick={() => router.push(AppRouter.getPage(ipfsId))}>
-                    { options?.short ? heyShorty(ipfsId) : ipfsId }
-                </a>                    
-                { options?.copy ? <Copy value={ipfsId} /> : '' }
-            </div>
-        )
-    }
+	if (!ipfsId) return <>Loading...</>;
 
-    if( ! ipfsId ) return <>Loading...</>;
-
-    return (
-        <div className="flex ">
-            { renderValue() }
-        </div>
-    )
-}
+	return <div className="flex ">{renderValue()}</div>;
+};
 
 export default RenderAction;

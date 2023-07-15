@@ -2,45 +2,43 @@ import { useEffect, useState } from "react";
 import { pub2Addr } from "../../../utils/converter";
 import { useAppContext } from "../../Contexts/AppContext";
 import Copy from "../../UI/Copy";
+import GreenTick from "../../UI/GreenTick";
+const { toChecksumAddress } = require("ethereum-checksum-address");
 
-const ETHAddressByPKPId = ({
-    pkpId
-} : {
-    pkpId: string | any 
-}) => {
+const ETHAddressByPKPId = ({ pkpId }: { pkpId: string | any }) => {
+	// -- (app context)
+	const { routerContract } = useAppContext();
 
-    // -- (app context)
-    const { routerContract } = useAppContext();
+	// -- (state)
+	const [address, setAddress] = useState<any>();
 
-    // -- (state)
-    const [address, setAddress] = useState<any>();
-    
-    // -- (mounted)
-    useEffect(() => {
+	// -- (mounted)
+	useEffect(() => {
+		// -- validate
+		if (!pkpId || routerContract?.read === undefined) return;
 
-        // -- validate
-        if( ! pkpId ) return;
+		(async () => {
+			const _pubKey = await routerContract.read.getFullPubKey(pkpId);
 
-        (async() => {
+			const _ethAddress = "0x" + pub2Addr(_pubKey);
 
-            const _pubKey = await routerContract.read.getFullPubKey(pkpId);
+			const _checksummedAddress = toChecksumAddress(_ethAddress);
 
-            const _ethAddress = '0x' + pub2Addr(_pubKey);
+			setAddress(_checksummedAddress);
+		})();
+	}, [routerContract?.read]);
 
-            setAddress(_ethAddress);
+	// -- (validations)
+	if (!address) return <>loading...</>;
 
-        })();
-
-    }, [])
-
-    // -- (validations)
-    if( ! address ) return <>loading...</>
-
-    return (
-        <div className="flex text-sm">
-            <div className="flex-content">ETH Address: { address }</div> 
-            <Copy value={address} />
-        </div>
-    )
-}
+	return (
+		<div className="flex text-sm">
+			<div className="flex-content flex">
+				<div className="flex-content">ETH Address: {address}</div>
+				<GreenTick message="Checksummed" />
+			</div>
+			<Copy value={address} />
+		</div>
+	);
+};
 export default ETHAddressByPKPId;

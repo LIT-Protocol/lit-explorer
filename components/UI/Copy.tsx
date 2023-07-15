@@ -1,30 +1,27 @@
-
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Chip } from "@mui/material";
-import copy from 'copy-to-clipboard';
-import alertMsg from '../../utils/alertMsg';
+import copy from "copy-to-clipboard";
+import alertMsg from "../../utils/alertMsg";
 
-const Copy = ({
-    value
-}: {
-    value: string
-}) => {
+const Copy = ({ value }: { value: string }) => {
+	// (event) handle copy
+	const handleCopy = (value: any) => {
+		copy(value);
 
-    // (event) handle copy
-    const handleCopy = (value: any) =>{
+		alertMsg({
+			title: "Copied!",
+			message: `You have copied ${value} to your clipboard!`,
+		});
+	};
 
-        copy(value);
-
-        alertMsg({
-            title: "Copied!",
-            message: `You have copied ${value} to your clipboard!`
-        });
-
-    }
-
-    // -- finally
-    return (
-        <Chip className="copy" onClick={ () => handleCopy(value) } icon={<ContentCopyIcon />} label="" /> 
-    )
-}
+	// -- finally
+	return (
+		<Chip
+			className="copy"
+			onClick={() => handleCopy(value)}
+			icon={<ContentCopyIcon />}
+			label=""
+		/>
+	);
+};
 export default Copy;
