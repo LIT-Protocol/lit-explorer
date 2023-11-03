@@ -33,7 +33,7 @@ import router from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
 import { PKPPermissionsContract } from "../../utils/blockchain/contracts/PKPPermissionsContract";
 import { PKPHelperContract } from "../../utils/blockchain/contracts/PKPHelperContract";
-
+import { LitContracts } from '@lit-protocol/contracts-sdk';
 declare global {
 	interface Window {
 		dec2hex?(pkpId: string): void;
@@ -55,20 +55,12 @@ interface MyWeb3 {
 }
 
 interface SharedStates {
-	pkpContract: PKPContract;
-	pkpPermissionsContract: PKPPermissionsContract;
-	pkpHelperContract: PKPHelperContract;
-	routerContract: RouterContract;
-	rliContract: RLIContract;
+	contractsSdk: LitContracts;
 	web3: MyWeb3;
 }
 
 let defaultSharedStates: SharedStates = {
-	pkpContract: {} as PKPContract,
-	pkpPermissionsContract: {} as PKPPermissionsContract,
-	pkpHelperContract: {} as PKPHelperContract,
-	routerContract: {} as RouterContract,
-	rliContract: {} as RLIContract,
+	contractsSdk: {} as LitContracts,
 	web3: {} as MyWeb3,
 };
 
@@ -76,13 +68,14 @@ const AppContext = createContext(defaultSharedStates);
 
 export const AppContextProvider = ({ children }: { children: any }) => {
 	// -- (shared states)
-	const [pkpContract, setPkpContract] = useState<PKPContract>();
-	const [pkpPermissionsContract, setPkpPermissionsContract] =
-		useState<PKPPermissionsContract>();
-	const [pkpHelperContract, setPkpHelperContract] =
-		useState<PKPHelperContract>();
-	const [routerContract, setRouterContract] = useState<RouterContract>();
-	const [rliContract, setRliContract] = useState<RLIContract>();
+	// const [pkpContract, setPkpContract] = useState<PKPContract>();
+	// const [pkpPermissionsContract, setPkpPermissionsContract] =
+	// 	useState<PKPPermissionsContract>();
+	// const [pkpHelperContract, setPkpHelperContract] =
+	// 	useState<PKPHelperContract>();
+	// const [routerContract, setRouterContract] = useState<RouterContract>();
+	// const [rliContract, setRliContract] = useState<RLIContract>();
+	const [contractsSdk, setContractsSdk] = useState<LitContracts>();
 	const [ownerAddress, setOwnerAddress] = useState<string>();
 
 	// -- (state)
@@ -118,41 +111,18 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		// console.warn("...connectContracts");
 
 		// -- validate
-		if (pkpContract && routerContract && rliContract && contractsLoaded)
+		if (contractsSdk && contractsLoaded)
 			return;
 
 		console.log("[connectContracts]");
 
 		const { signer } = await getWeb3Wallet();
 
-		const _pkpContract = new PKPContract();
-		const _pkpPermissionsContract = new PKPPermissionsContract();
-		const _pkpHelperContract = new PKPHelperContract();
-		const _routerContract = new RouterContract();
-		const _rliContract = new RLIContract();
+		const contractsSDK = new LitContracts({ signer });
 
-		// (new)
-		await _pkpPermissionsContract.connect({ signer });
+		await contractsSDK.connect();
 
-		await _pkpHelperContract.connect({ signer });
-
-		await _pkpContract.connect({ signer });
-
-		await _routerContract.connect({ signer });
-
-		await _rliContract.connect({ signer });
-
-		// const PKP_TOKEN_ID = '97194107225080213901219764844025856477702741025523632755533808599240578068193';
-		// const TARGET_ADDRESS = '0x75EdCdfb5A678290A8654979703bdb75C683B3dD';
-
-		// const tx = await _pkpPermissionsContract.write.addPermittedAddress(PKP_TOKEN_ID, TARGET_ADDRESS, _routerContract);
-
-		setPkpContract(_pkpContract);
-		setRouterContract(_routerContract);
-		setRliContract(_rliContract);
-
-		setPkpPermissionsContract(_pkpPermissionsContract);
-		setPkpHelperContract(_pkpHelperContract);
+		setContractsSdk(contractsSDK);
 
 		setContractsLoaded(true);
 	};
@@ -299,8 +269,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 				`${MyWeb3().installed ? "✅ " : "❌ "}MyWeb3().installed`
 			);
 			console.warn(
-				`${
-					MyWeb3().walletConnected ? "✅ " : "❌ "
+				`${MyWeb3().walletConnected ? "✅ " : "❌ "
 				}MyWeb3().walletConnected`
 			);
 
@@ -473,12 +442,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 	// -- share states for children components
 	let sharedStates = {
-		pkpContract: pkpContract as PKPContract,
-		pkpPermissionsContract:
-			pkpPermissionsContract as PKPPermissionsContract,
-		pkpHelperContract: pkpHelperContract as PKPHelperContract,
-		routerContract: routerContract as RouterContract,
-		rliContract: rliContract as RLIContract,
+		contractsSdk: contractsSdk ?? {} as LitContracts,
 		web3: {
 			get: web3Connected,
 			login: onLogin,

@@ -104,9 +104,9 @@ export const APP_CONFIG = {
 		ENABLED: true,
 		NAME: "Chronicle Testnet",
 	},
-	API_URL: "https://lit-protocol.calderaexplorer.xyz/api",
+	API_URL: "https://chain.litprotocol.com/api",
 	ECDSA_KEY: 2,
-	IPFS_PIN_NAME: "Lit Explorer v0.0.5",
+	IPFS_PIN_NAME: "Lit Explorer v0.1.0",
 	IPFS_PATH: "https://lit.mypinata.cloud/ipfs",
 	// --- Main contracts used in this explorer
 	PKP_NFT_CONTRACT: {

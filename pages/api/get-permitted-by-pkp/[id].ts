@@ -1,8 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PKPPermissionsContract } from "../../../utils/blockchain/contracts/PKPPermissionsContract";
 import getWeb3Wallet from "../../../utils/blockchain/getWeb3Wallet";
+import { LitContracts } from "@lit-protocol/contracts-sdk";
 
 type Data = {
 	id?: string;
@@ -20,14 +21,14 @@ export default async function handler(
 
 	console.log("[api/get-permitted-by-pkp] input<pkpId>:", pkpId);
 
-	const pkpPermissionsContract = new PKPPermissionsContract();
+	const contracts = new LitContracts();
 
-	await pkpPermissionsContract.connect();
-
-	let addresses = await pkpPermissionsContract.read.getPermittedAddresses(
-		pkpId
+	await contracts.connect();
+	
+	let addresses = await contracts.pkpPermissionsContract.read.getPermittedAddresses(
+		pkpId as BigNumberish
 	);
-	let actions = await pkpPermissionsContract.read.getPermittedActions(pkpId);
+	let actions = await contracts.pkpPermissionsContract.read.getPermittedActions(pkpId as BigNumberish);
 
 	const data = { addresses, actions };
 

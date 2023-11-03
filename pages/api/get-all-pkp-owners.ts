@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { APP_CONFIG } from "../../app_config";
 // import { Alchemy } from "alchemy-sdk";
 const { toChecksumAddress } = require("ethereum-checksum-address");
+import { LitContracts } from "@lit-protocol/contracts-sdk";
 
 type Data = {
 	id?: string;
@@ -15,7 +16,10 @@ export default async function handler(
 	res: NextApiResponse<Data>
 ) {
 	const baseURL = APP_CONFIG.API_URL;
-	const contractAddressHash = APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS;
+	const contracts = new LitContracts();
+	await contracts.connect();
+	const contractAddressHash = contracts.pkpNftContract.read.address;
+
 	const query = `?module=token&action=getTokenHolders&contractaddress=${contractAddressHash}`;
 
 	const url = `${baseURL}${query}`;
