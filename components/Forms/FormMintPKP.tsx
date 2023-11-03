@@ -12,7 +12,7 @@ import { hexToDecimal } from "../../utils/converter";
 const FormMintNewPKP: NextPageWithLayout = () => {
 	// -- app context
 	const appContext = useAppContext();
-	const { pkpContract, routerContract } = appContext;
+	const { contractsSdk } = appContext;
 
 	const router = useRouter();
 
@@ -43,7 +43,7 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 			})
 		);
 
-		const mintCost = await pkpContract.read.mintCost();
+		const mintCost = await contractsSdk.pkpNftContract.read.mintCost();
 		console.log("mintCost:", mintCost);
 
 		// ===== STEP =====
@@ -51,36 +51,27 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 			setMintProgress(
 				newObjectState(mintProgress, {
 					progress: 75,
-					message: `Cost ${mintCost.eth} to mint, minting...`,
+					message: `Cost ${mintCost} to mint, minting...`,
 				})
 			);
 
-			const mintRes = await pkpContract.write.mint({
-				value: mintCost.arg,
+			const mintRes = await contractsSdk.pkpNftContract.write.mintNext(2, {
+				value: mintCost,
 			});
 
-			const tokenId = mintRes.tokenId;
+			const res: any = await mintRes.wait();
+			console.log("res:", res);
+
+			let events = 'events' in res ? res.events : res.logs;
+			console.log("events:", events);
+
+			let tokenId = hexToDecimal(events[1].topics[3]);
 
 			console.log("XX tokenId:", tokenId);
 
 			setMintedPKPId(tokenId);
 
-			const isRouted = await tryUntil({
-				onlyIf: async () => await routerContract.read.isRouted(tokenId),
-				thenRun: async () => true,
-				onTrying: (counter: number) => {
-					setMintProgress(
-						newObjectState(mintProgress, {
-							progress: 75 + counter,
-							message: `${counter} waiting for confirmation...`,
-						})
-					);
-				},
-				onError: (props: TryUntilProp) => {
-					throwError(`Failed to execute: ${JSON.stringify(props)}`);
-				},
-				interval: 3000,
-			});
+			const isRouted = true;
 
 			console.log("isRouted:", isRouted);
 

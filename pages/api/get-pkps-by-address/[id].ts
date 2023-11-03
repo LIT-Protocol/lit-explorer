@@ -4,6 +4,7 @@ import { APP_CONFIG } from "../../../app_config";
 import { RouterContract } from "../../../utils/blockchain/contracts/RouterContract";
 import { decimalTohex, pub2Addr } from "../../../utils/converter";
 import { asyncForEach } from "../../../utils/utils";
+import { LitContracts } from "@lit-protocol/contracts-sdk";
 
 type Data = {
 	id?: string;
@@ -27,20 +28,21 @@ export default async function handler(
 	}
 	const baseURL = APP_CONFIG.API_URL;
 	const query = `?module=account&action=tokentx&address=${id}`;
+	const url = `${baseURL}${query}`;
+	console.log("url", url);
 
-	const dataRes = await fetch(`${baseURL}${query}`);
+	const dataRes = await fetch(url);
 
 	const data = await dataRes.json();
 
-	let pkps = data.result
-		.filter((item: any) => item.tokenSymbol === "PKP")
-		.filter(
-			(item: any) =>
-				item.contractAddress ===
-				APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS.toLowerCase()
-		);
+	const contracts = new LitContracts();
+	await contracts.connect();
+	const contractAddressHash = contracts.pkpNftContract.read.address;
+	console.log("contractAddressHash", contractAddressHash);
 
-	console.log("pkps", pkps);
+
+	let pkps = data.result
+		.filter((item: any) => item.contractAddress === contractAddressHash.toLowerCase())
 
 	res.status(200).json({
 		id: id?.toString(),
