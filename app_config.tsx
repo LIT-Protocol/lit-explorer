@@ -9,10 +9,10 @@ import RateLimitNFT from "./ABIs/RateLimitNFT.json";
 
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
-	WALLET_CONNECTED: "lit-explorer-wallet-connected",
+	// WALLET_CONNECTED: "lit-explorer-wallet-connected",
 	LANG: "lit-explorer-i18n-lang",
-	WALLET_EVENTS: "lit-explorer-wallet-events",
-	LOGGED: "lit-logged",
+	// WALLET_EVENTS: "lit-explorer-wallet-events",
+	// LOGGED: "lit-logged",
 };
 
 /** ========== LINKS ========== */
@@ -29,15 +29,22 @@ export const APP_LINKS = {
 export const CURRENT_NETWORK = "LIT_PROTOCOL";
 export const CURRENT_CHAIN = {
 	params: {
+		id: 175177,
 		chainId: "0x2AC49",
 		chainName: "Chronicle - Lit Protocol Testnet",
+		network: "chronicle",
 		nativeCurrency: {
 			name: "LIT",
 			symbol: "LIT",
 			decimals: 18,
 		},
 		rpcUrls: ["https://chain-rpc.litprotocol.com/http"],
-		blockExplorerUrls: ["https://chain.litprotocol.com"],
+		blockExplorerUrls: [
+			{
+				name: "lit-protocol Explorer",
+				url: "https://chain.litprotocol.com",
+			},
+		],
 	},
 };
 

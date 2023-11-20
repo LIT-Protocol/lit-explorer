@@ -13,6 +13,9 @@
 	},
 	"dependencies": {
 		"@celo-tools/celo-ethers-wrapper": "^0.3.0",
+		"@cosmjs/amino": "^0.31.3",
+		"@cosmjs/crypto": "^0.31.3",
+		"@cosmjs/encoding": "^0.31.3",
 		"@emotion/react": "^11.9.3",
 		"@emotion/styled": "^11.9.3",
 		"@lit-protocol/contracts-sdk": "^3.0.16",
@@ -47,7 +50,8 @@
 		"nprogress": "^0.2.0",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
-		"react-intl": "^6.0.5"
+		"react-intl": "^6.0.5",
+		"wagmi": "^0.12.19"
 	},
 	"devDependencies": {
 		"@types/node": "18.6.1",

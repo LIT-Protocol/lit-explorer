@@ -13,9 +13,14 @@ import { pub2Addr, wei2eth } from "../../utils/converter";
 import { PKPContract } from "../../utils/blockchain/contracts/PKPContract";
 import { RouterContract } from "../../utils/blockchain/contracts/RouterContract";
 import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
-import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
-import { CircularProgress, Typography } from "@mui/material";
-import MyButton from "../UI/MyButton";
+// import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
+import {
+	Button,
+	CircularProgress,
+	Container,
+	Stack,
+	Typography,
+} from "@mui/material";
 import {
 	APP_CONFIG,
 	APP_LINKS,
@@ -33,7 +38,16 @@ import router from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
 import { PKPPermissionsContract } from "../../utils/blockchain/contracts/PKPPermissionsContract";
 import { PKPHelperContract } from "../../utils/blockchain/contracts/PKPHelperContract";
-import { LitContracts } from '@lit-protocol/contracts-sdk';
+import { LitContracts } from "@lit-protocol/contracts-sdk";
+
+import {
+	useAccount,
+	useConnect,
+	useDisconnect,
+	Connector,
+	ConnectorData,
+} from "wagmi";
+
 declare global {
 	interface Window {
 		dec2hex?(pkpId: string): void;
@@ -47,21 +61,13 @@ declare global {
 	}
 }
 
-interface MyWeb3 {
-	get: boolean;
-	login(): Promise<void>;
-	logout(): Promise<void>;
-	ownerAddress: any;
-}
-
 interface SharedStates {
 	contractsSdk: LitContracts;
-	web3: MyWeb3;
+	logout?: () => Promise<void>;
 }
 
 let defaultSharedStates: SharedStates = {
 	contractsSdk: {} as LitContracts,
-	web3: {} as MyWeb3,
 };
 
 const AppContext = createContext(defaultSharedStates);
@@ -76,14 +82,21 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 	// const [routerContract, setRouterContract] = useState<RouterContract>();
 	// const [rliContract, setRliContract] = useState<RLIContract>();
 	const [contractsSdk, setContractsSdk] = useState<LitContracts>();
-	const [ownerAddress, setOwnerAddress] = useState<string>();
 
 	// -- (state)
-	const [web3Connected, setWeb3Connected] = useState(false);
-	const [contractsLoaded, setContractsLoaded] = useState(false);
-	const [clickedConnectWallet, setClickedConnectWallet] = useState(false);
-	const [logged, setLogged] = useState<any>(null);
-	const [loading, setLoading] = useState<any>(false);
+	const [web3Installed, setWeb3Installed] = useState<boolean>(false);
+	const [contractsLoaded, setContractsLoaded] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
+
+	// -- (wagmi)
+	const { connectors, connect, error } = useConnect();
+	const {
+		address,
+		connector: activeConnector,
+		isConnecting,
+		isConnected,
+	} = useAccount();
+	const { disconnectAsync } = useDisconnect();
 
 	const injectGlobalFunctions = () => {
 		// console.warn("...injectGlobalFunctions");
@@ -92,7 +105,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		window.hex2dec = converter.hexToDec;
 		window.wei2eth = wei2eth;
 		window.pub2addr = pub2Addr;
-		window.login = onLogin;
+		// window.login = onLogin;
 		window.logout = onLogout;
 		window.config = {
 			APP_CONFIG,
@@ -107,206 +120,68 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		};
 	};
 
+	// -- Initialize contracts
 	const connectContracts = async () => {
-		// console.warn("...connectContracts");
+		setLoading(true);
 
-		// -- validate
-		if (contractsSdk && contractsLoaded)
-			return;
+		if (activeConnector) {
+			console.log("activeConnector: ", activeConnector);
+			const signer = await activeConnector!.getSigner();
 
-		console.log("[connectContracts]");
+			const contractsSDK = new LitContracts({ signer });
+			await contractsSDK.connect();
 
-		const { signer } = await getWeb3Wallet();
-
-		const contractsSDK = new LitContracts({ signer });
-
-		await contractsSDK.connect();
-
-		setContractsSdk(contractsSDK);
-
-		setContractsLoaded(true);
-	};
-
-	// -- (event listeners) listen to all given events,
-	// and ignore if the given events are already being listened
-	const listenToWalletEvents = (): void => {
-		console.warn("...listenToWalletEvents");
-
-		// -- setup events you want to listen
-		const walletEvents = {
-			accountsChanged: (accounts: Array<string>) => {
-				onLogout().then(() => {
-					onLogin();
-
-					const newOwner = accounts[0];
-					console.warn(
-						"[walletEvent:accountsChanged] output<newOwner>:",
-						newOwner
-					);
-					setOwnerAddress(newOwner);
-				});
-			},
-			connect: (e: any) => {
-				console.warn("connect:", e);
-
-				if (e.chainId !== APP_CONFIG.NETWORK.params.chainId) {
-					console.warn(
-						`Expecting ${APP_CONFIG.NETWORK.params.chainName} but received something else.`
-					);
-					onLogout();
-				}
-			},
-			disconnect: (e: any) => console.warn("disconnect:", e),
-			chainChanged: (e: any) => () => {
-				console.warn("chainChanged:", e);
-			},
-		};
-
-		const keys = Object.keys(walletEvents);
-
-		localStorage.setItem(STORAGE_KEYS.WALLET_EVENTS, keys.toString());
-
-		// check if listener already exists
-		let attachedWalletEvents: Array<string>;
-
-		try {
-			attachedWalletEvents = window?.ethereum?.eventNames();
-		} catch (e: any) {
-			console.warn("Provider Error:", e.message);
-			console.warn("Using localStorage as a fallback method instead");
-			attachedWalletEvents = localStorage
-				.getItem(STORAGE_KEYS.WALLET_EVENTS)
-				?.split(",") as Array<string>;
+			setContractsSdk(contractsSDK);
+			setContractsLoaded(true);
 		}
 
-		keys.forEach((eventName: string, i: number) => {
-			// -- ignore if event already attached
-			if (attachedWalletEvents.includes(eventName)) return;
-
-			// -- finally
-			const callback = Object.values(walletEvents)[i];
-			window.ethereum.on(eventName, callback);
-		});
-
-		console.warn(
-			"✅ Web3 Provider Found! Listening to events:",
-			Object.keys(walletEvents),
-			"..."
-		);
+		setLoading(false);
 	};
-
-	/**
-	 * An object to check if a web3 provider && wallet is connected
-	 * @returns
-	 */
-	const MyWeb3 = (): {
-		installed: boolean;
-		walletConnected: boolean;
-		eventsListened: boolean;
-		connected: boolean;
-		logged: boolean;
-	} => {
-		let installed = false;
-		let walletConnected = false;
-		let eventsListened = false;
-		let logged = false;
-		let connected = false;
-
-		try {
-			installed = typeof window?.ethereum !== "undefined";
-			walletConnected =
-				localStorage.getItem(STORAGE_KEYS.WALLET_CONNECTED) == "true";
-			eventsListened =
-				localStorage.getItem(STORAGE_KEYS.WALLET_EVENTS) == "true";
-			logged = localStorage.getItem(STORAGE_KEYS.LOGGED) == "true";
-			connected = installed && walletConnected;
-		} catch (e) {
-			console.warn("Failed to run MyWeb3():", e);
-		}
-
-		return {
-			installed,
-			walletConnected,
-			eventsListened,
-			connected,
-			logged,
-		};
-	};
-
-	const delay = async () =>
-		new Promise((resolve) => {
-			setTimeout(() => {
-				resolve(true);
-			}, 500);
-		});
 
 	useEffect(() => {
-		console.warn("...running useEffect:");
-
 		/**
 		 * Export bunch of functions so you can test on the browser
 		 */
 		injectGlobalFunctions();
 
 		(async () => {
-			// -- session status
-			const status = await fetch("/api/sessions/status").then((res) =>
-				res.json()
-			);
-			const isLogged = status?.logged ?? false;
+			setLoading(true);
 
-			if (isLogged) {
-				setLoading(true);
-				await delay();
-				setLoading(false);
-			}
-			console.log("isLogged:", isLogged);
+			// -- If wallet is installed
+			setWeb3Installed(typeof window?.ethereum !== "undefined");
 
-			setLogged(isLogged);
-
-			// -- If a web3 provider is installed && cache key is found in the local storage
-			console.warn(
-				`${MyWeb3().installed ? "✅ " : "❌ "}MyWeb3().installed`
-			);
-			console.warn(
-				`${MyWeb3().walletConnected ? "✅ " : "❌ "
-				}MyWeb3().walletConnected`
-			);
-
-			if (!MyWeb3().walletConnected) {
-				setLogged(false);
+			// -- If wallet is connected but contracts are not loaded
+			if (isConnected && !contractsLoaded) {
+				connectContracts();
 			}
 
-			// -- If both web provider is installed and wallet is connected
-			if (MyWeb3().connected && !contractsLoaded) {
-				// console.warn("...inside connected but contracts NOT loaded");
-
-				/**
-				 * Setup all contracts so that is available on all components
-				 * ** DON'T Connect until user clicks "CONNECT WALLET" **
-				 * This will stop the popup
-				 */
-				if (clickedConnectWallet || MyWeb3().logged) {
-					connectContracts();
-
-					const { ownerAddress } = await getWeb3Wallet();
-					setOwnerAddress(ownerAddress);
-				}
-
-				return;
-			}
-
-			// -- If a web3 provider is installed
-			if (MyWeb3().installed && !MyWeb3().eventsListened) {
-				// console.warn("...inside installed but events NOT listened");
-
-				listenToWalletEvents();
-			}
-
-			// -- trigger state change
-			setWeb3Connected(MyWeb3().connected);
+			setLoading(false);
 		})();
-	}, [web3Connected, clickedConnectWallet]);
+	}, [isConnected]);
+
+	// -- Listen to account or chain changes
+	useEffect(() => {
+		const handleConnectorUpdate = ({ account, chain }: ConnectorData) => {
+			if (account) {
+				connectContracts();
+			} else if (chain) {
+				if (chain.unsupported) {
+					console.warn(
+						`Switched to unsupported chain ${chain.id}... Logging out`
+					);
+					onLogout();
+				}
+			}
+		};
+
+		if (activeConnector) {
+			activeConnector.on("change", handleConnectorUpdate);
+		}
+
+		return () => {
+			activeConnector?.off("change", handleConnectorUpdate);
+		};
+	}, [activeConnector]);
 
 	/**
 	 *
@@ -338,79 +213,18 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		router.push(AppRouter.getPage(id));
 	};
 
-	// -- (event) handle login
-	const onLogin = async () => {
-		const session = await fetch("/api/sessions/login").then((res) =>
-			res.json()
-		);
-		console.log("Session:", session);
-
-		setClickedConnectWallet(true);
-
-		console.warn("[onLogin]");
-
-		let _ownerAddress;
-
-		try {
-			const { ownerAddress } = await getWeb3Wallet();
-
-			console.warn("[onLogin]: output<ownerAddress>:", ownerAddress);
-
-			_ownerAddress = ownerAddress;
-
-			localStorage.setItem(STORAGE_KEYS.WALLET_CONNECTED, "true");
-
-			console.log("MyWeb3().connected:", MyWeb3().connected);
-
-			setWeb3Connected(MyWeb3().connected);
-
-			localStorage.setItem(STORAGE_KEYS.LOGGED, "true");
-		} catch (e: any) {
-			if (e === "8546: Not implemented") {
-				alert(
-					`[${e}] Found conflicts between Metamask and Coinbase or Enkrypt Google Chrome Extensions. We are investigating a solution. Meanwhile, please remove the extensions so that Metamask could proceed. Thanks!`
-				);
-				throwError(e);
-				return;
-			}
-
-			console.error("[onLogin] error<e.message>:", e.message ?? e);
-			throwError(e.message);
-
-			return;
-		}
-
-		console.log("_ownerAddress:", _ownerAddress);
-	};
-
 	// -- (event) logout of web 3
 	const onLogout = async () => {
-		const session = await fetch("/api/sessions/logout").then((res) =>
-			res.json()
-		);
-		console.log("Session:", session);
+		setLoading(true);
 
-		console.log("onLogout:", onLogout);
-		setClickedConnectWallet(false);
-		setWeb3Connected(false);
+		await disconnectAsync();
 		setContractsLoaded(false);
-		localStorage.removeItem(STORAGE_KEYS.LOGGED);
-		localStorage.removeItem(STORAGE_KEYS.WALLET_CONNECTED);
-		localStorage.removeItem(STORAGE_KEYS.WALLET_EVENTS);
 
 		setLoading(false);
-		setLogged(false);
 	};
 
 	// -- (render) web3 not logged
 	const renderNotLogged = () => {
-		if (logged || logged === null || loading)
-			return (
-				<div className="w-full h-full flex">
-					<CircularProgress className="flex-content flex-content-x" />
-				</div>
-			);
-
 		return (
 			<div className="flex login">
 				<div className="text-center m-auto">
@@ -429,26 +243,47 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 						</a>
 						.
 					</p>
-					<MyButton className="mt-12" onClick={onLogin}>
-						Connect Wallet
-					</MyButton>
+					{web3Installed ? (
+						<Container maxWidth="xs" sx={{ mt: 2 }}>
+							<Stack spacing={1}>
+								{connectors.map((connector) => (
+									<Button
+										className="btn-2"
+										disabled={!connector.ready}
+										key={connector.id}
+										onClick={() => connect({ connector })}
+										sx={{
+											textTransform: "none",
+										}}
+									>
+										{connector.name === "Injected"
+											? "Other wallets"
+											: connector.name}
+									</Button>
+								))}
+							</Stack>
+						</Container>
+					) : (
+						<p>Download</p>
+					)}
 				</div>
 			</div>
 		);
 	};
 
-	if (!web3Connected && !contractsLoaded && !clickedConnectWallet)
-		return renderNotLogged();
+	if (loading || isConnecting)
+		return (
+			<div className="w-full h-full flex">
+				<CircularProgress className="flex-content flex-content-x" />
+			</div>
+		);
+
+	if (!isConnected && !contractsLoaded) return renderNotLogged();
 
 	// -- share states for children components
 	let sharedStates = {
-		contractsSdk: contractsSdk ?? {} as LitContracts,
-		web3: {
-			get: web3Connected,
-			login: onLogin,
-			logout: onLogout,
-			ownerAddress: ownerAddress,
-		},
+		contractsSdk: contractsSdk ?? ({} as LitContracts),
+		logout: onLogout,
 	};
 
 	return (

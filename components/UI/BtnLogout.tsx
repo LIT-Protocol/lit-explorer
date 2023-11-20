@@ -5,8 +5,9 @@ import Menu, { MenuProps } from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useAppContext } from "../Contexts/AppContext";
 import { heyShorty } from "../../utils/converter";
+import { useAccount } from "wagmi";
+import { useAppContext } from "../Contexts/AppContext";
 
 const StyledMenu = styled((props: MenuProps) => (
 	<Menu
@@ -52,9 +53,9 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 export default function MuiDropdown() {
-	// -- app context
-	const { web3 } = useAppContext();
-	console.log("web3:", web3);
+	const appContext = useAppContext();
+	const { logout } = appContext;
+	const { address, isConnected } = useAccount();
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
@@ -77,7 +78,7 @@ export default function MuiDropdown() {
 				onClick={handleClick}
 				endIcon={<KeyboardArrowDownIcon />}
 			>
-				{heyShorty(web3.ownerAddress, 4)}
+				{isConnected ? heyShorty(address!, 4) : ""}
 			</Button>
 			<StyledMenu
 				id="demo-customized-menu"
@@ -88,7 +89,7 @@ export default function MuiDropdown() {
 				open={open}
 				onClose={handleClose}
 			>
-				<MenuItem onClick={() => web3.logout()} disableRipple>
+				<MenuItem onClick={() => logout && logout()} disableRipple>
 					<LogoutIcon />
 					Logout
 				</MenuItem>
