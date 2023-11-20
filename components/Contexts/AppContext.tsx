@@ -264,7 +264,10 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 							</Stack>
 						</Container>
 					) : (
-						<p>Download</p>
+						<p className="paragraph">
+							To get started, kindly install a web3 wallet browser
+							extension like MetaMask or Coinbase Wallet.
+						</p>
 					)}
 				</div>
 			</div>
