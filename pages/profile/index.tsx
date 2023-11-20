@@ -1,15 +1,14 @@
 import MainLayout from "../../components/Layouts/MainLayout";
 import { NextPageWithLayout } from "../_app";
 import MyDescription from "../../components/UI/MyDescription";
-import { useAppContext } from "../../components/Contexts/AppContext";
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";
 import { ROUTES } from "../../app_config";
 import { useRouter } from "next/router";
 import { Button } from "@mui/material";
+import { useAccount } from "wagmi";
 
 const ProfilePage: NextPageWithLayout = () => {
-	// -- (app context)
-	const appContext = useAppContext();
+	const { address, isConnected } = useAccount();
 	const router = useRouter();
 
 	const renderButton = () => {
@@ -35,7 +34,7 @@ const ProfilePage: NextPageWithLayout = () => {
 		);
 	};
 
-	if (!appContext.web3.ownerAddress) return <></>;
+	if (!isConnected) return <></>;
 
 	return (
 		<>
@@ -43,10 +42,10 @@ const ProfilePage: NextPageWithLayout = () => {
 			{/* <PKPs/> */}
 
 			<PKPsByOwnerAddress
-				ownerAddress={appContext.web3.ownerAddress}
+				ownerAddress={address!}
 				options={{
 					height: 500,
-					title: `Your account: ${appContext.web3.ownerAddress}`,
+					title: `Your account: ${address}`,
 					loadingMessage: "Finding your PKPs...",
 					errorMessage: renderButton(),
 				}}
