@@ -8,6 +8,10 @@ export default {
 		"what is pkp": `PKP是一個分散的可編程的密鑰對。使用這個頁面來鑄造一個PKP NFT, 讓你控制哪些Lit Actions可以使用該密鑰進行簽名。`,
 		"Mint New PKP": "創建新的 PKP",
 		"Create Action": "創建Lit Actions",
+		Profile: "個人資料",
+		"profile page - title": "個人儀表板",
+		"profile page - p1": "這裡是您可以查看自己的 PKP 和容量積分的地方。",
+		"Buy Capacity Credits": "購買容量積分",
 		Pages: "頁面",
 		Owners: "擁有者",
 		PKPs: "PKPs",
@@ -25,10 +29,13 @@ export default {
 		"actions page - title": "Lit Actions 存儲在哪裡？",
 		"actions page":
 			"Lit Actions 存儲在 IPFS 上並且是不可變的，就像智能​​合約一樣。您可以將它們視為具有網絡訪問權限並可以發出 HTTP 請求的 Javascript 智能合約。",
-		"rlis page - title": "什麼是速率限制增加 NFT？",
+		"rlis page - title": "什麼是容量積分 NFT？",
 		"rlis page":
-			"默認情況下，每個 Lit Action 執行都附帶一個“免費計劃”，允許您在 Lit 節點上執行有限數量的請求/毫秒。要解除此限制，您可以通過購買帶有“靈活條款”的 RLI NFT 來“升級”您的計劃，該條款可以通過 2 個因素進行定制，即請求數/毫秒和到期日期。",
-		"all rlis - title": "最新速率限制增加 NFT",
-		"all rlis - error": "未找到 RLI NFT",
+			"默認情況下，每個 Lit Action 執行都附帶一個「免費計劃」，允許您在 Lit 節點上每秒執行有限數量的請求。要解除此限制，您可以通過購買帶有「靈活條款」的容量積分 NFT 來「升級」您的計劃，該條款可根據兩個因素自定義，即每秒請求數量和到期日期。",
+		"all rlis - title": "其他用戶最近鑄造的容量積分 NFT",
+		"all rlis - error": "未找到容量積分 NFT。",
+		"all rlis - loading": "正在加載容量積分 NFT...",
+		"mint rli - title": "鑄造容量積分 NFT",
+		"mint rli - button": "購買容量積分",
 	},
 };

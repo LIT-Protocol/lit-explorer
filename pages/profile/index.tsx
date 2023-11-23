@@ -4,8 +4,9 @@ import MyDescription from "../../components/UI/MyDescription";
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";
 import { ROUTES } from "../../app_config";
 import { useRouter } from "next/router";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useAccount } from "wagmi";
+import RLIsByOwnerAddress from "../../components/Views/RLIsByOwnerAddress";
 
 const ProfilePage: NextPageWithLayout = () => {
 	const { address, isConnected } = useAccount();
@@ -44,9 +45,21 @@ const ProfilePage: NextPageWithLayout = () => {
 			<PKPsByOwnerAddress
 				ownerAddress={address!}
 				options={{
-					height: 500,
-					title: `Your account: ${address}`,
+					height: 240,
+					title: `Your PKP NFTs`,
 					loadingMessage: "Finding your PKPs...",
+					errorMessage: renderButton(),
+				}}
+			/>
+
+			<Box sx={{ m: 4 }} />
+
+			<RLIsByOwnerAddress
+				ownerAddress={address!}
+				options={{
+					height: 240,
+					title: `Your Capacity Credits NFTS`,
+					loadingMessage: "Finding your Capacity Credits NFTs...",
 					errorMessage: renderButton(),
 				}}
 			/>

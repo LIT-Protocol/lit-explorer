@@ -10,10 +10,12 @@ const throwError = (msg: string, throwError = false) => {
 	globalMessage.style.display = "block";
 	globalMessageContent.innerText = msg;
 
+	const displayTime = (msg.length / 1000) * 60 * 1000;
+
 	setTimeout(() => {
 		globalMessage.style.display = "none";
 		globalMessageContent.innerText = "";
-	}, 3000);
+	}, displayTime);
 
 	if (throwError) {
 		throw new Error(`${msg}`);

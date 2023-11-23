@@ -7,10 +7,11 @@ export default {
 		"what is pkp": `A PKP is a public and private keypair that can be associated with one or many smart contracts. PKPs let developers create applications where user controlled keys can sign in the decentralized cloud. Use this page to mint a PKP NFT that lets you control which Lit Actions can sign using that key `,
 		"PKP & Lit Action": "PKP & Lit Action",
 		"Mint New PKP": "Mint New PKP",
+		"Buy Capacity Credits": "Buy Capacity Credits",
 		Profile: "Profile",
 		"profile page - title": "Personal Dashboard",
 		"profile page - p1":
-			"Here's where you can view your own PKPs. If you would like to find a list of PKPs owned by a specific wallet address, use the search bar above.",
+			"Here's where you can view your own PKPs and Capacity Credits.",
 		"Create Action": "Create Action",
 		Pages: "Categories",
 		Owners: "PKP Owners",
@@ -31,15 +32,15 @@ export default {
 		"actions page - title": "Where are Lit Actions stored?",
 		"actions page":
 			"Lit Actions are stored on IPFS and, like smart contracts, are immutable. You can think of them as Javascript smart contracts that have network access and can make HTTP requests.",
-		"rlis page - title": "What is a Rate Limit Increase NFT?",
+		"rlis page - title": "What is a Capacity Credits NFT?",
 		"rlis page":
-			'By default, each Lit Action execution comes with a "free plan" that allows you to execute a limited number of requests/millisecond on the Lit nodes. To lift this limitation, you can "upgrade" your plan by purchasing an RLI NFT that comes with "flexible terms" which can be customized by 2 factors, the number of requests/millisecond and the expiry date.',
+			'By default, each Lit Action execution comes with a "free plan" that allows you to execute a limited number of requests per second on the Lit nodes. To lift this limitation, you can "upgrade" your plan by purchasing an Capacity Credits NFT that comes with "flexible terms" which can be customized by 2 factors, the number of requests per second and the expiry date.',
 		"all rlis - title":
-			"Latest Rate Limit Increase NFTs minted by other users",
-		"all rlis - error": "No RLI NFTs found.",
-		"all rlis - loading": "Loading Rate Limit Increase NFTs...",
-		"mint rli - title": "Mint a Rate Limit Increase NFT",
-		"mint rli - button": "MINT RLI NFT",
+			"Latest Capacity Credits NFTs minted by other users",
+		"all rlis - error": "No Capacity Credits NFTs found.",
+		"all rlis - loading": "Loading Capacity Credits NFTs...",
+		"mint rli - title": "Mint a Capacity Credits NFT",
+		"mint rli - button": "Buy Capacity Credits",
 		"authorised action - title": "Authorized Lit Actions stored on IPFS:",
 		"authorised action - loading":
 			"Loading Authorized Actions stored on IPFS...",

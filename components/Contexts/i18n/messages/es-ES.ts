@@ -6,6 +6,11 @@ export default {
 		"what is pkp - title": `¿Qué es un PKP?`,
 		"what is pkp": `Un PKP es un par de claves programables descentralizadas. Utiliza esta página para acuñar una NFT PKP que te permita controlar qué Acciones Lit pueden firmar utilizando esa clave.`,
 		"Mint New PKP": "Menta Nueva PKP",
+		"Buy Capacity Credits": "Comprar Créditos de Capacidad",
+		Profile: "Perfil",
+		"profile page - title": "Panel de Control Personal",
+		"profile page - p1":
+			"Aquí es donde puedes ver tus propios PKPs y Créditos de Capacidad.",
 		"Create Action": "Crear acción",
 		Pages: "PAGINAS",
 		Owners: "Propietarios",
@@ -24,10 +29,14 @@ export default {
 		"actions page - title": "¿Dónde se almacenan Las Acciones Lit?",
 		"actions page":
 			"Las Acciones Lit se almacenan en IPFS y son inmutables, como los contratos inteligentes. Puede pensar en ellos como contratos inteligentes de Javascript que tienen acceso a la red y pueden realizar solicitudes HTTP.",
-		"rlis page - title": "¿Qué es un NFT de aumento de límite de tasa?",
+		"rlis page - title": "¿Qué es un NFT de Créditos de Capacidad?",
 		"rlis page":
-			'De manera predeterminada, cada ejecución de Lit Action viene con un "plan gratuito" que le permite ejecutar un número limitado de solicitudes por milisegundo en los nodos de Lit. Para eliminar esta limitación, puede "actualizar" su plan comprando un RLI NFT que viene con "términos flexibles" que se pueden personalizar por 2 factores, el número de solicitudes/milisegundo y la fecha de vencimiento.',
-		"all rlis - title": "NFT de aumento de límite de tasa más reciente",
-		"all rlis - error": "No se encontraron RLI NFT.",
+			"Por defecto, cada ejecución de Lit Action viene con un 'plan gratuito' que te permite realizar un número limitado de solicitudes por segundo en los nodos de Lit. Para levantar esta limitación, puedes 'mejorar' tu plan comprando un NFT de Créditos de Capacidad que viene con 'términos flexibles' que pueden personalizarse por 2 factores, el número de solicitudes por segundo y la fecha de vencimiento.",
+		"all rlis - title":
+			"Últimos NFTs de Créditos de Capacidad acuñados por otros usuarios",
+		"all rlis - error": "No se encontraron NFTs de Créditos de Capacidad.",
+		"all rlis - loading": "Cargando NFTs de Créditos de Capacidad...",
+		"mint rli - title": "Acuñar un NFT de Créditos de Capacidad",
+		"mint rli - button": "Comprar Créditos de Capacidad",
 	},
 };

@@ -125,7 +125,6 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		setLoading(true);
 
 		if (activeConnector) {
-			console.log("activeConnector: ", activeConnector);
 			const signer = await activeConnector!.getSigner();
 
 			const contractsSDK = new LitContracts({ signer });
@@ -176,12 +175,13 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 		if (activeConnector) {
 			activeConnector.on("change", handleConnectorUpdate);
+			if (!contractsLoaded) connectContracts();
 		}
 
 		return () => {
 			activeConnector?.off("change", handleConnectorUpdate);
 		};
-	}, [activeConnector]);
+	}, [activeConnector, contractsLoaded]);
 
 	/**
 	 *
@@ -281,7 +281,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 			</div>
 		);
 
-	if (!isConnected && !contractsLoaded) return renderNotLogged();
+	if (!isConnected || !contractsLoaded) return renderNotLogged();
 
 	// -- share states for children components
 	let sharedStates = {

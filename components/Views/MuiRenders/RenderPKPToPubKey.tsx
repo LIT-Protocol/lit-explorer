@@ -18,7 +18,7 @@ export const Address = ({
 	options: MyOptions;
 }) => {
 	// -- (app context)
-	const { routerContract } = useAppContext();
+	const { contractsSdk } = useAppContext();
 	const router = useRouter();
 
 	// -- (states)
@@ -26,16 +26,17 @@ export const Address = ({
 
 	// -- (mounted)
 	useEffect(() => {
-		if (!routerContract?.read) return;
+		if (!contractsSdk) return;
 
 		(async () => {
 			if (address) return;
 
-			const _pubKey = await routerContract.read.getFullPubKey(pkpId);
+			const _pubKey =
+				await contractsSdk.pubkeyRouterContract.read.getPubkey(pkpId);
 
 			setAddress(_pubKey.replaceAll("0x", ""));
 		})();
-	}, [routerContract?.read]);
+	}, [contractsSdk]);
 
 	// -- (validation)
 	if (!address) return <>Loading...</>;

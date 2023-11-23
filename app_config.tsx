@@ -17,12 +17,13 @@ export const STORAGE_KEYS = {
 
 /** ========== LINKS ========== */
 export const APP_LINKS = {
-	WHAT_IS_PKP:
-		"https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs",
+	WHAT_IS_PKP: "https://developer.litprotocol.com/v2/pkp/intro",
+	WHAT_IS_RLI:
+		"https://developer.litprotocol.com/v2/resources/glossary/#rate-limiting",
 	WORKING_WITH_LIT_ACTIONS:
-		"https://developer.litprotocol.com/SDK/Explanation/litActions",
+		"https://developer.litprotocol.com/v2/LitActions/intro",
 	LIT_DISCORD: "https://litgateway.com/discord",
-	DOC: "https://developer.litprotocol.com/",
+	DOC: "https://developer.litprotocol.com",
 };
 
 /** ========== CURRENT NETWORK ========== */
@@ -76,6 +77,7 @@ export const ROUTES = {
 	PROFILE: "/profile",
 	MINT_PKP: "/mint-pkp",
 	CREATE_ACTION: "/create-action",
+	GET_CREDITS: "/get-credits",
 	OWNERS: "/owners",
 	PKPS: "/pkps",
 	ACTIONS: "/actions",
@@ -104,7 +106,7 @@ export const DEFAULT_LIT_ACTION = `const go = async () => {
 export const APP_CONFIG = {
 	// ---------- MUMBAI ----------
 	// -- explorer address
-	EXPLORER: "https://lit-protocol.calderaexplorer.xyz/address/",
+	EXPLORER: "https://chain.litprotocol.com",
 	NETWORK_NAME: CURRENT_NETWORK,
 	NETWORK: CURRENT_CHAIN,
 	NETWORK_LABEL: {
