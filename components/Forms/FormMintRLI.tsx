@@ -5,6 +5,7 @@ import moment from "moment";
 import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";
 import { wait } from "../../utils/utils";
+import { FixedNumber } from "ethers";
 
 const FormMintRLI = ({
 	onMint,
@@ -12,7 +13,7 @@ const FormMintRLI = ({
 	onMint?(cost: MultiETHFormat, tx: any): void;
 }) => {
 	// (app context)
-	const { rliContract } = useAppContext();
+	const { contractsSdk } = useAppContext();
 
 	const [progress, setProgress] = useState<MyProgressI>({
 		progress: 0,
@@ -27,13 +28,13 @@ const FormMintRLI = ({
 			return;
 		}
 
-		console.log("HandleClick:", res);
+		const requestsPerSecond = parseInt(res[0].data);
+		const requestsPerKilosecond = requestsPerSecond * 1000;
+		const expiresAt = moment(res[1].data).unix();
 
-		const requests = parseInt(res[0].data);
-		const timestamp = moment(res[1].data).unix();
-
-		console.log("requests:", requests);
-		console.log("timestamp:", timestamp);
+		console.log("Requests per second:", requestsPerSecond);
+		console.log("Requests per kilosecond:", requestsPerKilosecond);
+		console.log("Expires at:", expiresAt);
 
 		setProgress({
 			progress: 50,
@@ -42,58 +43,70 @@ const FormMintRLI = ({
 		let cost;
 
 		try {
-			cost = await rliContract.read.costOfRequestsPerSecond(
-				requests,
-				timestamp
+			cost = await contractsSdk.rateLimitNftContract.read.calculateCost(
+				requestsPerKilosecond,
+				expiresAt
 			);
 		} catch (e: any) {
 			setProgress({
 				progress: 0,
 				message: "",
 			});
-			throwError(e.message);
+			throwError(
+				`Unable to calculate cost for Capacity Credits NFT due to: ${e.message}. Please try again.`
+			);
 			return;
 		}
 
-		console.log("cost:", cost);
+		console.log("Estimated cost:", cost);
+
+		const estCost = FixedNumber.fromValue(cost, 18).toString();
 
 		setProgress({
 			progress: 75,
-			message: "Minting...",
+			message: `Estimated cost: ${estCost} LIT. Minting...`,
 		});
 
-		// -- mint
-		const mintTx = await rliContract.write.mint({
-			mintCost: {
-				value: cost.arg,
-			},
-			timestamp,
-		});
+		try {
+			// -- mint
+			const mintRes = await contractsSdk.rateLimitNftContract.write.mint(
+				expiresAt,
+				{
+					value: cost,
+				}
+			);
+			const mintWait = await mintRes.wait();
+			console.log("res:", mintWait);
 
-		setProgress({
-			progress: 100,
-			message: "Done",
-		});
-
-		await wait(1000);
-
-		setProgress({
-			progress: 0,
-			message: "",
-		});
-
-		if (onMint) {
-			onMint(cost, mintTx);
+			setProgress({
+				progress: 100,
+				message: "Successfully minted a Capacity Credits NFT!",
+			});
+		} catch (e: any) {
+			setProgress({
+				progress: 0,
+				message: "",
+			});
+			let errMsg = `Unable to mint Capacity Credits NFT due to: ${e.message}.`;
+			if (e.code === -32603) {
+				errMsg += ` Please make sure your wallet has ${
+					estCost?.length > 0 ? `at least ${estCost}` : `enough`
+				} LIT to complete the transaction. Visit the faucet at https://faucet.litprotocol.com/`;
+			}
+			throwError(errMsg);
+			return;
 		}
+
+		return;
 	};
 
 	return (
 		<div className="mt-12 mb-12">
 			<FormInputFields
-				title="Mint a Rate Limit Increase NFT"
+				title="Buy Capacity Credits"
 				fields={[
 					{
-						title: "Requests/millisecond",
+						title: "Requests per second",
 						label: "",
 					},
 					{
@@ -101,7 +114,7 @@ const FormMintRLI = ({
 						type: MyFieldType.DATE_TIME_PICKER,
 					},
 				]}
-				buttonText="MINT RLI NFT"
+				buttonText="Buy Capacity Credits"
 				onSubmit={handleClick}
 				progress={progress}
 			/>

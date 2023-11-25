@@ -81,6 +81,7 @@ const CardInputs = (props: CardInputsProps) => {
 					<DateTimePicker
 						renderInput={(props) => <TextField {...props} />}
 						label="DateTimePicker"
+						disablePast={true}
 						value={formDate}
 						onChange={(newValue) => {
 							handleChange(newValue, id);

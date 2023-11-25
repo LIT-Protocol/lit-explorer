@@ -8,6 +8,7 @@ import { tryUntil, TryUntilProp } from "../../utils/tryUntil";
 import { AppRouter } from "../../utils/AppRouter";
 import { useAppContext } from "../Contexts/AppContext";
 import { hexToDecimal } from "../../utils/converter";
+import { FixedNumber } from "ethers";
 
 const FormMintNewPKP: NextPageWithLayout = () => {
 	// -- app context
@@ -44,25 +45,30 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 		);
 
 		const mintCost = await contractsSdk.pkpNftContract.read.mintCost();
-		console.log("mintCost:", mintCost);
+		console.log("Estimated cost:", mintCost);
+
+		const estCost = FixedNumber.fromValue(mintCost, 18).toString();
 
 		// ===== STEP =====
 		try {
 			setMintProgress(
 				newObjectState(mintProgress, {
 					progress: 75,
-					message: `Cost ${mintCost} to mint, minting...`,
+					message: `Estimated cost: ${estCost} LIT. Minting...`,
 				})
 			);
 
-			const mintRes = await contractsSdk.pkpNftContract.write.mintNext(2, {
-				value: mintCost,
-			});
+			const mintRes = await contractsSdk.pkpNftContract.write.mintNext(
+				2,
+				{
+					value: mintCost,
+				}
+			);
 
 			const res: any = await mintRes.wait();
 			console.log("res:", res);
 
-			let events = 'events' in res ? res.events : res.logs;
+			let events = "events" in res ? res.events : res.logs;
 			console.log("events:", events);
 
 			let tokenId = hexToDecimal(events[1].topics[3]);
@@ -78,7 +84,7 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 			setMintProgress(
 				newObjectState(mintProgress, {
 					progress: 100,
-					message: "Congratulation! You have minted a PKP!",
+					message: "Successfully minted a PKP NFT!",
 				})
 			);
 
@@ -90,7 +96,13 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 					message: "",
 				})
 			);
-			throwError(e.message);
+			let errMsg = `Unable to mint PKP NFT due to: ${e.message}.`;
+			if (e.code === -32603) {
+				errMsg += ` Please make sure your wallet has ${
+					estCost?.length > 0 ? `at least ${estCost}` : `enough`
+				} LIT to complete the transaction. Visit the faucet at https://faucet.litprotocol.com/`;
+			}
+			throwError(errMsg);
 			return;
 		}
 

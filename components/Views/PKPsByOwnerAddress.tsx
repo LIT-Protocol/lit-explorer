@@ -7,6 +7,7 @@ import RenderLink from "./MuiRenders/RenderLink";
 import RenderPKPToAddress from "./MuiRenders/RenderPKPToAddress";
 import RenderPKPToBTC from "./MuiRenders/RenderPKPToBTC";
 import RenderPKPToPubKey from "./MuiRenders/RenderPKPToPubKey";
+import RenderTxnHash from "./MuiRenders/RenderTxnHash";
 
 interface PKPsByOwnerAddressOptions {
 	title?: string;
@@ -32,7 +33,7 @@ const PKPsByOwnerAddress = ({
 				options?.title ??
 				`PKPs by a given address: ${heyShorty(ownerAddress, 4)}`
 			}
-			errorMessage={options?.errorMessage ?? "No PKP owners found."}
+			errorMessage={options?.errorMessage ?? "No PKPs found."}
 			loadingMessage={
 				options?.loadingMessage ??
 				`Loading a list of PKPs by a given address...`
@@ -92,6 +93,16 @@ const PKPsByOwnerAddress = ({
 						// 	renderCell: RenderDate,
 						// },
 						// { headerName:"From", field: "from"},
+						{
+							headerName: "Transaction",
+							field: "hash",
+							renderCell: (props: any) => {
+								return RenderTxnHash(props, {
+									short: true,
+									copy: true,
+								});
+							},
+						},
 					],
 					width
 				);
@@ -105,6 +116,7 @@ const PKPsByOwnerAddress = ({
 						address: item.tokenID,
 						// date: item.timeLastUpdated,
 						// from: item.from === '0x0000000000000000000000000000000000000000' ? 'Minted' : pkp.from,
+						hash: item.hash,
 					};
 				});
 			}}

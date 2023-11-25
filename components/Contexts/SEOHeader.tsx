@@ -1,7 +1,7 @@
 import Head from "next/head";
 
 export default function SEOHeader({
-	description = "Lit Protocol Explorer for PKP(Programmable Key Pair), RLI(Rate Limit Increase NFT), and Lit Action (decentralised serverless functions)",
+	description = "Lit Protocol Explorer for PKP (Programmable Key Pair), Capacity Credits, and Lit Action (decentralised serverless functions)",
 	link = "https://explorer.litprotocol.com/",
 	image = "https://explorer.litprotocol.com/thumbnail.jpeg",
 }) {

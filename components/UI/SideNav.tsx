@@ -67,6 +67,18 @@ const SideNav = () => {
 						<FormattedMessage id="Create Action" />
 					</Button>
 				</li>
+				<li>
+					<Button
+						onClick={() => router.push(ROUTES.GET_CREDITS)}
+						className={
+							currentRoute.includes(ROUTES.GET_CREDITS)
+								? "btn active"
+								: "btn"
+						}
+					>
+						<FormattedMessage id="Buy Capacity Credits" />
+					</Button>
+				</li>
 			</ul>
 
 			<Divider className="divider" textAlign="left">

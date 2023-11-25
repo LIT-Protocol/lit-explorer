@@ -21,10 +21,7 @@ const rows = [
 		"PubkeyRouterAndPermissions",
 		APP_CONFIG.ROUTER_CONTRACT.ADDRESS
 	),
-	createData(
-		"Rate Limit Increase NFT",
-		APP_CONFIG.RATE_LIMIT_CONTRACT.ADDRESS
-	),
+	createData("Capacity Credits NFT", APP_CONFIG.RATE_LIMIT_CONTRACT.ADDRESS),
 	createData("Multisender", APP_CONFIG.MULTI_SENDER_CONTRACT.ADDRESS),
 	createData("Deployer address", APP_CONFIG.DEPLOYER_CONTRACT.ADDRESS),
 	createData("Staked node address", APP_CONFIG.STAKED_NODE_CONTRACT.ADDRESS),
@@ -63,7 +60,7 @@ const ContractsPage: NextPageWithLayout = () => {
 									<a
 										target="_blank"
 										rel="noreferrer"
-										href={`${APP_CONFIG.EXPLORER}${row.address}`}
+										href={`${APP_CONFIG.EXPLORER}/address/${row.address}`}
 									>
 										{row.address}
 									</a>
