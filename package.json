@@ -18,7 +18,7 @@
 		"@cosmjs/encoding": "^0.31.3",
 		"@emotion/react": "^11.9.3",
 		"@emotion/styled": "^11.9.3",
-		"@lit-protocol/contracts-sdk": "^3.0.16",
+		"@lit-protocol/contracts-sdk": "^3.0.24",
 		"@monaco-editor/react": "^4.4.5",
 		"@mui/icons-material": "^5.8.4",
 		"@mui/material": "^5.9.2",
