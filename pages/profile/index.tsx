@@ -12,19 +12,19 @@ const ProfilePage: NextPageWithLayout = () => {
 	const { address, isConnected } = useAccount();
 	const router = useRouter();
 
-	const renderButton = () => {
-		return (
-			<div>
-				You don&apos;t have any PKPs yet!
-				<Button
-					className="ml-12 btn-2"
-					onClick={() => router.push(ROUTES.MINT_PKP)}
-				>
-					Mint one now!
-				</Button>
-			</div>
-		);
-	};
+	// const renderButton = () => {
+	// 	return (
+	// 		<div>
+	// 			You don&apos;t have any PKPs yet!
+	// 			<Button
+	// 				className="ml-12 btn-2"
+	// 				onClick={() => router.push(ROUTES.MINT_PKP)}
+	// 			>
+	// 				Mint one now!
+	// 			</Button>
+	// 		</div>
+	// 	);
+	// };
 
 	const renderDescription = () => {
 		return (
@@ -48,7 +48,7 @@ const ProfilePage: NextPageWithLayout = () => {
 					height: 240,
 					title: `Your PKP NFTs`,
 					loadingMessage: "Finding your PKPs...",
-					errorMessage: renderButton(),
+					// errorMessage: renderButton(),
 				}}
 			/>
 
@@ -60,7 +60,7 @@ const ProfilePage: NextPageWithLayout = () => {
 					height: 240,
 					title: `Your Capacity Credits NFTS`,
 					loadingMessage: "Finding your Capacity Credits NFTs...",
-					errorMessage: renderButton(),
+					// errorMessage: renderButton(),
 				}}
 			/>
 		</>
