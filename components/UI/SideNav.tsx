@@ -155,10 +155,7 @@ const SideNav = () => {
 			<ul className="ul">
 				<li>
 					<Button
-						onClick={() =>
-							(window.location.href =
-								"https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs")
-						}
+						onClick={() => window.open("https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs", "_blank")}
 						className={
 							currentRoute.includes(ROUTES.DOCUMENTATION)
 								? "btn active"
