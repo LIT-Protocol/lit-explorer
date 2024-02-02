@@ -1,6 +1,7 @@
 import { Button, Input } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import BtnLogout from "../UI/BtnLogout";
+import NetworkDropdown from "../UI/NetworkDropdown";
 
 const SearchBar = (props: {
 	onSearch: (
@@ -33,7 +34,7 @@ const SearchBar = (props: {
 				type="search"
 				placeholder={config.placeholder}
 			/>
-
+			<NetworkDropdown />
 			<BtnLogout />
 		</div>
 	);

@@ -467,7 +467,7 @@ body {
 	margin-top: 0;
 }
 button#demo-customized-button {
-	border-radius: 12px;
+	border-radius: 8px;
 	background: #e7e8eb;
 	color: black;
 	border: 2px white solid;
