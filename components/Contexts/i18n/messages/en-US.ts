@@ -13,10 +13,10 @@ export default {
 		"profile page - p1":
 			"Here's where you can view your own PKPs and Capacity Credits.",
 		"Create Action": "Create Action",
-		Pages: "Categories",
+		Pages: "Lit Actions",
 		Owners: "PKP Owners",
 		PKPs: "PKPS",
-		Actions: "Actions",
+		Actions: "Published Lit Actions",
 		Contracts: "Contracts",
 		Documentation: "Documentation",
 		RLIs: "RLIs",

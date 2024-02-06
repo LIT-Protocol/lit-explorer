@@ -7,6 +7,7 @@ import { appendEvenWidths } from "../../utils/mui/mui";
 import RenderTxnHash from "./MuiRenders/RenderTxnHash";
 import RenderRLIRate from "./MuiRenders/RenderRLIRate";
 import RenderRLIExpiry from "./MuiRenders/RenderRLIExpiry";
+import { useAppContext } from "../Contexts/AppContext";
 
 interface RLIsByOwnerAddressOptions {
 	title?: string;
@@ -22,6 +23,9 @@ const RLIsByOwnerAddress = ({
 	ownerAddress: string;
 	options?: RLIsByOwnerAddressOptions;
 }) => {
+
+	const { network } = useAppContext();
+
 	// -- (state)
 	// const [list, setList] = useState();
 	// const [updating, setUpdating] = useState(false);
@@ -79,7 +83,7 @@ const RLIsByOwnerAddress = ({
 				options?.loadingMessage ??
 				`Loading a list of Capacity Credits NFTs by a given address...`
 			}
-			fetchPath={`/api/get-rlis-by-address/${ownerAddress}`}
+			fetchPath={`/api/get-rlis-by-address/${ownerAddress}?network=${network}`}
 			filter={(rawData: any) => {
 				console.log("[RLIsByOwnerAddress] input<rawData>", rawData);
 				return rawData.data;

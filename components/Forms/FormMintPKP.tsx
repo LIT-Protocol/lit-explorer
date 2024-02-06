@@ -44,7 +44,20 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 			})
 		);
 
-		const mintCost = await contractsSdk.pkpNftContract.read.mintCost();
+		let mintCost = null;
+
+		try {
+			mintCost = await contractsSdk.pkpNftContract.read.mintCost();
+		} catch (e: any) {
+			console.log(`Unable to get mint cost due to: ${e.message}`);
+			return;
+		}
+
+		if (!mintCost) {
+			console.log(`Unable to get mint cost`);
+			return;
+		}
+
 		console.log("Estimated cost:", mintCost);
 
 		const estCost = FixedNumber.fromValue(mintCost, 18).toString();
@@ -98,9 +111,8 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 			);
 			let errMsg = `Unable to mint PKP NFT due to: ${e.message}.`;
 			if (e.code === -32603) {
-				errMsg += ` Please make sure your wallet has ${
-					estCost?.length > 0 ? `at least ${estCost}` : `enough`
-				} LIT to complete the transaction. Visit the faucet at https://faucet.litprotocol.com/`;
+				errMsg += ` Please make sure your wallet has ${estCost?.length > 0 ? `at least ${estCost}` : `enough`
+					} LIT to complete the transaction. Visit the faucet at https://faucet.litprotocol.com/`;
 			}
 			throwError(errMsg);
 			return;

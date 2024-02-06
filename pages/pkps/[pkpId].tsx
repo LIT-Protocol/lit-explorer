@@ -12,6 +12,8 @@ import LitActionsByPKPId from "../../components/Views/LitActionsByPKPId";
 
 declare global {
 	interface Window {
+
+		// @ts-ignore
 		ethereum?: any;
 	}
 }

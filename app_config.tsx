@@ -110,7 +110,7 @@ export const APP_CONFIG = {
 	NETWORK_NAME: CURRENT_NETWORK,
 	NETWORK: CURRENT_CHAIN,
 	NETWORK_LABEL: {
-		ENABLED: true,
+		ENABLED: false,
 		NAME: "Chronicle Testnet",
 	},
 	API_URL: "https://chain.litprotocol.com/api",

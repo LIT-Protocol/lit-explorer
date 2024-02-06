@@ -17,14 +17,30 @@ export default async function handler(
 ) {
 	const { id } = req.query;
 
+	// get ?network from query
+	const network: any = req.query.network as string;
+
+	const isNetworkSupported = network === 'cayenne' || network === 'manzano' || network === 'habanero';
+
+	if (!isNetworkSupported) {
+
+		const msg = `Invalid network ${network} - must be cayenne, manzano or habanero`;
+
+		res.status(500).json({
+			data: new Error(msg),
+		});
+
+		throw new Error(msg);
+	}
+
 	const pkpId = id;
 
 	console.log("[api/get-permitted-by-pkp] input<pkpId>:", pkpId);
 
-	const contracts = new LitContracts();
+	const contracts = new LitContracts({ network });
 
 	await contracts.connect();
-	
+
 	let addresses = await contracts.pkpPermissionsContract.read.getPermittedAddresses(
 		pkpId as BigNumberish
 	);

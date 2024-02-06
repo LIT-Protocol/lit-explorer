@@ -6,8 +6,9 @@ import { LinearProgressWithLabel } from "../UI/Progress";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker } from "@mui/x-date-pickers";
 
-export interface MyFormData extends Array<MyFieldData> {}
+export interface MyFormData extends Array<MyFieldData> { }
 
 export interface MyProgressI {
 	progress?: number;
@@ -21,6 +22,7 @@ interface MyFieldData {
 
 export enum MyFieldType {
 	DATE_TIME_PICKER = "date-time-picker",
+	DATE_PICKER = "date-picker",
 	TEXT_FIELD = "text-field",
 }
 
@@ -28,6 +30,7 @@ interface MyField {
 	title?: string;
 	label?: string;
 	type?: MyFieldType;
+	default?: string | number;
 }
 
 interface CardInputsProps {
@@ -81,20 +84,69 @@ const CardInputs = (props: CardInputsProps) => {
 					<DateTimePicker
 						renderInput={(props) => <TextField {...props} />}
 						label="DateTimePicker"
+
+						// @ts-ignore
 						disablePast={true}
 						value={formDate}
+						// @ts-ignore
 						onChange={(newValue) => {
 							handleChange(newValue, id);
 							setFormDate(newValue);
 						}}
 					/>
+
+				</LocalizationProvider>
+			</div>
+		);
+	};
+	const renderDatePicker = (field: MyField, id: any) => {
+		return (
+			<div key={id} className="mt-24">
+				<LocalizationProvider dateAdapter={AdapterMoment}>
+
+					<div className="mb-12">{field?.label}</div>
+					<DatePicker
+
+						// @ts-ignore
+						rifmFormatter={(str) => {
+							const d = str.split('/');
+							if (d.length < 3) {
+								return null;
+							}
+
+							return d[2] + '-' + d[0] + '-' + d[1];
+						}}
+
+						// @ts-ignore
+						value={formDate}
+
+						// @ts-ignore
+						disablePast={true}
+						// @ts-ignore
+						onChange={(e: any) => {
+							// console.log(e);
+
+							// get moment UTC time
+							const moment = e;
+							const utc = moment.toISOString();
+
+							// set form date
+							setFormDate(utc);
+							handleChange(utc, id);
+
+							console.log("utc:", utc);
+						}}
+						renderInput={(props) => <TextField {...props} />}
+					/>
+
+
 				</LocalizationProvider>
 			</div>
 		);
 	};
 
 	// -- (render) render text field
-	const renderTextField = (field: any, id: any) => {
+	const renderTextField = (field: MyField, id: any) => {
 		return (
 			<div key={id} className="mb-12">
 				<div>{field.title}</div>
@@ -102,7 +154,6 @@ const CardInputs = (props: CardInputsProps) => {
 				<TextField
 					className="mt-8"
 					label={field.label}
-					defaultValue=""
 					size="small"
 					fullWidth={true}
 					onChange={(e) => handleChange(e.target.value, id)}
@@ -117,11 +168,15 @@ const CardInputs = (props: CardInputsProps) => {
 			<>
 				<div className="my-fields">
 					{fields?.map((field, i) => {
-						if (field.type == MyFieldType.DATE_TIME_PICKER) {
-							return renderDateTimePicker(field, i);
-						} else {
-							return renderTextField(field, i);
+						switch (field.type) {
+							case MyFieldType.DATE_TIME_PICKER:
+								return renderDateTimePicker(field, i);
+							case MyFieldType.DATE_PICKER:
+								return renderDatePicker(field, i);
+							default:
+								return renderTextField(field, i);
 						}
+
 					})}
 				</div>
 			</>

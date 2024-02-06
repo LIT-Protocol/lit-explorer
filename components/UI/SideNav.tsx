@@ -85,7 +85,9 @@ const SideNav = () => {
 				<FormattedMessage id="Pages" />
 			</Divider>
 			<ul className="ul">
-				<li>
+
+				{/* PKP Owners */}
+				{/* <li>
 					<Button
 						onClick={() => router.push(ROUTES.OWNERS)}
 						className={
@@ -96,7 +98,7 @@ const SideNav = () => {
 					>
 						<FormattedMessage id="Owners" />
 					</Button>
-				</li>
+				</li> */}
 				{/* <li>
 					<Button
 						onClick={() => router.push(ROUTES.PKPS)}
@@ -155,10 +157,7 @@ const SideNav = () => {
 			<ul className="ul">
 				<li>
 					<Button
-						onClick={() =>
-							(window.location.href =
-								"https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs")
-						}
+						onClick={() => window.open("https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs", "_blank")}
 						className={
 							currentRoute.includes(ROUTES.DOCUMENTATION)
 								? "btn active"

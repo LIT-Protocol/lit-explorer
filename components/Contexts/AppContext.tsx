@@ -10,10 +10,6 @@ import {
 // @ts-ignore
 import converter from "hex2dec";
 import { pub2Addr, wei2eth } from "../../utils/converter";
-import { PKPContract } from "../../utils/blockchain/contracts/PKPContract";
-import { RouterContract } from "../../utils/blockchain/contracts/RouterContract";
-import { RLIContract } from "../../utils/blockchain/contracts/RLIContract";
-// import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 import {
 	Button,
 	CircularProgress,
@@ -36,8 +32,6 @@ import NavPath from "../UI/NavPath";
 import SearchBar from "../Forms/SearchBar";
 import router from "next/router";
 import { AppRouter } from "../../utils/AppRouter";
-import { PKPPermissionsContract } from "../../utils/blockchain/contracts/PKPPermissionsContract";
-import { PKPHelperContract } from "../../utils/blockchain/contracts/PKPHelperContract";
 import { LitContracts } from "@lit-protocol/contracts-sdk";
 
 import {
@@ -61,13 +55,25 @@ declare global {
 	}
 }
 
+type LitNetwork = 'habanero' | 'manzano' | 'cayenne';
+
+enum LIT_NETWORKS {
+	HABANERO = 'habanero',
+	MANZANO = 'manzano',
+	CAYENNE = 'cayenne',
+}
+
 interface SharedStates {
 	contractsSdk: LitContracts;
+	network: LitNetwork;
+	onNetworkChange: (network: LitNetwork) => void;
 	logout?: () => Promise<void>;
 }
 
 let defaultSharedStates: SharedStates = {
 	contractsSdk: {} as LitContracts,
+	network: LIT_NETWORKS.HABANERO,
+	onNetworkChange: (network: LitNetwork) => { },
 };
 
 const AppContext = createContext(defaultSharedStates);
@@ -82,6 +88,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 	// const [routerContract, setRouterContract] = useState<RouterContract>();
 	// const [rliContract, setRliContract] = useState<RLIContract>();
 	const [contractsSdk, setContractsSdk] = useState<LitContracts>();
+	const [network, setNetwork] = useState<LitNetwork>(LIT_NETWORKS.HABANERO);
 
 	// -- (state)
 	const [web3Installed, setWeb3Installed] = useState<boolean>(false);
@@ -121,14 +128,24 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 	};
 
 	// -- Initialize contracts
-	const connectContracts = async () => {
+	const connectContracts = async (network: LitNetwork) => {
 		setLoading(true);
 
 		if (activeConnector) {
 			const signer = await activeConnector!.getSigner();
 
-			const contractsSDK = new LitContracts({ signer });
+			const contractsSDK = new LitContracts({
+				signer,
+				network: network,
+				debug: true,
+			});
+
 			await contractsSDK.connect();
+
+			console.log(`contractsSDK.network! ${contractsSDK.network}`);
+
+			// const mintCost = await contractsSDK.pkpNftContract.read.mintCost();
+			// console.log("mintCost:", mintCost);
 
 			setContractsSdk(contractsSDK);
 			setContractsLoaded(true);
@@ -151,7 +168,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 			// -- If wallet is connected but contracts are not loaded
 			if (isConnected && !contractsLoaded) {
-				connectContracts();
+				connectContracts(network);
 			}
 
 			setLoading(false);
@@ -162,7 +179,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 	useEffect(() => {
 		const handleConnectorUpdate = ({ account, chain }: ConnectorData) => {
 			if (account) {
-				connectContracts();
+				connectContracts(network);
 			} else if (chain) {
 				if (chain.unsupported) {
 					console.warn(
@@ -175,7 +192,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 		if (activeConnector) {
 			activeConnector.on("change", handleConnectorUpdate);
-			if (!contractsLoaded) connectContracts();
+			if (!contractsLoaded) connectContracts(network);
 		}
 
 		return () => {
@@ -212,6 +229,17 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 		router.push(AppRouter.getPage(id));
 	};
+
+
+	const onNetworkChange = async (network: LitNetwork) => {
+
+		console.log(`Swithing to network: ${network}...`);
+
+		setNetwork(network);
+
+		await connectContracts(network);
+
+	}
 
 	// -- (event) logout of web 3
 	const onLogout = async () => {
@@ -286,6 +314,8 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 	// -- share states for children components
 	let sharedStates = {
 		contractsSdk: contractsSdk ?? ({} as LitContracts),
+		network: network,
+		onNetworkChange: onNetworkChange,
 		logout: onLogout,
 	};
 
