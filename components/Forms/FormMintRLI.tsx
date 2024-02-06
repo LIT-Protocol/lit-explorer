@@ -8,6 +8,7 @@ import { wait } from "../../utils/utils";
 import { FixedNumber } from "ethers";
 
 const CHAIN_TX_URL = "https://chain.litprotocol.com/tx/";
+const FAUCET_LINK = 'https://chronicle-faucet-app.vercel.app/';
 
 const FormMintRLI = ({
 	onMint,
@@ -99,6 +100,14 @@ const FormMintRLI = ({
 
 	return (
 		<div className="mt-12 mb-12">
+
+			<div className="mt-12 res-result">
+				<div className="center-content">
+					Faucet: <a href={FAUCET_LINK} className="center-item" target="_blank" rel="noreferrer">{FAUCET_LINK}</a>
+				</div>
+			</div>
+
+
 			{token.tokenId && (
 				<div className="mt-12 res-result">
 					<div className="mb-12">🚀 Your Capacity Credits NFT</div>

@@ -31,8 +31,8 @@ export default function NetworkDropdown() {
       {
         !network ? <></> :
           <Select onChange={onChangeHandler} defaultValue={network}>
-            <Option value={'manzano'}>Manzano</Option>
             <Option value={'habanero'}>Habanero</Option>
+            <Option value={'manzano'}>Manzano</Option>
             <Option value={'cayenne'}>Cayenne</Option>
           </Select>
       }
