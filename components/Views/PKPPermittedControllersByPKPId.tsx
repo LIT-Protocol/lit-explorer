@@ -9,7 +9,7 @@ import RenderLink from "./MuiRenders/RenderLink";
 
 const PKPPermittedControllersByPKPId = ({ pkpId }: { pkpId: any }) => {
 	// -- (app context)
-	const { pkpPermissionsContract } = useAppContext();
+	const { contractsSdk } = useAppContext();
 
 	// -- (state)
 	const [updating, setUpdating] = useState(false);
@@ -17,13 +17,13 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: { pkpId: any }) => {
 	const [cache, setCache] = useState(true);
 
 	useEffect(() => {
-		if (pkpPermissionsContract?.read === undefined) return;
+		if (contractsSdk === undefined) return;
 
 		(async () => {
 			const { ownerAddress } = await getWeb3Wallet();
-
+			contractsSdk
 			const _isPermitted =
-				await pkpPermissionsContract.read.isPermittedAddress(
+				await contractsSdk.pkpPermissionsContract.read.isPermittedAddress(
 					pkpId,
 					ownerAddress
 				);

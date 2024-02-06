@@ -16,7 +16,7 @@ const SearchBar = (props: {
 	const config = {
 		placeholder:
 			props?.placeholder ??
-			"Search by Address / PKP Token ID / RFI Token ID / IPFS ID / ",
+			"Search by Address / PKP Token ID / IPFS ID / ",
 		imgSrc: props?.imgSrc ?? "/svg/search.svg",
 	};
 

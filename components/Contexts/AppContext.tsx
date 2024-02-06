@@ -137,7 +137,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 			const contractsSDK = new LitContracts({
 				signer,
 				network: network,
-				// debug: true,
+				debug: true,
 			});
 
 			await contractsSDK.connect();

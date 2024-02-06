@@ -33,6 +33,7 @@ export const Rate = ({
 				rateLimit.requestsPerKilosecond.toNumber();
 
 			setRequestsPerSecond(requestsPerKilosecond / 1000);
+
 		})();
 	}, [contractsSdk]);
 

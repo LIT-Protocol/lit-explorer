@@ -2,12 +2,12 @@ import { useRouter } from "next/router";
 import MainLayout from "../../components/Layouts/MainLayout";
 import { NextPageWithLayout } from "../_app";
 import PKPsByOwnerAddress from "../../components/Views/PKPsByOwnerAddress";
-import { useAppContext } from "../../components/Contexts/AppContext";
-import RLIsByOwnerAddress from "../../components/Views/RLIsByOwnerAddress";
+// import { useAppContext } from "../../components/Contexts/AppContext";
+// import RLIsByOwnerAddress from "../../components/Views/RLIsByOwnerAddress";
 
 const OwnersPageById: NextPageWithLayout = () => {
 	// -- (app context)
-	const { rliContract } = useAppContext();
+	// const { contractsSdk } = useAppContext();
 
 	const router = useRouter();
 	const { ownerAddress } = router.query;

@@ -85,7 +85,9 @@ const SideNav = () => {
 				<FormattedMessage id="Pages" />
 			</Divider>
 			<ul className="ul">
-				<li>
+
+				{/* PKP Owners */}
+				{/* <li>
 					<Button
 						onClick={() => router.push(ROUTES.OWNERS)}
 						className={
@@ -96,7 +98,7 @@ const SideNav = () => {
 					>
 						<FormattedMessage id="Owners" />
 					</Button>
-				</li>
+				</li> */}
 				{/* <li>
 					<Button
 						onClick={() => router.push(ROUTES.PKPS)}

@@ -33,6 +33,8 @@ export const Address = ({
 		(async () => {
 			if (address) return;
 
+			console.log("contractsSdk:", contractsSdk);
+
 			const _pubKey =
 				await contractsSdk.pubkeyRouterContract.read.getPubkey(pkpId);
 
@@ -40,9 +42,13 @@ export const Address = ({
 
 			console.log("_address:", _address);
 
-			const _checksummed = toChecksumAddress(_address);
+			try {
+				const _checksummed = toChecksumAddress(_address);
 
-			setAddress(_checksummed);
+				setAddress(_checksummed);
+			} catch (e) {
+				console.log("error:", e);
+			}
 		})();
 	}, [contractsSdk]);
 

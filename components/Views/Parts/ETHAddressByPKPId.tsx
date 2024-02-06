@@ -7,7 +7,7 @@ const { toChecksumAddress } = require("ethereum-checksum-address");
 
 const ETHAddressByPKPId = ({ pkpId }: { pkpId: string | any }) => {
 	// -- (app context)
-	const { routerContract } = useAppContext();
+	const { contractsSdk } = useAppContext();
 
 	// -- (state)
 	const [address, setAddress] = useState<any>();
@@ -15,10 +15,10 @@ const ETHAddressByPKPId = ({ pkpId }: { pkpId: string | any }) => {
 	// -- (mounted)
 	useEffect(() => {
 		// -- validate
-		if (!pkpId || routerContract?.read === undefined) return;
+		if (!pkpId || contractsSdk === undefined) return;
 
 		(async () => {
-			const _pubKey = await routerContract.read.getFullPubKey(pkpId);
+			const _pubKey = await contractsSdk.pubkeyRouterContract.read.getPubkey(pkpId);
 
 			const _ethAddress = "0x" + pub2Addr(_pubKey);
 
@@ -26,7 +26,7 @@ const ETHAddressByPKPId = ({ pkpId }: { pkpId: string | any }) => {
 
 			setAddress(_checksummedAddress);
 		})();
-	}, [routerContract?.read]);
+	}, [contractsSdk]);
 
 	// -- (validations)
 	if (!address) return <>loading...</>;
