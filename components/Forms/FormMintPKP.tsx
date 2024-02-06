@@ -10,6 +10,9 @@ import { useAppContext } from "../Contexts/AppContext";
 import { hexToDecimal } from "../../utils/converter";
 import { FixedNumber } from "ethers";
 
+const FAUCET_LINK = 'https://chronicle-faucet-app.vercel.app/';
+
+
 const FormMintNewPKP: NextPageWithLayout = () => {
 	// -- app context
 	const appContext = useAppContext();
@@ -141,14 +144,23 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 	};
 
 	return (
-		<FormInputFields
-			title={"Mint New PKP"}
-			buttonText={mintButtonText}
-			// fields={FormMintNewPKPFields}
-			onSubmit={onSubmit}
-			progress={mintProgress}
-			fullWidth={true}
-		/>
+
+		<>
+			<div className="mt-12 res-result">
+				<div className="center-content">
+					Faucet: <a href={FAUCET_LINK} className="center-item" target="_blank" rel="noreferrer">{FAUCET_LINK}</a>
+				</div>
+			</div>
+
+			<FormInputFields
+				title={"Mint New PKP"}
+				buttonText={mintButtonText}
+				// fields={FormMintNewPKPFields}
+				onSubmit={onSubmit}
+				progress={mintProgress}
+				fullWidth={true}
+			/>
+		</>
 	);
 };
 
