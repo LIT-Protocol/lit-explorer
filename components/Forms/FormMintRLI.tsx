@@ -104,7 +104,7 @@ const FormMintRLI = ({
 					<div className="mb-12">🚀 Your Capacity Credits NFT</div>
 					<div className="mb-12">
 						<div>Token ID: {token.tokenId}</div>
-						<div>Transaction: <a href={`${CHAIN_TX_URL}${token.tx}`} target="_blank">
+						<div>Transaction: <a href={`${CHAIN_TX_URL}${token.tx}`} target="_blank" rel="noreferrer">
 							{CHAIN_TX_URL}{token.tx}</a></div>
 					</div>
 				</div>
