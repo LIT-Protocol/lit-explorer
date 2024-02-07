@@ -6,9 +6,9 @@ import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";
 import { wait } from "../../utils/utils";
 import { FixedNumber } from "ethers";
+import FaucetLink from "../UI/FaucetLink";
 
 const CHAIN_TX_URL = "https://chain.litprotocol.com/tx/";
-const FAUCET_LINK = 'https://chronicle-faucet-app.vercel.app/';
 
 const FormMintRLI = ({
 	onMint,
@@ -38,14 +38,14 @@ const FormMintRLI = ({
 
 		console.log("res:", res);
 
-		const requestsPerDay = parseInt((res.find((item: any) => item.id === "Requests per day")).data);
+		const requestsPerKilosecond = parseInt((res.find((item: any) => item.id === "Requests per kilosecond")).data);
 		let expirationDate = (res.find((item: any) => item.id === MyFieldType.DATE_PICKER)).data;
-		console.log("requestsPerDay:", requestsPerDay);
+		console.log("requestsPerKilosecond:", requestsPerKilosecond);
 		console.log("expirationDate:", expirationDate);
 
 		// calculate how many requests per minute
-		const requestsPerMinute = requestsPerDay / 1440;
-		console.log("requestsPerMinute:", requestsPerMinute);
+		// const requestsPerMinute = requestsPerDay / 1440;
+		// console.log("requestsPerMinute:", requestsPerMinute);
 
 		// calculate days until expiration date
 		const today = moment();
@@ -69,7 +69,7 @@ const FormMintRLI = ({
 		try {
 			console.log("*** minting capacity credits NFT ***");
 			const { capacityTokenIdStr, rliTxHash } = await contractsSdk.mintCapacityCreditsNFT({
-				requestsPerDay: requestsPerDay, // 10 request per minute
+				requestsPerKilosecond,
 				daysUntilUTCMidnightExpiration: daysUntilExpiration,
 			});
 
@@ -101,11 +101,7 @@ const FormMintRLI = ({
 	return (
 		<div className="mt-12 mb-12">
 
-			<div className="mt-12 res-result">
-				<div className="center-content">
-					Faucet: <a href={FAUCET_LINK} className="center-item" target="_blank" rel="noreferrer">{FAUCET_LINK}</a>
-				</div>
-			</div>
+			<FaucetLink />
 
 
 			{token.tokenId && (
@@ -123,14 +119,13 @@ const FormMintRLI = ({
 				title="Buy Capacity Credits"
 				fields={[
 					{
-						title: "Requests per day",
-						label: "",
+						type: MyFieldType.TEXT_FIELD,
+						title: "Requests per kilosecond",
 						default: 14400,
 					},
 					{
-						title: MyFieldType.DATE_PICKER,
 						type: MyFieldType.DATE_PICKER,
-						label: "UTC Midnight Expiration Date",
+						title: "UTC Midnight Expiration Date",
 					},
 				]}
 				buttonText="Buy Capacity Credits"
