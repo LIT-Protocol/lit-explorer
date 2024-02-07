@@ -6,9 +6,14 @@ import { MultiETHFormat } from "../../utils/converter";
 import { useState } from "react";
 import { wait } from "../../utils/utils";
 import { FixedNumber } from "ethers";
+import FaucetLink from "../UI/FaucetLink";
+import {
+	requestsToDay,
+	requestsToSecond,
+	requestsToKilosecond,
+} from "@lit-protocol/contracts-sdk";
 
 const CHAIN_TX_URL = "https://chain.litprotocol.com/tx/";
-const FAUCET_LINK = 'https://chronicle-faucet-app.vercel.app/';
 
 const FormMintRLI = ({
 	onMint,
@@ -28,6 +33,8 @@ const FormMintRLI = ({
 		tx: "",
 	});
 
+	const [conversionData, setConversionData] = useState<any>();
+
 	// (event) handle click
 	const handleClick = async (res: any): Promise<void> => {
 
@@ -36,16 +43,20 @@ const FormMintRLI = ({
 			message: "Minting...	",
 		});
 
+
+		// remove undefined
+		res = res.filter((item: any) => item !== undefined);
 		console.log("res:", res);
 
-		const requestsPerDay = parseInt((res.find((item: any) => item.id === "Requests per day")).data);
-		let expirationDate = (res.find((item: any) => item.id === MyFieldType.DATE_PICKER)).data;
-		console.log("requestsPerDay:", requestsPerDay);
+
+		const requestsPerKilosecond = parseInt((res.find((item: any) => item.id === "Requests per kilosecond")).data);
+		let expirationDate = (res.find((item: any) => item.id === 'UTC Midnight Expiration Date')).data;
+		console.log("requestsPerKilosecond:", requestsPerKilosecond);
 		console.log("expirationDate:", expirationDate);
 
 		// calculate how many requests per minute
-		const requestsPerMinute = requestsPerDay / 1440;
-		console.log("requestsPerMinute:", requestsPerMinute);
+		// const requestsPerMinute = requestsPerDay / 1440;
+		// console.log("requestsPerMinute:", requestsPerMinute);
 
 		// calculate days until expiration date
 		const today = moment();
@@ -55,8 +66,21 @@ const FormMintRLI = ({
 		console.log("daysUntilExpiration:", daysUntilExpiration);
 
 		// selected date must be at least 2 days from now
-		if (daysUntilExpiration < 2) {
-			throwError(`Days until UTC expiration must be at least 2 days from current UTC time. Received ${daysUntilExpiration} days.`);
+		if (daysUntilExpiration < 1) {
+			throwError(`Days until UTC expiration must be at least 1 day from current UTC time. Received ${daysUntilExpiration} days.`);
+
+			setProgress({
+				progress: 0,
+				message: "Calculating cost...",
+			});
+
+			return;
+		}
+
+		const maxRequestsPerKilosecond = await contractsSdk.rateLimitNftContract.read.maxRequestsPerKilosecond();
+
+		if (requestsPerKilosecond > maxRequestsPerKilosecond.toNumber()) {
+			throwError(`Requests per kilosecond must be less than or equal to ${maxRequestsPerKilosecond.toNumber()}. Received ${requestsPerKilosecond}.`);
 
 			setProgress({
 				progress: 0,
@@ -69,7 +93,7 @@ const FormMintRLI = ({
 		try {
 			console.log("*** minting capacity credits NFT ***");
 			const { capacityTokenIdStr, rliTxHash } = await contractsSdk.mintCapacityCreditsNFT({
-				requestsPerDay: requestsPerDay, // 10 request per minute
+				requestsPerKilosecond,
 				daysUntilUTCMidnightExpiration: daysUntilExpiration,
 			});
 
@@ -88,7 +112,7 @@ const FormMintRLI = ({
 			});
 
 		} catch (e: any) {
-			console.log("error:", e);
+			console.log(e);
 			throwError(`Unable to mint Capacity Credits NFT due to: ${e.message}. Please try again.`);
 
 			setProgress({
@@ -101,11 +125,7 @@ const FormMintRLI = ({
 	return (
 		<div className="mt-12 mb-12">
 
-			<div className="mt-12 res-result">
-				<div className="center-content">
-					Faucet: <a href={FAUCET_LINK} className="center-item" target="_blank" rel="noreferrer">{FAUCET_LINK}</a>
-				</div>
-			</div>
+			<FaucetLink />
 
 
 			{token.tokenId && (
@@ -123,18 +143,51 @@ const FormMintRLI = ({
 				title="Buy Capacity Credits"
 				fields={[
 					{
-						title: "Requests per day",
-						label: "",
+						type: MyFieldType.TEXT_FIELD,
+						title: "Requests per kilosecond",
 						default: 14400,
 					},
 					{
-						title: MyFieldType.DATE_PICKER,
+						type: MyFieldType.CUSTOM,
+						render: (field: any, i: number) => {
+							return !conversionData ? <div key={i}></div> : (
+								<div key={i} className="mb-12 info">
+									<div>≡ {conversionData.requestsPerDay} req/day</div>
+								</div>
+							);
+						}
+					},
+					{
 						type: MyFieldType.DATE_PICKER,
-						label: "UTC Midnight Expiration Date",
+						title: "UTC Midnight Expiration Date",
 					},
 				]}
 				buttonText="Buy Capacity Credits"
 				onSubmit={handleClick}
+				onChange={(res: any) => {
+
+					// remove undefined
+					res = res.filter((item: any) => item !== undefined);
+
+					const requestsPerKilosecond = res.find((item: any) => item.id === "Requests per kilosecond").data;
+
+					const requestsPerDay = requestsToDay({ period: 'kilosecond', requests: requestsPerKilosecond });
+
+					const requestsPerSecond = requestsToSecond({
+						period: 'kilosecond',
+						requests: requestsPerKilosecond,
+					})
+
+					const conversionData = {
+						requestsPerKilosecond: parseInt(requestsPerKilosecond),
+						requestsPerDay,
+						requestsPerSecond,
+					}
+
+					setConversionData(conversionData);
+
+
+				}}
 				progress={progress}
 			/>
 		</div>

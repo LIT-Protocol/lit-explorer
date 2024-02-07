@@ -96,7 +96,7 @@ const RLIsByOwnerAddress = ({
 							field: "tokenID",
 						},
 						{
-							headerName: "Requests per second",
+							headerName: "Requests/day",
 							field: "requestsPerSecond",
 							renderCell: (props: any) => {
 								return RenderRLIRate(props);
