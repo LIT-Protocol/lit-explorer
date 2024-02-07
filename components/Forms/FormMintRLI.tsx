@@ -7,6 +7,11 @@ import { useState } from "react";
 import { wait } from "../../utils/utils";
 import { FixedNumber } from "ethers";
 import FaucetLink from "../UI/FaucetLink";
+import {
+	requestsToDay,
+	requestsToSecond,
+	requestsToKilosecond,
+} from "@lit-protocol/contracts-sdk";
 
 const CHAIN_TX_URL = "https://chain.litprotocol.com/tx/";
 
@@ -28,6 +33,8 @@ const FormMintRLI = ({
 		tx: "",
 	});
 
+	const [conversionData, setConversionData] = useState<any>();
+
 	// (event) handle click
 	const handleClick = async (res: any): Promise<void> => {
 
@@ -36,10 +43,14 @@ const FormMintRLI = ({
 			message: "Minting...	",
 		});
 
+
+		// remove undefined
+		res = res.filter((item: any) => item !== undefined);
 		console.log("res:", res);
 
+
 		const requestsPerKilosecond = parseInt((res.find((item: any) => item.id === "Requests per kilosecond")).data);
-		let expirationDate = (res.find((item: any) => item.id === MyFieldType.DATE_PICKER)).data;
+		let expirationDate = (res.find((item: any) => item.id === 'UTC Midnight Expiration Date')).data;
 		console.log("requestsPerKilosecond:", requestsPerKilosecond);
 		console.log("expirationDate:", expirationDate);
 
@@ -55,8 +66,21 @@ const FormMintRLI = ({
 		console.log("daysUntilExpiration:", daysUntilExpiration);
 
 		// selected date must be at least 2 days from now
-		if (daysUntilExpiration < 2) {
-			throwError(`Days until UTC expiration must be at least 2 days from current UTC time. Received ${daysUntilExpiration} days.`);
+		if (daysUntilExpiration < 1) {
+			throwError(`Days until UTC expiration must be at least 1 day from current UTC time. Received ${daysUntilExpiration} days.`);
+
+			setProgress({
+				progress: 0,
+				message: "Calculating cost...",
+			});
+
+			return;
+		}
+
+		const maxRequestsPerKilosecond = await contractsSdk.rateLimitNftContract.read.maxRequestsPerKilosecond();
+
+		if (requestsPerKilosecond > maxRequestsPerKilosecond.toNumber()) {
+			throwError(`Requests per kilosecond must be less than or equal to ${maxRequestsPerKilosecond.toNumber()}. Received ${requestsPerKilosecond}.`);
 
 			setProgress({
 				progress: 0,
@@ -88,7 +112,7 @@ const FormMintRLI = ({
 			});
 
 		} catch (e: any) {
-			console.log("error:", e);
+			console.log(e);
 			throwError(`Unable to mint Capacity Credits NFT due to: ${e.message}. Please try again.`);
 
 			setProgress({
@@ -124,12 +148,46 @@ const FormMintRLI = ({
 						default: 14400,
 					},
 					{
+						type: MyFieldType.CUSTOM,
+						render: (field: any, i: number) => {
+							return !conversionData ? <div key={i}></div> : (
+								<div key={i} className="mb-12 info">
+									<div>≡ {conversionData.requestsPerDay} req/day</div>
+								</div>
+							);
+						}
+					},
+					{
 						type: MyFieldType.DATE_PICKER,
 						title: "UTC Midnight Expiration Date",
 					},
 				]}
 				buttonText="Buy Capacity Credits"
 				onSubmit={handleClick}
+				onChange={(res: any) => {
+
+					// remove undefined
+					res = res.filter((item: any) => item !== undefined);
+
+					const requestsPerKilosecond = res.find((item: any) => item.id === "Requests per kilosecond").data;
+
+					const requestsPerDay = requestsToDay({ period: 'kilosecond', requests: requestsPerKilosecond });
+
+					const requestsPerSecond = requestsToSecond({
+						period: 'kilosecond',
+						requests: requestsPerKilosecond,
+					})
+
+					const conversionData = {
+						requestsPerKilosecond: parseInt(requestsPerKilosecond),
+						requestsPerDay,
+						requestsPerSecond,
+					}
+
+					setConversionData(conversionData);
+
+
+				}}
 				progress={progress}
 			/>
 		</div>

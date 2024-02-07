@@ -111,8 +111,6 @@ export default function PKPOptionsModal(props: PKPOptionsModalProps) {
 	};
 
 
-	return <></>;
-
 	return (
 		<div>
 			<Chip

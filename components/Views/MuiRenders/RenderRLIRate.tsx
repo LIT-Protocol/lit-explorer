@@ -1,7 +1,7 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../Contexts/AppContext";
-
+import { requestsToDay } from "@lit-protocol/contracts-sdk";
 export interface MyOptions {
 	copy?: boolean;
 	short?: boolean;
@@ -29,10 +29,14 @@ export const Rate = ({
 
 			const rateLimit =
 				await contractsSdk.rateLimitNftContract.read.capacity(tokenId);
+
 			const requestsPerKilosecond =
 				rateLimit.requestsPerKilosecond.toNumber();
 
-			setRequestsPerSecond(requestsPerKilosecond / 1000);
+			setRequestsPerSecond(requestsToDay({
+				period: 'kilosecond',
+				requests: requestsPerKilosecond,
+			}));
 
 		})();
 	}, [contractsSdk]);

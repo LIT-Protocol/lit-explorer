@@ -219,6 +219,15 @@ body {
 .mb-6 {
 	margin-bottom: 6px;
 }
+
+.mb-8 {
+	margin-bottom: 8px;
+}
+
+.mb-10 {
+	margin-bottom: 10px;
+}
+
 .mb-12 {
 	margin-bottom: 12px;
 }
@@ -585,4 +594,12 @@ button#demo-customized-button {
 
 .center-item {
 	margin: auto;
+}
+
+.info{
+	margin-top: 12px;
+	background: #5732AE;
+	color: white;
+	font-size: 0.875rem;
+	padding: 12px;
 }
