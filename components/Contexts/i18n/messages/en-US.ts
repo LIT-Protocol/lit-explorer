@@ -44,7 +44,7 @@ export default {
 		"authorised action - title": "Authorized Lit Actions stored on IPFS:",
 		"authorised action - loading":
 			"Loading Authorized Actions stored on IPFS...",
-		"authorised action - error": "Cannot find authorized actions.",
+		"authorised action - error": "No Authorized Actions found.",
 		"action page - title": "How do Lit Actions and PKPs work together?",
 		"action page":
 			"A user may generate a new PKP, and may grant a Lit Action the right to sign using it. This means that Lit actions are kind of like smart contracts with a secret key they can use to sign or decrypt things.",
