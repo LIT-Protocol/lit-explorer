@@ -16,6 +16,8 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: { pkpId: any }) => {
 	const [isPermitted, setIsPermitted] = useState(false);
 	const [cache, setCache] = useState(true);
 
+	const { network } = useAppContext();
+
 	useEffect(() => {
 		if (contractsSdk === undefined) return;
 
@@ -67,7 +69,7 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: { pkpId: any }) => {
 			renderStatus={renderStatus()}
 			errorMessage="No PKP owners found."
 			loadingMessage="Loading authorised PKP controllers..."
-			fetchPath={`/api/get-permitted-by-pkp/${pkpId}`}
+			fetchPath={`/api/get-permitted-by-pkp/${pkpId}?network=${network}`}
 			filter={(rawData: any) => {
 				console.log(
 					"[PKPPermittedControllersByPKPId] input<rawData>",
