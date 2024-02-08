@@ -78,9 +78,9 @@ const FormMintRLI = ({
 			return;
 		}
 
-		const maxRequestsPerKilosecond = await contractsSdk.rateLimitNftContract.read.maxRequestsPerKilosecond();
+		const maxRequestsPerKilosecond = await contractsSdk?.rateLimitNftContract?.read?.maxRequestsPerKilosecond();
 
-		if (requestsPerKilosecond > maxRequestsPerKilosecond.toNumber()) {
+		if (requestsPerKilosecond > parseInt(maxRequestsPerKilosecond?.toString())) {
 			throwError(`Requests per kilosecond must be less than or equal to ${maxRequestsPerKilosecond.toNumber()}. Received ${requestsPerKilosecond}.`);
 
 			setProgress({
