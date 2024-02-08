@@ -12,6 +12,7 @@ import {
 	requestsToSecond,
 	requestsToKilosecond,
 } from "@lit-protocol/contracts-sdk";
+import NetworkBasedMessage from "../UI/NetworkBasedMessage";
 
 const CHAIN_TX_URL = "https://chain.litprotocol.com/tx/";
 
@@ -21,7 +22,7 @@ const FormMintRLI = ({
 	onMint?(cost: MultiETHFormat, tx: any): void;
 }) => {
 	// (app context)
-	const { contractsSdk } = useAppContext();
+	const { contractsSdk, network } = useAppContext();
 
 	const [progress, setProgress] = useState<MyProgressI>({
 		progress: 0,
@@ -125,8 +126,12 @@ const FormMintRLI = ({
 	return (
 		<div className="mt-12 mb-12">
 
-			<FaucetLink />
 
+			{
+				(network == 'manzano' || network == 'habanero') ? (
+					<FaucetLink />
+				) : ''
+			}
 
 			{token.tokenId && (
 				<div className="mt-12 res-result">
@@ -139,57 +144,62 @@ const FormMintRLI = ({
 				</div>
 			)}
 
-			<FormInputFields
-				title="Buy Capacity Credits"
-				fields={[
-					{
-						type: MyFieldType.TEXT_FIELD,
-						title: "Requests per kilosecond",
-						default: 14400,
-					},
-					{
-						type: MyFieldType.CUSTOM,
-						render: (field: any, i: number) => {
-							return !conversionData ? <div key={i}></div> : (
-								<div key={i} className="mb-12 info">
-									<div>≡ {conversionData.requestsPerDay} req/day</div>
-								</div>
-							);
-						}
-					},
-					{
-						type: MyFieldType.DATE_PICKER,
-						title: "UTC Midnight Expiration Date",
-					},
-				]}
-				buttonText="Buy Capacity Credits"
-				onSubmit={handleClick}
-				onChange={(res: any) => {
+			<NetworkBasedMessage network={network} type="general" />
 
-					// remove undefined
-					res = res.filter((item: any) => item !== undefined);
+			{
+				(network == 'manzano' || network == 'habanero') ? (
+					<FormInputFields
+						title="Buy Capacity Credits"
+						fields={[
+							{
+								type: MyFieldType.TEXT_FIELD,
+								title: "Requests per kilosecond",
+								default: 14400,
+							},
+							{
+								type: MyFieldType.CUSTOM,
+								render: (field: any, i: number) => {
+									return !conversionData ? <div key={i}></div> : (
+										<div key={i} className="mb-12 info">
+											<div>≡ {conversionData.requestsPerDay} req/day</div>
+										</div>
+									);
+								}
+							},
+							{
+								type: MyFieldType.DATE_PICKER,
+								title: "UTC Midnight Expiration Date",
+							},
+						]}
+						buttonText="Buy Capacity Credits"
+						onSubmit={handleClick}
+						onChange={(res: any) => {
 
-					const requestsPerKilosecond = res.find((item: any) => item.id === "Requests per kilosecond").data;
+							// remove undefined
+							res = res.filter((item: any) => item !== undefined);
 
-					const requestsPerDay = requestsToDay({ period: 'kilosecond', requests: requestsPerKilosecond });
+							const requestsPerKilosecond = res.find((item: any) => item.id === "Requests per kilosecond").data;
 
-					const requestsPerSecond = requestsToSecond({
-						period: 'kilosecond',
-						requests: requestsPerKilosecond,
-					})
+							const requestsPerDay = requestsToDay({ period: 'kilosecond', requests: requestsPerKilosecond });
 
-					const conversionData = {
-						requestsPerKilosecond: parseInt(requestsPerKilosecond),
-						requestsPerDay,
-						requestsPerSecond,
-					}
+							const requestsPerSecond = requestsToSecond({
+								period: 'kilosecond',
+								requests: requestsPerKilosecond,
+							})
 
-					setConversionData(conversionData);
+							const conversionData = {
+								requestsPerKilosecond: parseInt(requestsPerKilosecond),
+								requestsPerDay,
+								requestsPerSecond,
+							}
 
+							setConversionData(conversionData);
+						}}
+						progress={progress}
+					/>
+				) : ''
+			}
 
-				}}
-				progress={progress}
-			/>
 		</div>
 	);
 };
