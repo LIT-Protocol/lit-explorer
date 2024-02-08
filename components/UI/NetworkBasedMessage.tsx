@@ -19,7 +19,7 @@ const NetworkBasedMessage = ({
           {/* -- manzano -- */}
           {network === 'manzano' ? <>
             <div className="mt-12 mb-12 info">
-              <div>🔥 <strong>Important:</strong> The Manzano testnet is a decentralised public testnet and is not meant for production use as there's no persistency guarantees. Please use the Manzano testnet for testing and development purposes only.</div>
+              <div>🔥 <strong>Important:</strong> The Manzano testnet is a decentralised public testnet and is not meant for production use as there&apos;s no persistency guarantees. Please use the Manzano testnet for testing and development purposes only.</div>
             </div>
           </> : ''}
         </>)
