@@ -279,7 +279,10 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 										className="btn-2"
 										disabled={!connector.ready}
 										key={connector.id}
-										onClick={() => connect({ connector })}
+										onClick={() => connect({
+											connector,
+											chainId: APP_CONFIG.NETWORK.params.id,
+										})}
 										sx={{
 											textTransform: "none",
 										}}
