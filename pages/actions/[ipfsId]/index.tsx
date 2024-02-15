@@ -147,6 +147,7 @@ const ActionsPage: NextPageWithLayout = () => {
 	const renderForms = () => {
 		// -- (inner render)
 		const _renderLoading = () => {
+			return (<></>)
 			return (
 				<MyCard title={"Loading action settings..."} className="mt-24">
 					<CircularProgress />
