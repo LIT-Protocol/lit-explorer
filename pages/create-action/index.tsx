@@ -21,7 +21,8 @@ import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION } from "../../app_config";
 import { tryUntil } from "../../utils/tryUntil";
 import MyDescription from "../../components/UI/MyDescription";
 import { preventPageLeave } from "../../utils/utils";
-import * as demos from "../../DEMOs/index";
+
+const API = 'https://lit-general-worker-staging.onrender.com/lit-action/examples';
 
 const CreateAction: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -33,6 +34,17 @@ const CreateAction: NextPageWithLayout = () => {
 	const [ipfsId, setIpfsId] = useState<string | any>();
 	const [completed, setCompleted] = useState(false);
 	const [demoIndex, setDemoIndex] = useState(8);
+	const [examples, setExamples] = useState<any[] | any>();
+	const [exampleIndex, setExampleIndex] = useState(0);
+
+	useEffect(() => {
+		if (!examples) {
+			fetch('https://lit-general-worker-staging.onrender.com/lit-action/examples').then(async (res) => {
+				const data = (await res.json()).data;
+				setExamples(data);
+			});
+		}
+	})
 
 	/**
 	 * When code is being edited
@@ -121,17 +133,6 @@ const CreateAction: NextPageWithLayout = () => {
 		return <MyProgress value={progress} message={msg} />;
 	};
 
-	const onSelectDemo = (demo: any) => {
-		const code = (demos as any)[demo.target.value];
-
-		setCode(code);
-
-		// find index by value
-		const index = Object.keys(demos).findIndex(
-			(key) => (demos as any)[key] === code
-		);
-		setDemoIndex(index);
-	};
 	/*
 	 * (render) render lit action demo select
 	 */
@@ -141,21 +142,32 @@ const CreateAction: NextPageWithLayout = () => {
 				<InputLabel id="demo-simple-select-label">
 					Select Example
 				</InputLabel>
-				<Select
-					labelId="demo-simple-select-label"
-					id="demo-simple-select"
-					value={Object.keys(demos)[demoIndex]}
-					label="Select Example"
-					onChange={onSelectDemo}
-				>
-					{Object.keys(demos).map((key) => {
-						return (
-							<MenuItem key={key} value={key}>
-								{key}
-							</MenuItem>
-						);
-					})}
-				</Select>
+
+				{
+					examples && examples[exampleIndex]?.file && (
+						<>
+							<Select
+								labelId="demo-simple-select-label"
+								id="demo-simple-select"
+								value={exampleIndex}
+								label="Select Example"
+								onChange={(e) => {
+
+									// @ts-ignore
+									setExampleIndex(e.target.value);
+									setCode(examples[e.target.value]?.content);
+								}}
+							>
+								{examples.map((item: { file: string, content: string }, key: string) => {
+									return <MenuItem key={key} value={key}>
+										{item.file}
+									</MenuItem>
+								})}
+							</Select>
+						</>
+					)
+				}
+
 			</FormControl>
 		);
 	};
