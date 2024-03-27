@@ -17,11 +17,11 @@ export const STORAGE_KEYS = {
 
 /** ========== LINKS ========== */
 export const APP_LINKS = {
-	WHAT_IS_PKP: "https://developer.litprotocol.com/v2/pkp/intro",
+	WHAT_IS_PKP: "https://developer.litprotocol.com/v3/sdk/wallets/intro",
 	WHAT_IS_RLI:
-		"https://developer.litprotocol.com/v2/resources/glossary/#rate-limiting",
+		"https://developer.litprotocol.com/v3/resources/glossary#rate-limiting",
 	WORKING_WITH_LIT_ACTIONS:
-		"https://developer.litprotocol.com/v2/LitActions/intro",
+		"https://developer.litprotocol.com/v3/sdk/serverless-signing/overview",
 	LIT_DISCORD: "https://litgateway.com/discord",
 	DOC: "https://developer.litprotocol.com",
 };

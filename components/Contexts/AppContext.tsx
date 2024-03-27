@@ -266,7 +266,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 					<p className="paragraph">
 						To learn more about Programmable Key Pairs (PKPs) and
 						Lit Actions, read our{" "}
-						<a href="https://developer.litprotocol.com/LitActionsAndPKPs/whatAreLitActionsAndPKPs">
+						<a href="https://developer.litprotocol.com">
 							documentation
 						</a>
 						.
