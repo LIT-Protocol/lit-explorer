@@ -1,4 +1,3 @@
-import { APP_CONFIG } from "../../app_config";
 import { heyShorty } from "../../utils/converter";
 import { appendEvenWidths } from "../../utils/mui/mui";
 import { useAppContext } from "../Contexts/AppContext";
@@ -24,8 +23,7 @@ const PKPsByOwnerAddress = ({
 	ownerAddress: string;
 	options?: PKPsByOwnerAddressOptions;
 }) => {
-
-	const { network } = useAppContext();
+	const { network, appConfig } = useAppContext();
 
 	return (
 		<div>

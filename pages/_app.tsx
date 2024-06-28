@@ -15,7 +15,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { APP_CONFIG } from "../app_config";
+import { VESUVIUS_APP_CONFIG } from "../app_config";
 
 NProgress.configure({
 	minimum: 0.3,
@@ -40,24 +40,27 @@ export type Props = AppProps & {
 const { chains, provider, webSocketProvider } = configureChains(
 	[
 		{
-			id: APP_CONFIG.NETWORK.params.id,
-			name: APP_CONFIG.NETWORK.params.chainName,
-			network: APP_CONFIG.NETWORK.params.network,
+			id: VESUVIUS_APP_CONFIG.NETWORK.params.id,
+			name: VESUVIUS_APP_CONFIG.NETWORK.params.chainName,
+			network: VESUVIUS_APP_CONFIG.NETWORK.params.network,
 			nativeCurrency: {
-				decimals: APP_CONFIG.NETWORK.params.nativeCurrency.decimals,
-				name: APP_CONFIG.NETWORK.params.nativeCurrency.name,
-				symbol: APP_CONFIG.NETWORK.params.nativeCurrency.symbol,
+				decimals:
+					VESUVIUS_APP_CONFIG.NETWORK.params.nativeCurrency.decimals,
+				name: VESUVIUS_APP_CONFIG.NETWORK.params.nativeCurrency.name,
+				symbol: VESUVIUS_APP_CONFIG.NETWORK.params.nativeCurrency
+					.symbol,
 			},
 			rpcUrls: {
 				public: {
-					http: [APP_CONFIG.NETWORK.params.rpcUrls[0]],
+					http: [VESUVIUS_APP_CONFIG.NETWORK.params.rpcUrls[0]],
 				},
 				default: {
-					http: [APP_CONFIG.NETWORK.params.rpcUrls[0]],
+					http: [VESUVIUS_APP_CONFIG.NETWORK.params.rpcUrls[0]],
 				},
 			},
 			blockExplorers: {
-				default: APP_CONFIG.NETWORK.params.blockExplorerUrls[0],
+				default:
+					VESUVIUS_APP_CONFIG.NETWORK.params.blockExplorerUrls[0],
 			},
 		},
 	],

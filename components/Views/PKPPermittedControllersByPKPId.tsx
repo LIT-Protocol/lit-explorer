@@ -22,7 +22,7 @@ const PKPPermittedControllersByPKPId = ({ pkpId }: { pkpId: any }) => {
 		if (contractsSdk === undefined) return;
 
 		(async () => {
-			const { ownerAddress } = await getWeb3Wallet();
+			const { ownerAddress } = await getWeb3Wallet(network);
 			contractsSdk
 			const _isPermitted =
 				await contractsSdk.pkpPermissionsContract.read.isPermittedAddress(

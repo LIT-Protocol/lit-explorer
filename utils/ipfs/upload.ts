@@ -1,5 +1,5 @@
 import * as IPFS from "ipfs-core";
-import { APP_CONFIG } from "../../app_config";
+import { VESUVIUS_APP_CONFIG } from "../../app_config";
 
 interface IPFSData {
 	path: string;
@@ -32,7 +32,7 @@ const uploadToIPFS = async (code: string): Promise<IPFSData> => {
 
 	const data: IPFSData = {
 		path: path,
-		url: `${APP_CONFIG.IPFS_PATH}/${path}`,
+		url: `${VESUVIUS_APP_CONFIG.IPFS_PATH}/${path}`,
 	};
 
 	console.log("[uploadToIPFS] data: ", data);

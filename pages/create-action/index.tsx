@@ -1,7 +1,4 @@
-import MainLayout from "../../components/Layouts/MainLayout";
-import { NextPageWithLayout } from "../_app";
 import MonacoEditor from "@monaco-editor/react";
-import { useEffect, useState } from "react";
 import {
 	Alert,
 	Button,
@@ -11,18 +8,19 @@ import {
 	Select,
 	TextField,
 } from "@mui/material";
-import uploadToIPFS from "../../utils/ipfs/upload";
-import throwError from "../../utils/throwError";
 import { useRouter } from "next/router";
-import { AppRouter } from "../../utils/AppRouter";
-import MyProgress from "../../components/UI/MyProgress";
+import { useEffect, useState } from "react";
+import { APP_LINKS, DEFAULT_LIT_ACTION } from "../../app_config";
+import MainLayout from "../../components/Layouts/MainLayout";
 import MyCard from "../../components/UI/MyCard";
-import { APP_CONFIG, APP_LINKS, DEFAULT_LIT_ACTION } from "../../app_config";
-import { tryUntil } from "../../utils/tryUntil";
 import MyDescription from "../../components/UI/MyDescription";
+import MyProgress from "../../components/UI/MyProgress";
+import { AppRouter } from "../../utils/AppRouter";
 import { preventPageLeave } from "../../utils/utils";
+import { NextPageWithLayout } from "../_app";
 
-const API = 'https://lit-general-worker-staging.onrender.com/lit-action/examples';
+const API =
+	"https://lit-general-worker-staging.onrender.com/lit-action/examples";
 
 const CreateAction: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -39,12 +37,12 @@ const CreateAction: NextPageWithLayout = () => {
 
 	useEffect(() => {
 		if (!examples) {
-			fetch('https://lit-general-worker-staging.onrender.com/lit-action/examples').then(async (res) => {
+			fetch(API).then(async (res) => {
 				const data = (await res.json()).data;
 				setExamples(data);
 			});
 		}
-	})
+	});
 
 	/**
 	 * When code is being edited
@@ -143,31 +141,34 @@ const CreateAction: NextPageWithLayout = () => {
 					Select Example
 				</InputLabel>
 
-				{
-					examples && examples[exampleIndex]?.file && (
-						<>
-							<Select
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
-								value={exampleIndex}
-								label="Select Example"
-								onChange={(e) => {
-
-									// @ts-ignore
-									setExampleIndex(e.target.value);
-									setCode(examples[e.target.value]?.content);
-								}}
-							>
-								{examples.map((item: { file: string, content: string }, key: string) => {
-									return <MenuItem key={key} value={key}>
-										{item.file}
-									</MenuItem>
-								})}
-							</Select>
-						</>
-					)
-				}
-
+				{examples && examples[exampleIndex]?.file && (
+					<>
+						<Select
+							labelId="demo-simple-select-label"
+							id="demo-simple-select"
+							value={exampleIndex}
+							label="Select Example"
+							onChange={(e) => {
+								// @ts-ignore
+								setExampleIndex(e.target.value);
+								setCode(examples[e.target.value]?.content);
+							}}
+						>
+							{examples.map(
+								(
+									item: { file: string; content: string },
+									key: string
+								) => {
+									return (
+										<MenuItem key={key} value={key}>
+											{item.file}
+										</MenuItem>
+									);
+								}
+							)}
+						</Select>
+					</>
+				)}
 			</FormControl>
 		);
 	};
