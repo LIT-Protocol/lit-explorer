@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../../components/Contexts/AppContext";
 
 const DATA_API =
-	"https://lit-general-worker-staging.onrender.com/network/addresses";
+	"https://apis.getlit.dev/network/addresses";
 
 const ContractsPage: NextPageWithLayout = () => {
 	const [rows, setRows] = useState([]);
