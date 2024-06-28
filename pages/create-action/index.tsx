@@ -20,7 +20,7 @@ import { preventPageLeave } from "../../utils/utils";
 import { NextPageWithLayout } from "../_app";
 
 const API =
-	"https://lit-general-worker-staging.onrender.com/lit-action/examples";
+	"https://apis.getlit.dev/lit-action/examples";
 
 const CreateAction: NextPageWithLayout = () => {
 	const router = useRouter();

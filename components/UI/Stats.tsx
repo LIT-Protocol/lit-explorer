@@ -17,7 +17,7 @@ export default function Stats() {
 
 		setIsLoading(true);
 		fetch(
-			`https://lit-general-worker-staging.onrender.com/${network}/stats`
+			`https://apis.getlit.dev/${network}/stats`
 		)
 			.then((res) => res.json())
 			.then((data: StatsData) => {
