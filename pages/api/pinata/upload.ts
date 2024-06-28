@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import date from "date-and-time";
 import pinataSDK from "@pinata/sdk";
-import { APP_CONFIG } from "../../../app_config";
+import { VESUVIUS_APP_CONFIG } from "../../../app_config";
 import fs from "fs";
 import { Readable } from "stream";
 import FormData from "form-data";
@@ -33,7 +33,7 @@ export default async function handler(
 			stream.path = "string.txt";
 
 			const res = await pinata.pinFileToIPFS(stream, {
-				pinataMetadata: { name: APP_CONFIG.IPFS_PIN_NAME },
+				pinataMetadata: { name: VESUVIUS_APP_CONFIG.IPFS_PIN_NAME },
 			});
 			data = { status: 200, data: res };
 		} catch (error) {

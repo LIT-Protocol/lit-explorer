@@ -1,9 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { BigNumberish, ethers } from "ethers";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { PKPPermissionsContract } from "../../../utils/blockchain/contracts/PKPPermissionsContract";
-import getWeb3Wallet from "../../../utils/blockchain/getWeb3Wallet";
 import { LitContracts } from "@lit-protocol/contracts-sdk";
+import { BigNumberish } from "ethers";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
 	id?: string;
@@ -20,11 +18,14 @@ export default async function handler(
 	// get ?network from query
 	const network: any = req.query.network as string;
 
-	const isNetworkSupported = network === 'cayenne' || network === 'manzano' || network === 'habanero';
+	const isNetworkSupported =
+		network === "cayenne" ||
+		network === "manzano" ||
+		network === "habanero" ||
+		network === "datil-dev";
 
 	if (!isNetworkSupported) {
-
-		const msg = `Invalid network ${network} - must be cayenne, manzano or habanero`;
+		const msg = `Invalid network ${network} - must be datil-dev, cayenne, manzano or habanero`;
 
 		res.status(500).json({
 			data: new Error(msg),
@@ -41,10 +42,14 @@ export default async function handler(
 
 	await contracts.connect();
 
-	let addresses = await contracts.pkpPermissionsContract.read.getPermittedAddresses(
-		pkpId as BigNumberish
-	);
-	let actions = await contracts.pkpPermissionsContract.read.getPermittedActions(pkpId as BigNumberish);
+	let addresses =
+		await contracts.pkpPermissionsContract.read.getPermittedAddresses(
+			pkpId as BigNumberish
+		);
+	let actions =
+		await contracts.pkpPermissionsContract.read.getPermittedActions(
+			pkpId as BigNumberish
+		);
 
 	const data = { addresses, actions };
 

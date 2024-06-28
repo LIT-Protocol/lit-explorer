@@ -20,7 +20,7 @@ const SelectionPermittedPKPs = ({
 	onDefaultToken?(token: string): void;
 }) => {
 	// -- (app context)
-	const { pkpContract, pkpPermissionsContract } = useAppContext();
+	const { appConfig } = useAppContext();
 
 	// -- (state)
 	const [tokens, setTokens] = useState<Array<string>>();
@@ -40,8 +40,10 @@ const SelectionPermittedPKPs = ({
 
 	// -- (void)
 	const fetchTokens = async () => {
-		const { ownerAddress } = await getWeb3Wallet();
-
+		const { ownerAddress } = await getWeb3Wallet(
+			appConfig.NETWORK.params.network
+		);
+		return;
 		const _tokens: Array<string> =
 			await pkpContract.read.getTokensByAddress(ownerAddress);
 		console.log("[fetchTokens] output<_tokens>:", _tokens);

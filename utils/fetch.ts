@@ -1,4 +1,4 @@
-import { APP_CONFIG } from "../app_config";
+import { VESUVIUS_APP_CONFIG } from "../app_config";
 
 /**
  * Fetch action code by a given IPFS ID
@@ -8,7 +8,7 @@ import { APP_CONFIG } from "../app_config";
 export const fetchActionCode = async (ipfsId: string): Promise<string> => {
 	console.log("[fetchActionCode] input<ipfsId>:", ipfsId);
 
-	const API = `${APP_CONFIG.IPFS_PATH}/${ipfsId}`;
+	const API = `${VESUVIUS_APP_CONFIG.IPFS_PATH}/${ipfsId}`;
 	console.log("[fetchActionCode] converted<API>:", API);
 
 	let code: string;

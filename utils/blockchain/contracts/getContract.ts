@@ -1,5 +1,5 @@
 import { Contract, ContractInterface, ethers, Signer, Wallet } from "ethers";
-import { APP_CONFIG } from "../../../app_config";
+import { VESUVIUS_APP_CONFIG, CHRONICLE_APP_CONFIG } from "../../../app_config";
 
 /**
  *
@@ -12,6 +12,9 @@ import { APP_CONFIG } from "../../../app_config";
 export const getSigner = async (network: string): Promise<Signer> => {
 	console.log("[getSigner] network:", network);
 
+	const appConfig =
+		network === "datil-dev" ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
+
 	let signer: Signer;
 
 	// const randomPrivateKey = ethers.Wallet.createRandom().privateKey;
@@ -20,7 +23,7 @@ export const getSigner = async (network: string): Promise<Signer> => {
 		"4ecd2d6fc9153d39b2883b8ebb59de9c2a469a5b2d07d31039e09600585ae805";
 
 	const provider = new ethers.providers.JsonRpcProvider(
-		APP_CONFIG.NETWORK.params.rpcUrls[0]
+		appConfig.NETWORK.params.rpcUrls[0]
 	);
 
 	signer = new ethers.Wallet(randomPrivateKey, provider);
@@ -31,10 +34,13 @@ export const getSigner = async (network: string): Promise<Signer> => {
 	// throw new Error(`No signer is found in network "${network}".`);
 };
 
-export const getContractFromAppConfig = (address: string) => {
+export const getContractFromAppConfig = (network: string, address: string) => {
 	const contracts: any = [];
 
-	Object.entries(APP_CONFIG).forEach((e) => {
+	const appConfig =
+		network === "datil-dev" ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
+
+	Object.entries(appConfig).forEach((e) => {
 		const item: any = e[1];
 
 		if (item) {
@@ -81,7 +87,7 @@ export const getABI = async ({
 		// .then((data) => data.result);
 
 		// ABI = data;
-		ABI = getContractFromAppConfig(contractAddress).ABI;
+		ABI = getContractFromAppConfig(network, contractAddress).ABI;
 
 		// -- using fallback
 		// if( data.includes('Max rate limit reached')){

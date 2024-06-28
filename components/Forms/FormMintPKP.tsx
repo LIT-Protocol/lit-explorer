@@ -15,7 +15,6 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 	// -- app context
 	const appContext = useAppContext();
 	const { contractsSdk } = appContext;
-
 	const router = useRouter();
 
 	// -- states
@@ -76,6 +75,7 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 				2,
 				{
 					value: mintCost,
+					gasLimit: 5000000,
 				}
 			);
 
@@ -87,7 +87,7 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 
 			let tokenId = hexToDecimal(events[1].topics[3]);
 
-			console.log("XX tokenId:", tokenId);
+			console.log("Your tokenId:", tokenId);
 
 			setMintedPKPId(tokenId);
 
@@ -112,8 +112,9 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 			);
 			let errMsg = `Unable to mint PKP NFT due to: ${e.message}.`;
 			if (e.code === -32603) {
-				errMsg += ` Please make sure your wallet has ${estCost?.length > 0 ? `at least ${estCost}` : `enough`
-					} LIT to complete the transaction. Visit the faucet at https://faucet.litprotocol.com/`;
+				errMsg += ` Please make sure your wallet has ${
+					estCost?.length > 0 ? `at least ${estCost}` : `enough`
+				} LIT to complete the transaction. Visit the faucet at https://faucet.litprotocol.com/`;
 			}
 			throwError(errMsg);
 			return;
@@ -142,7 +143,6 @@ const FormMintNewPKP: NextPageWithLayout = () => {
 	};
 
 	return (
-
 		<>
 			<FaucetLink />
 
