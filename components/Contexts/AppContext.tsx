@@ -18,7 +18,8 @@ import {
 	Typography,
 } from "@mui/material";
 import {
-	APP_CONFIG,
+	VESUVIUS_APP_CONFIG,
+	CHRONICLE_APP_CONFIG,
 	APP_LINKS,
 	DEFAULT_LIT_ACTION,
 	ROUTES,
@@ -26,6 +27,7 @@ import {
 	STORAGE_KEYS,
 	SupportedNetworks,
 	SupportedSearchTypes,
+	AppConfig,
 } from "../../app_config";
 import throwError from "../../utils/throwError";
 import NavPath from "../UI/NavPath";
@@ -41,6 +43,7 @@ import {
 	Connector,
 	ConnectorData,
 } from "wagmi";
+import getWeb3Wallet from "../../utils/blockchain/getWeb3Wallet";
 
 declare global {
 	interface Window {
@@ -55,12 +58,13 @@ declare global {
 	}
 }
 
-type LitNetwork = 'habanero' | 'manzano' | 'cayenne';
+type LitNetwork = "datil-dev" | "habanero" | "manzano" | "cayenne";
 
 enum LIT_NETWORKS {
-	HABANERO = 'habanero',
-	MANZANO = 'manzano',
-	CAYENNE = 'cayenne',
+	DATIL_DEV = "datil-dev",
+	HABANERO = "habanero",
+	MANZANO = "manzano",
+	CAYENNE = "cayenne",
 }
 
 interface SharedStates {
@@ -68,12 +72,14 @@ interface SharedStates {
 	network: LitNetwork;
 	onNetworkChange: (network: LitNetwork) => void;
 	logout?: () => Promise<void>;
+	appConfig: AppConfig;
 }
 
 let defaultSharedStates: SharedStates = {
 	contractsSdk: {} as LitContracts,
-	network: LIT_NETWORKS.HABANERO,
-	onNetworkChange: (network: LitNetwork) => { },
+	network: LIT_NETWORKS.DATIL_DEV,
+	onNetworkChange: (network: LitNetwork) => {},
+	appConfig: VESUVIUS_APP_CONFIG,
 };
 
 const AppContext = createContext(defaultSharedStates);
@@ -88,12 +94,13 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 	// const [routerContract, setRouterContract] = useState<RouterContract>();
 	// const [rliContract, setRliContract] = useState<RLIContract>();
 	const [contractsSdk, setContractsSdk] = useState<LitContracts>();
-	const [network, setNetwork] = useState<LitNetwork>(LIT_NETWORKS.HABANERO);
+	const [network, setNetwork] = useState<LitNetwork>(LIT_NETWORKS.DATIL_DEV);
 
 	// -- (state)
 	const [web3Installed, setWeb3Installed] = useState<boolean>(false);
 	const [contractsLoaded, setContractsLoaded] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [appConfig, setAppConfig] = useState<AppConfig>(VESUVIUS_APP_CONFIG);
 
 	// -- (wagmi)
 	const { connectors, connect, error } = useConnect();
@@ -115,7 +122,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		// window.login = onLogin;
 		window.logout = onLogout;
 		window.config = {
-			APP_CONFIG,
+			APP_CONFIG: appConfig,
 			STORAGE_KEYS,
 			APP_LINKS,
 			SupportedNetworks,
@@ -142,10 +149,9 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 			await contractsSDK.connect();
 
-			console.log(`contractsSDK.network! ${contractsSDK.network}`);
-
-			// const mintCost = await contractsSDK.pkpNftContract.read.mintCost();
-			// console.log("mintCost:", mintCost);
+			console.log(
+				`[connectContracts] contractsSDK.network! ${contractsSDK.network}`
+			);
 
 			setContractsSdk(contractsSDK);
 			setContractsLoaded(true);
@@ -230,16 +236,18 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		router.push(AppRouter.getPage(id));
 	};
 
-
 	const onNetworkChange = async (network: LitNetwork) => {
-
 		console.log(`Swithing to network: ${network}...`);
 
 		setNetwork(network);
+		setAppConfig(
+			network === "datil-dev" ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG
+		);
+
+		getWeb3Wallet(network);
 
 		await connectContracts(network);
-
-	}
+	};
 
 	// -- (event) logout of web 3
 	const onLogout = async () => {
@@ -279,10 +287,13 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 										className="btn-2"
 										disabled={!connector.ready}
 										key={connector.id}
-										onClick={() => connect({
-											connector,
-											chainId: APP_CONFIG.NETWORK.params.id,
-										})}
+										onClick={() =>
+											connect({
+												connector,
+												chainId:
+													appConfig.NETWORK.params.id,
+											})
+										}
 										sx={{
 											textTransform: "none",
 										}}
@@ -320,6 +331,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 		network: network,
 		onNetworkChange: onNetworkChange,
 		logout: onLogout,
+		appConfig,
 	};
 
 	return (

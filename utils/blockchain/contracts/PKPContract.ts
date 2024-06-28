@@ -1,6 +1,6 @@
 import { Contract, ethers } from "ethers";
 import { ContractProps } from "./ContractI";
-import { APP_CONFIG } from "../../../app_config";
+import { VESUVIUS_APP_CONFIG, CHRONICLE_APP_CONFIG } from "../../../app_config";
 import { getContract } from "./getContract";
 import { hexToDecimal, MultiETHFormat, wei2eth } from "../../converter";
 
@@ -26,11 +26,16 @@ export class PKPContract {
 	 * @return { void }
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
+		const appConfig =
+			props?.network === "datil-dev"
+				? VESUVIUS_APP_CONFIG
+				: CHRONICLE_APP_CONFIG;
+
 		const config = {
-			network: props?.network ?? APP_CONFIG.NETWORK_NAME,
+			network: props?.network ?? appConfig.NETWORK_NAME,
 			signer: props?.signer,
 			contractAddress:
-				props?.contractAddress ?? APP_CONFIG.PKP_NFT_CONTRACT.ADDRESS,
+				props?.contractAddress ?? appConfig.PKP_NFT_CONTRACT.ADDRESS,
 		};
 
 		const _contract = await getContract(config);
@@ -159,7 +164,10 @@ export class WritePKPContract {
 	}
 
 	mint = async (mintCost: { value: any }) => {
-		const tx = await this.contract.mintNext(APP_CONFIG.ECDSA_KEY, mintCost);
+		const tx = await this.contract.mintNext(
+			VESUVIUS_APP_CONFIG.ECDSA_KEY,
+			mintCost
+		);
 
 		const res = await tx.wait();
 

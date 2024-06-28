@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { APP_CONFIG } from "../../../app_config";
+import { VESUVIUS_APP_CONFIG, CHRONICLE_APP_CONFIG } from "../../../app_config";
 import { RouterContract } from "../../../utils/blockchain/contracts/RouterContract";
 import { decimalTohex, pub2Addr } from "../../../utils/converter";
 import { asyncForEach } from "../../../utils/utils";
@@ -21,10 +21,13 @@ export default async function handler(
 	// get ?network from query
 	const network: any = req.query.network as string;
 
-	const isNetworkSupported = network === 'cayenne' || network === 'manzano' || network === 'habanero';
+	const isNetworkSupported =
+		network === "cayenne" ||
+		network === "manzano" ||
+		network === "habanero" ||
+		network === "datil-dev";
 
 	if (!isNetworkSupported) {
-
 		const msg = `Invalid network ${network} - must be cayenne, manzano or habanero`;
 
 		res.status(500).json({
@@ -42,29 +45,63 @@ export default async function handler(
 
 		throw new Error("ID/Wallet address cannot be empty");
 	}
-	const baseURL = APP_CONFIG.API_URL;
-	const query = `?module=account&action=tokentx&address=${id}`;
-	const url = `${baseURL}${query}`;
-	console.log("url", url);
 
-	const dataRes = await fetch(url);
+	let data;
+	let pkps;
 
-	const data = await dataRes.json();
+	if (network === "datil-dev") {
+		const url = `https://vesuvius-explorer.litprotocol.com/api/v2/addresses/${id}/token-transfers`;
 
-	const contracts = new LitContracts({
-		network,
-	});
+		const dataRes = await fetch(url);
 
-	await contracts.connect();
-	const contractAddressHash = contracts.pkpNftContract.read.address;
-	console.log("contractAddressHash", contractAddressHash);
+		data = await dataRes.json();
 
+		pkps = data.items
+			.filter((item: any) => {
+				return item.method === "mintNext";
+			})
+			.map((item: any) => {
+				return {
+					blockHash: item.block_hash,
+					tokenID: item.total.token_id,
+					timeStamp: item.timestamp,
+					hash: item.tx_hash,
+				};
+			});
+	} else {
+		const baseURL = CHRONICLE_APP_CONFIG.API_URL;
+		const query = `?module=account&action=tokentx&address=${id}`;
+		const url = `${baseURL}${query}`;
+		console.log("url", url);
 
-	let pkps = data.result
-		.filter((item: any) => item.contractAddress === contractAddressHash.toLowerCase())
+		const dataRes = await fetch(url);
 
-	res.status(200).json({
+		data = await dataRes.json();
+
+		const contracts = new LitContracts({
+			network,
+		});
+
+		await contracts.connect();
+
+		const contractAddressHash = contracts.pkpNftContract.read.address;
+		console.log(
+			"[get-pkps-by-address] contractAddressHash",
+			contractAddressHash
+		);
+
+		pkps = data.result.filter(
+			(item: any) =>
+				item.contractAddress === contractAddressHash.toLowerCase()
+		);
+	}
+
+	const result = {
 		id: id?.toString(),
 		data: pkps,
-	});
+	};
+
+	console.log("result:", result);
+
+	res.status(200).json(result);
 }

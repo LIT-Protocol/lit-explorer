@@ -1,6 +1,6 @@
 import { Contract, ethers } from "ethers";
 import { ContractProps } from "./ContractI";
-import { APP_CONFIG } from "../../../app_config";
+import { CHRONICLE_APP_CONFIG, VESUVIUS_APP_CONFIG } from "../../../app_config";
 import { getContract } from "./getContract";
 import {
 	getBytes32FromMultihash,
@@ -32,11 +32,16 @@ export class RouterContract {
 	 * @return { void }
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
+		const appConfig =
+			props?.network === "datil-dev"
+				? VESUVIUS_APP_CONFIG
+				: CHRONICLE_APP_CONFIG;
+
 		const config = {
-			network: props?.network ?? APP_CONFIG.NETWORK_NAME,
+			network: props?.network ?? appConfig.NETWORK_NAME,
 			signer: props?.signer,
 			contractAddress:
-				props?.contractAddress ?? APP_CONFIG.ROUTER_CONTRACT.ADDRESS,
+				props?.contractAddress ?? appConfig.ROUTER_CONTRACT.ADDRESS,
 		};
 
 		const _contract = await getContract(config);

@@ -18,11 +18,14 @@ export default async function handler(
 	// get ?network from query
 	const network: any = req.query.network as string;
 
-	const isNetworkSupported = network === 'cayenne' || network === 'manzano' || network === 'habanero';
+	const isNetworkSupported =
+		network === "cayenne" ||
+		network === "manzano" ||
+		network === "habanero" ||
+		network === "datil-dev";
 
 	if (!isNetworkSupported) {
-
-		const msg = `Invalid network ${network} - must be cayenne, manzano or habanero`;
+		const msg = `Invalid network ${network} - must be datil-dev, cayenne, manzano or habanero`;
 
 		res.status(500).json({
 			data: new Error(msg),
@@ -30,8 +33,6 @@ export default async function handler(
 
 		throw new Error(msg);
 	}
-
-	console.log("XX network:", network);
 
 	// -- validate
 	if (!id) {

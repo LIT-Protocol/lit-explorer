@@ -1,14 +1,16 @@
 import { GridRenderCellParams } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
-import { APP_CONFIG, SupportedSearchTypes } from "../../../app_config";
+import { SupportedSearchTypes } from "../../../app_config";
 import { AppRouter } from "../../../utils/AppRouter";
 import { heyShorty } from "../../../utils/converter";
 import Copy from "../../UI/Copy";
 import { MyOptions } from "./RenderPKPToAddress";
 import { Link } from "@mui/material";
+import { useAppContext } from "../../Contexts/AppContext";
 
 const RenderTxnHash = (props: GridRenderCellParams, options: MyOptions) => {
 	const hash = props.row.hash;
+	const { appConfig } = useAppContext();
 
 	// -- (render)
 	const renderValue = (v: string) => {
@@ -16,7 +18,7 @@ const RenderTxnHash = (props: GridRenderCellParams, options: MyOptions) => {
 			<div className="flex justify-cell">
 				<Link
 					id={`link-${v}`}
-					href={`${APP_CONFIG.EXPLORER}/tx/${v}`}
+					href={`${appConfig.EXPLORER}/tx/${v}`}
 					target="_blank"
 					rel="noopener noreferrer"
 				>

@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { Signer } from "ethers";
-import { APP_CONFIG } from "../../app_config";
+import { VESUVIUS_APP_CONFIG, CHRONICLE_APP_CONFIG } from "../../app_config";
 
 interface Web3WalletProps {
 	wallet: any;
@@ -16,10 +16,15 @@ const defaultProps = {
 	ownerAddress: null,
 };
 
-const getWeb3Wallet = async (): Promise<Web3WalletProps | never> => {
+const getWeb3Wallet = async (
+	network: string
+): Promise<Web3WalletProps | never> => {
 	const web3Provider = window.ethereum;
 
 	console.warn("web3Provider:", web3Provider);
+
+	const appConfig =
+		network === "datil-dev" ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
 
 	if (!web3Provider) {
 		alert("Please install web3 wallet like Metamask/Brave.");
@@ -28,12 +33,12 @@ const getWeb3Wallet = async (): Promise<Web3WalletProps | never> => {
 
 	try {
 		await web3Provider.send("wallet_switchEthereumChain", [
-			{ chainId: APP_CONFIG.NETWORK.params.chainId },
+			{ chainId: appConfig.NETWORK.params.chainId },
 		]);
 	} catch (e) {
 		await web3Provider.request({
 			method: "wallet_addEthereumChain",
-			params: [APP_CONFIG.NETWORK.params],
+			params: [appConfig.NETWORK.params],
 		});
 	}
 

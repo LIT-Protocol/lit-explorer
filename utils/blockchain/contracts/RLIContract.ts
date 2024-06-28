@@ -1,5 +1,9 @@
 import { BigNumber, Contract, ethers } from "ethers";
-import { APP_CONFIG, SupportedNetworks } from "../../../app_config";
+import {
+	CHRONICLE_APP_CONFIG,
+	SupportedNetworks,
+	VESUVIUS_APP_CONFIG,
+} from "../../../app_config";
 import { asyncForEachReturn } from "../../utils";
 import {
 	milliC,
@@ -40,12 +44,16 @@ export class RLIContract {
 	 * @return { void }
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
+		const appConfig =
+			props?.network === "datil-dev"
+				? VESUVIUS_APP_CONFIG
+				: CHRONICLE_APP_CONFIG;
+
 		const config = {
-			network: props?.network ?? APP_CONFIG.NETWORK_NAME,
+			network: props?.network ?? appConfig.NETWORK_NAME,
 			signer: props?.signer,
 			contractAddress:
-				props?.contractAddress ??
-				APP_CONFIG.RATE_LIMIT_CONTRACT.ADDRESS,
+				props?.contractAddress ?? appConfig.RATE_LIMIT_CONTRACT.ADDRESS,
 		};
 
 		const _contract = await getContract(config);

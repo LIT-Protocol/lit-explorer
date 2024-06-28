@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import pinataSDK from "@pinata/sdk";
-import { APP_CONFIG } from "../../app_config";
+import { VESUVIUS_APP_CONFIG } from "../../app_config";
 
 // https://github.com/PinataCloud/Pinata-SDK
 // interface PinataFilterI extends pinList{
@@ -32,7 +32,7 @@ export default async function handler(
 
 	let filters: any = {
 		metadata: {
-			name: APP_CONFIG.IPFS_PIN_NAME,
+			name: VESUVIUS_APP_CONFIG.IPFS_PIN_NAME,
 		},
 	};
 

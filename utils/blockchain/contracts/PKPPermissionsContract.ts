@@ -1,6 +1,10 @@
 import { BigNumber, Contract, ethers } from "ethers";
 import { ContractProps } from "./ContractI";
-import { APP_CONFIG, SupportedNetworks } from "../../../app_config";
+import {
+	CHRONICLE_APP_CONFIG,
+	SupportedNetworks,
+	VESUVIUS_APP_CONFIG,
+} from "../../../app_config";
 import { getContract } from "./getContract";
 import {
 	decimalTohex,
@@ -36,12 +40,17 @@ export class PKPPermissionsContract {
 	 * @return { void }
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
+		const appConfig =
+			props?.network === "datil-dev"
+				? VESUVIUS_APP_CONFIG
+				: CHRONICLE_APP_CONFIG;
+
 		const config = {
-			network: props?.network ?? APP_CONFIG.NETWORK_NAME,
+			network: props?.network ?? appConfig.NETWORK_NAME,
 			signer: props?.signer,
 			contractAddress:
 				props?.contractAddress ??
-				APP_CONFIG.PKP_PERMISSIONS_CONTRACT.ADDRESS,
+				appConfig.PKP_PERMISSIONS_CONTRACT.ADDRESS,
 		};
 
 		const _contract = await getContract(config);

@@ -1,17 +1,23 @@
 import { Button, Divider, Link, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { FormattedMessage } from "react-intl";
-import { APP_CONFIG, ROUTES } from "../../app_config";
+import {
+	VESUVIUS_APP_CONFIG,
+	CHRONICLE_APP_CONFIG,
+	ROUTES,
+} from "../../app_config";
+import { useAppContext } from "../Contexts/AppContext";
 
 const SideNav = () => {
 	const router = useRouter();
 	const currentRoute = router.pathname;
+	const { appConfig } = useAppContext();
 
 	return (
 		<>
-			{APP_CONFIG.NETWORK_LABEL.ENABLED ? (
+			{appConfig.NETWORK_LABEL.ENABLED ? (
 				<div className="logo-network">
-					{APP_CONFIG.NETWORK_LABEL.NAME}
+					{appConfig.NETWORK_LABEL.NAME}
 				</div>
 			) : (
 				""
@@ -85,7 +91,6 @@ const SideNav = () => {
 				<FormattedMessage id="Pages" />
 			</Divider>
 			<ul className="ul">
-
 				{/* PKP Owners */}
 				{/* <li>
 					<Button
@@ -157,7 +162,12 @@ const SideNav = () => {
 			<ul className="ul">
 				<li>
 					<Button
-						onClick={() => window.open("https://developer.litprotocol.com", "_blank")}
+						onClick={() =>
+							window.open(
+								"https://developer.litprotocol.com",
+								"_blank"
+							)
+						}
 						className={
 							currentRoute.includes(ROUTES.DOCUMENTATION)
 								? "btn active"

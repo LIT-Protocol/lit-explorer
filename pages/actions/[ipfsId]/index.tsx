@@ -17,7 +17,7 @@ import MyDescription from "../../../components/UI/MyDescription";
 
 const ActionsPage: NextPageWithLayout = () => {
 	// -- (app context)
-	const { pkpContract, routerContract } = useAppContext();
+	const { appConfig } = useAppContext();
 
 	// -- (router)
 	const router = useRouter();
@@ -61,33 +61,12 @@ const ActionsPage: NextPageWithLayout = () => {
 				setCode(code);
 				clearTimeout(0);
 			}
-
-			// -- checks
-			await checkifUserHasPKPs();
-			await checkIfActionRegistered();
 		})();
 
 		return () => {
 			clearTimeout(0);
 		};
 	}, [ipfsId, counter]);
-
-	// -- (void) check has PKP
-	const checkifUserHasPKPs = async () => {
-		const { ownerAddress } = await getWeb3Wallet();
-
-		const tokens = await pkpContract.read.getTokensByAddress(ownerAddress);
-
-		setHasPKPs(tokens.length > 0);
-	};
-
-	// -- (void) check if action is registered
-	const checkIfActionRegistered = async () => {
-		const _isRegistered = await routerContract.read.isActionRegistered(
-			ipfsId as string
-		);
-		setActionRegistered(_isRegistered);
-	};
 
 	// -- (render) render description
 	const renderDescription = () => {
@@ -147,7 +126,7 @@ const ActionsPage: NextPageWithLayout = () => {
 	const renderForms = () => {
 		// -- (inner render)
 		const _renderLoading = () => {
-			return (<></>)
+			return <></>;
 			return (
 				<MyCard title={"Loading action settings..."} className="mt-24">
 					<CircularProgress />
@@ -211,8 +190,6 @@ const ActionsPage: NextPageWithLayout = () => {
 	const reRender = async () => {
 		console.log("[reRender]");
 		setRefresh((prev) => prev + 1);
-		await checkifUserHasPKPs();
-		await checkIfActionRegistered();
 	};
 
 	if (!ipfsId) return <p>ipfsId is not ready</p>;
