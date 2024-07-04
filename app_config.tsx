@@ -58,8 +58,8 @@ export const LitChain = {
 			chainName: "Datil Devnet - Lit Protocol",
 			network: "datil-dev",
 			nativeCurrency: {
-				name: "testLit",
-				symbol: "testLit",
+				name: "tstLit",
+				symbol: "tstLit",
 				decimals: 18,
 			},
 			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
