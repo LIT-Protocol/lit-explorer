@@ -32,6 +32,7 @@ export default function NetworkDropdown() {
 			) : (
 				<Select onChange={onChangeHandler} defaultValue={network}>
 					<Option value={"datil-dev"}>Datil-Dev</Option>
+					<Option value={"datil-test"}>Datil-Test</Option>
 					<Option value={"habanero"}>Habanero</Option>
 					<Option value={"manzano"}>Manzano</Option>
 					<Option value={"cayenne"}>Cayenne</Option>

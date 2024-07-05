@@ -7,7 +7,8 @@ export default function FaucetLink() {
 	const { appConfig } = useAppContext();
 
 	const faucetLink =
-		appConfig.NETWORK.params.network === "datil-dev"
+		appConfig.NETWORK.params.network === "datil-dev" ||
+		appConfig.NETWORK.params.network === "datil-test"
 			? DATIL_FACUET
 			: FAUCET_LINK;
 

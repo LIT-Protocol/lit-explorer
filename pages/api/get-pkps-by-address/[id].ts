@@ -6,6 +6,12 @@ import { decimalTohex, pub2Addr } from "../../../utils/converter";
 import { asyncForEach } from "../../../utils/utils";
 import { LitContracts } from "@lit-protocol/contracts-sdk";
 
+// const DATIL_DEV = "https://staging.apis.getlit.dev/datil-dev/addresses";
+const DATIL_DEV_PKPNFT = "0x5526d5309Bb6caa560261aB37c1C28cC2ebe33c4";
+
+// const DATIL_TEST = "https://staging.apis.getlit.dev/datil-test/addresses";
+const DATIL_TEST_PKPNFT = "0xFEec163a7a82DBBb808c6A58cd1E84d08Df6CBa7";
+
 type Data = {
 	id?: string;
 	body?: string;
@@ -25,10 +31,11 @@ export default async function handler(
 		network === "cayenne" ||
 		network === "manzano" ||
 		network === "habanero" ||
-		network === "datil-dev";
+		network === "datil-dev" ||
+		network === "datil-test";
 
 	if (!isNetworkSupported) {
-		const msg = `Invalid network ${network} - must be cayenne, manzano or habanero`;
+		const msg = `Invalid network ${network} - must be datil-dev, datil-test, cayenne, manzano or habanero`;
 
 		res.status(500).json({
 			data: new Error(msg),
@@ -49,8 +56,25 @@ export default async function handler(
 	let data;
 	let pkps;
 
-	if (network === "datil-dev") {
+	if (network === "datil-dev" || network === "datil-test") {
 		const url = `https://vesuvius-explorer.litprotocol.com/api/v2/addresses/${id}/token-transfers`;
+
+		let PKPNFTAddress: string | undefined = undefined;
+
+		if (network === "datil-dev") {
+			PKPNFTAddress = DATIL_DEV_PKPNFT;
+		}
+		if (network === "datil-test") {
+			PKPNFTAddress = DATIL_TEST_PKPNFT;
+		}
+
+		if (!PKPNFTAddress) {
+			res.status(500).json({
+				data: new Error("Invalid network"),
+			});
+
+			throw new Error("Invalid network");
+		}
 
 		const dataRes = await fetch(url);
 
@@ -58,7 +82,10 @@ export default async function handler(
 
 		pkps = data.items
 			.filter((item: any) => {
-				return item.method === "mintNext";
+				return (
+					item.method === "mintNext" &&
+					item.token.address === PKPNFTAddress
+				);
 			})
 			.map((item: any) => {
 				return {
