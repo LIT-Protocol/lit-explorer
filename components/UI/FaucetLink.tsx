@@ -1,7 +1,8 @@
 import { useAppContext } from "../Contexts/AppContext";
 
-const FAUCET_LINK = "https://faucet.litprotocol.com/";
-const DATIL_FACUET = "https://datil-dev-faucet.vercel.app/";
+const CHRONICLE_FAUCET = "https://faucet.litprotocol.com/";
+const CHRONICLE_VESUVIUS_FACUET =
+	"https://chronicle-vesuvius-faucet.getlit.dev/";
 
 export default function FaucetLink() {
 	const { appConfig } = useAppContext();
@@ -9,8 +10,8 @@ export default function FaucetLink() {
 	const faucetLink =
 		appConfig.NETWORK.params.network === "datil-dev" ||
 		appConfig.NETWORK.params.network === "datil-test"
-			? DATIL_FACUET
-			: FAUCET_LINK;
+			? CHRONICLE_VESUVIUS_FACUET
+			: CHRONICLE_FAUCET;
 
 	return (
 		<div className="mt-12 res-result">
