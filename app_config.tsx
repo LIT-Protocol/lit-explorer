@@ -58,8 +58,8 @@ export const LitChain = {
 			chainName: "Vesuvius - Lit Protocol",
 			network: "datil-dev",
 			nativeCurrency: {
-				name: "tstLit",
-				symbol: "tstLit",
+				name: "txtLPX",
+				symbol: "txtLPX",
 				decimals: 18,
 			},
 			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
@@ -79,8 +79,8 @@ export const LitChain = {
 			chainName: "Vesuvius - Lit Protocol",
 			network: "datil-test",
 			nativeCurrency: {
-				name: "tstLit",
-				symbol: "tstLit",
+				name: "txtLPX",
+				symbol: "txtLPX",
 				decimals: 18,
 			},
 			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
