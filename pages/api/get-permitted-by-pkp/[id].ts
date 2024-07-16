@@ -22,10 +22,11 @@ export default async function handler(
 		network === "cayenne" ||
 		network === "manzano" ||
 		network === "habanero" ||
-		network === "datil-dev";
+		network === "datil-dev" ||
+		network === "datil-test"
 
 	if (!isNetworkSupported) {
-		const msg = `Invalid network ${network} - must be datil-dev, cayenne, manzano or habanero`;
+		const msg = `Invalid network ${network} - must be datil-dev, datil-test, cayenne, manzano or habanero`;
 
 		res.status(500).json({
 			data: new Error(msg),

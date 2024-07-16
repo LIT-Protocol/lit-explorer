@@ -41,7 +41,7 @@ export class PKPPermissionsContract {
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
 		const appConfig =
-			props?.network === "datil-dev"
+			props?.network === "datil-dev" || props?.network === "datil-test"
 				? VESUVIUS_APP_CONFIG
 				: CHRONICLE_APP_CONFIG;
 

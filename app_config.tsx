@@ -55,17 +55,38 @@ export const LitChain = {
 		params: {
 			id: 2311,
 			chainId: "0x907",
-			chainName: "Datil Devnet - Lit Protocol",
+			chainName: "Vesuvius - Lit Protocol",
 			network: "datil-dev",
 			nativeCurrency: {
-				name: "tstLIT",
-				symbol: "tstLIT",
+				name: "tstLPX",
+				symbol: "tstLPX",
 				decimals: 18,
 			},
 			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
 			blockExplorerUrls: [
 				{
-					name: "Datil Devnet Explorer",
+					name: "Vesuvius Explorer",
+					url: "https://vesuvius-explorer.litprotocol.com",
+				},
+			],
+		},
+		api: "https://vesuvius-explorer.litprotocol.com/api/v2/",
+	},
+	datilTest: {
+		params: {
+			id: 2311,
+			chainId: "0x907",
+			chainName: "Vesuvius - Lit Protocol",
+			network: "datil-test",
+			nativeCurrency: {
+				name: "tstLPX",
+				symbol: "tstLPX",
+				decimals: 18,
+			},
+			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
+			blockExplorerUrls: [
+				{
+					name: "Vesuvius Explorer",
 					url: "https://vesuvius-explorer.litprotocol.com",
 				},
 			],

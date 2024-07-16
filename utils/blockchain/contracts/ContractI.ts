@@ -4,5 +4,5 @@ import { SupportedNetworks } from "../../../app_config";
 export interface ContractProps {
 	signer?: Signer;
 	contractAddress?: string;
-	network?: "datil-dev" | "habanero" | "manzano" | "cayenne";
+	network?: "datil-dev" | "datil-test" | "habanero" | "manzano" | "cayenne";
 }

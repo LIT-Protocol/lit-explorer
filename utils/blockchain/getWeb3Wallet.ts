@@ -24,7 +24,7 @@ const getWeb3Wallet = async (
 	console.warn("web3Provider:", web3Provider);
 
 	const appConfig =
-		network === "datil-dev" ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
+		(network === "datil-dev" || network === "datil-test") ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
 
 	if (!web3Provider) {
 		alert("Please install web3 wallet like Metamask/Brave.");

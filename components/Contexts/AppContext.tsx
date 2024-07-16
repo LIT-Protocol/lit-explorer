@@ -58,9 +58,10 @@ declare global {
 	}
 }
 
-type LitNetwork = "datil-dev" | "habanero" | "manzano" | "cayenne";
+type LitNetwork = "datil-test" | "datil-dev" | "habanero" | "manzano" | "cayenne";
 
 enum LIT_NETWORKS {
+	DATIL_TEST = "datil-test",
 	DATIL_DEV = "datil-dev",
 	HABANERO = "habanero",
 	MANZANO = "manzano",
@@ -241,7 +242,7 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 		setNetwork(network);
 		setAppConfig(
-			network === "datil-dev" ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG
+			(network === "datil-dev" || network === "datil-test") ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG
 		);
 
 		getWeb3Wallet(network);
