@@ -1,7 +1,7 @@
 import { useAppContext } from "../Contexts/AppContext";
 
 const FAUCET_LINK = "https://faucet.litprotocol.com/";
-const DATIL_FACUET = "https://datil-dev-faucet.vercel.app/";
+const DATIL_FACUET = "https://chronicle-vesuvius-faucet.getlit.dev";
 
 export default function FaucetLink() {
 	const { appConfig } = useAppContext();
