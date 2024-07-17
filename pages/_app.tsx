@@ -15,7 +15,7 @@ import { publicProvider } from "wagmi/providers/public";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { VESUVIUS_APP_CONFIG } from "../app_config";
+import { VESUVIUS_APP_CONFIG, YELLOWSTONE_APP_CONFIG } from "../app_config";
 
 NProgress.configure({
 	minimum: 0.3,

@@ -18,6 +18,7 @@ import {
 	Typography,
 } from "@mui/material";
 import {
+	YELLOWSTONE_APP_CONFIG,
 	VESUVIUS_APP_CONFIG,
 	CHRONICLE_APP_CONFIG,
 	APP_LINKS,
@@ -58,7 +59,12 @@ declare global {
 	}
 }
 
-type LitNetwork = "datil-test" | "datil-dev" | "habanero" | "manzano" | "cayenne";
+type LitNetwork =
+	| "datil-test"
+	| "datil-dev"
+	| "habanero"
+	| "manzano"
+	| "cayenne";
 
 enum LIT_NETWORKS {
 	DATIL_TEST = "datil-test",
@@ -242,7 +248,11 @@ export const AppContextProvider = ({ children }: { children: any }) => {
 
 		setNetwork(network);
 		setAppConfig(
-			(network === "datil-dev" || network === "datil-test") ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG
+			network === "datil-dev"
+				? VESUVIUS_APP_CONFIG
+				: network === "datil-test"
+				? YELLOWSTONE_APP_CONFIG
+				: CHRONICLE_APP_CONFIG
 		);
 
 		getWeb3Wallet(network);

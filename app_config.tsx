@@ -1,18 +1,18 @@
 // import json
-import deployedContracts from "./ABIs/deployed-contracts.json";
+import oldChronicleDeployedContracts from "./ABIs/deployed-contracts.json";
+import datilDevDeployedContracts from "./ABIs/datil-dev-deployed-contracts.json";
+import datilTestDeployedContracts from "./ABIs/datil-test-deployed-contracts.json";
 import PKPHelper from "./ABIs/PKPHelper.json";
 import PKPNFT from "./ABIs/PKPNFT.json";
 import PKPPermissions from "./ABIs/PKPPermissions.json";
 import PubkeyRouter from "./ABIs/PubkeyRouter.json";
 import RateLimitNFT from "./ABIs/RateLimitNFT.json";
 // import { Network } from "alchemy-sdk";
+import { LIT_CHAINS } from "@lit-protocol/constants";
 
 /** ========== Storage Keys ========== */
 export const STORAGE_KEYS = {
-	// WALLET_CONNECTED: "lit-explorer-wallet-connected",
 	LANG: "lit-explorer-i18n-lang",
-	// WALLET_EVENTS: "lit-explorer-wallet-events",
-	// LOGGED: "lit-logged",
 };
 
 /** ========== LINKS ========== */
@@ -33,7 +33,7 @@ export const LitChain = {
 	chronicle: {
 		params: {
 			id: 175177,
-			chainId: "0x2AC49",
+			chainId: "0x2ac49",
 			chainName: "Chronicle - Lit Protocol Testnet",
 			network: "chronicle",
 			nativeCurrency: {
@@ -53,20 +53,21 @@ export const LitChain = {
 	},
 	datilDev: {
 		params: {
-			id: 2311,
-			chainId: "0x907",
-			chainName: "Vesuvius - Lit Protocol",
 			network: "datil-dev",
+			id: LIT_CHAINS["chronicleVesuviusTestnet"].chainId,
+			chainId: LIT_CHAINS["chronicleVesuviusTestnet"].chainId,
+			chainName: LIT_CHAINS["chronicleVesuviusTestnet"].name,
 			nativeCurrency: {
-				name: "tstLPX",
-				symbol: "tstLPX",
-				decimals: 18,
+				name: LIT_CHAINS["chronicleVesuviusTestnet"].symbol,
+				symbol: LIT_CHAINS["chronicleVesuviusTestnet"].symbol,
+				decimals: LIT_CHAINS["chronicleVesuviusTestnet"].decimals,
 			},
-			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
+			rpcUrls: LIT_CHAINS["chronicleVesuviusTestnet"].rpcUrls,
 			blockExplorerUrls: [
 				{
-					name: "Vesuvius Explorer",
-					url: "https://vesuvius-explorer.litprotocol.com",
+					name: LIT_CHAINS["chronicleVesuviusTestnet"].name,
+					url: LIT_CHAINS["chronicleVesuviusTestnet"]
+						.blockExplorerUrls[0],
 				},
 			],
 		},
@@ -74,24 +75,25 @@ export const LitChain = {
 	},
 	datilTest: {
 		params: {
-			id: 2311,
-			chainId: "0x907",
-			chainName: "Vesuvius - Lit Protocol",
 			network: "datil-test",
+			id: LIT_CHAINS["chronicleYellowstoneTestnet"].chainId,
+			chainId: LIT_CHAINS["chronicleYellowstoneTestnet"].chainId,
+			chainName: LIT_CHAINS["chronicleYellowstoneTestnet"].name,
 			nativeCurrency: {
-				name: "tstLPX",
-				symbol: "tstLPX",
-				decimals: 18,
+				name: LIT_CHAINS["chronicleYellowstoneTestnet"].symbol,
+				symbol: LIT_CHAINS["chronicleYellowstoneTestnet"].symbol,
+				decimals: LIT_CHAINS["chronicleYellowstoneTestnet"].decimals,
 			},
-			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
+			rpcUrls: LIT_CHAINS["chronicleYellowstoneTestnet"].rpcUrls,
 			blockExplorerUrls: [
 				{
-					name: "Vesuvius Explorer",
-					url: "https://vesuvius-explorer.litprotocol.com",
+					name: LIT_CHAINS["chronicleYellowstoneTestnet"].name,
+					url: LIT_CHAINS["chronicleYellowstoneTestnet"]
+						.blockExplorerUrls[0],
 				},
 			],
 		},
-		api: "https://vesuvius-explorer.litprotocol.com/api/v2/",
+		api: "https://yellowstone-explorer.litprotocol.com/api/v2/",
 	},
 };
 
@@ -156,7 +158,10 @@ interface ContractConfig {
 export interface AppConfig {
 	EXPLORER: string;
 	NETWORK_NAME: string;
-	NETWORK: typeof LitChain.datilDev | typeof LitChain.chronicle;
+	NETWORK:
+		| typeof LitChain.datilDev
+		| typeof LitChain.datilTest
+		| typeof LitChain.chronicle;
 	NETWORK_LABEL: {
 		ENABLED: boolean;
 		NAME: string;
@@ -187,6 +192,60 @@ export interface AppConfig {
 	};
 }
 
+export const YELLOWSTONE_APP_CONFIG = {
+	// -- explorer address
+	EXPLORER: LitChain.datilTest.params.blockExplorerUrls[0].url,
+	NETWORK_NAME: CURRENT_NETWORK,
+	NETWORK: LitChain.datilTest,
+	NETWORK_LABEL: {
+		ENABLED: false,
+		NAME: LitChain.datilTest.params.chainName,
+	},
+	API_URL: LitChain.datilTest.api,
+	ECDSA_KEY: 2,
+	IPFS_PIN_NAME: "Lit Explorer DatilTest",
+	IPFS_PATH: "https://lit.mypinata.cloud/ipfs",
+
+	// --- Main contracts used in this explorer
+	PKP_NFT_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.pkpNftContractAddress,
+		ABI: PKPNFT.abi,
+	},
+	RATE_LIMIT_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.rateLimitNftContractAddress,
+		ABI: RateLimitNFT.abi,
+	},
+	ROUTER_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.pubkeyRouterContractAddress,
+		ABI: PubkeyRouter.abi,
+	},
+	PKP_HELPER_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.pkpHelperContractAddress,
+		ABI: PKPHelper.abi,
+	},
+	PKP_PERMISSIONS_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.pkpPermissionsContractAddress,
+		ABI: PKPPermissions.abi,
+	},
+
+	// -- (NOT IMPORTANT) Only for display
+	ACCS_CONTRACT: {
+		ADDRESS: "N/A",
+	},
+	LIT_TOKEN_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.litTokenContractAddress,
+	},
+	MULTI_SENDER_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.multisenderContractAddress,
+	},
+	DEPLOYER_CONTRACT: {
+		ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
+	},
+	STAKED_NODE_CONTRACT: {
+		ADDRESS: datilTestDeployedContracts.stakingContractAddress,
+	},
+};
+
 export const VESUVIUS_APP_CONFIG = {
 	// -- explorer address
 	EXPLORER: LitChain.datilDev.params.blockExplorerUrls[0].url,
@@ -203,42 +262,42 @@ export const VESUVIUS_APP_CONFIG = {
 
 	// --- Main contracts used in this explorer
 	PKP_NFT_CONTRACT: {
-		ADDRESS: deployedContracts.pkpNftContractAddress,
+		ADDRESS: datilDevDeployedContracts.pkpNftContractAddress,
 		ABI: PKPNFT.abi,
 	},
 	RATE_LIMIT_CONTRACT: {
-		ADDRESS: deployedContracts.rateLimitNftContractAddress,
+		ADDRESS: datilDevDeployedContracts.rateLimitNftContractAddress,
 		ABI: RateLimitNFT.abi,
 	},
 	ROUTER_CONTRACT: {
-		ADDRESS: deployedContracts.pubkeyRouterContractAddress,
+		ADDRESS: datilDevDeployedContracts.pubkeyRouterContractAddress,
 		ABI: PubkeyRouter.abi,
 	},
 
 	PKP_HELPER_CONTRACT: {
-		ADDRESS: deployedContracts.pkpHelperContractAddress,
+		ADDRESS: datilDevDeployedContracts.pkpHelperContractAddress,
 		ABI: PKPHelper.abi,
 	},
 	PKP_PERMISSIONS_CONTRACT: {
-		ADDRESS: deployedContracts.pkpPermissionsContractAddress,
+		ADDRESS: datilDevDeployedContracts.pkpPermissionsContractAddress,
 		ABI: PKPPermissions.abi,
 	},
 
 	// -- (NOT IMPORTANT) Only for display
 	ACCS_CONTRACT: {
-		ADDRESS: deployedContracts.accessControlConditionsContractAddress,
+		ADDRESS: "N/A",
 	},
 	LIT_TOKEN_CONTRACT: {
-		ADDRESS: deployedContracts.litTokenContractAddress,
+		ADDRESS: datilDevDeployedContracts.litTokenContractAddress,
 	},
 	MULTI_SENDER_CONTRACT: {
-		ADDRESS: deployedContracts.multisenderContractAddress,
+		ADDRESS: datilDevDeployedContracts.multisenderContractAddress,
 	},
 	DEPLOYER_CONTRACT: {
 		ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
 	},
 	STAKED_NODE_CONTRACT: {
-		ADDRESS: deployedContracts.stakingContractAddress,
+		ADDRESS: datilDevDeployedContracts.stakingContractAddress,
 	},
 };
 
@@ -258,41 +317,42 @@ export const CHRONICLE_APP_CONFIG = {
 
 	// --- Main contracts used in this explorer
 	PKP_NFT_CONTRACT: {
-		ADDRESS: deployedContracts.pkpNftContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.pkpNftContractAddress,
 		ABI: PKPNFT.abi,
 	},
 	RATE_LIMIT_CONTRACT: {
-		ADDRESS: deployedContracts.rateLimitNftContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.rateLimitNftContractAddress,
 		ABI: RateLimitNFT.abi,
 	},
 	ROUTER_CONTRACT: {
-		ADDRESS: deployedContracts.pubkeyRouterContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.pubkeyRouterContractAddress,
 		ABI: PubkeyRouter.abi,
 	},
 
 	PKP_HELPER_CONTRACT: {
-		ADDRESS: deployedContracts.pkpHelperContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.pkpHelperContractAddress,
 		ABI: PKPHelper.abi,
 	},
 	PKP_PERMISSIONS_CONTRACT: {
-		ADDRESS: deployedContracts.pkpPermissionsContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.pkpPermissionsContractAddress,
 		ABI: PKPPermissions.abi,
 	},
 
 	// -- (NOT IMPORTANT) Only for display
 	ACCS_CONTRACT: {
-		ADDRESS: deployedContracts.accessControlConditionsContractAddress,
+		ADDRESS:
+			oldChronicleDeployedContracts.accessControlConditionsContractAddress,
 	},
 	LIT_TOKEN_CONTRACT: {
-		ADDRESS: deployedContracts.litTokenContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.litTokenContractAddress,
 	},
 	MULTI_SENDER_CONTRACT: {
-		ADDRESS: deployedContracts.multisenderContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.multisenderContractAddress,
 	},
 	DEPLOYER_CONTRACT: {
 		ADDRESS: "0x50e2dac5e78B5905CB09495547452cEE64426db2",
 	},
 	STAKED_NODE_CONTRACT: {
-		ADDRESS: deployedContracts.stakingContractAddress,
+		ADDRESS: oldChronicleDeployedContracts.stakingContractAddress,
 	},
 };

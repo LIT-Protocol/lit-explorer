@@ -2,8 +2,6 @@ import { Button, Divider, Link, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { FormattedMessage } from "react-intl";
 import {
-	VESUVIUS_APP_CONFIG,
-	CHRONICLE_APP_CONFIG,
 	ROUTES,
 } from "../../app_config";
 import { useAppContext } from "../Contexts/AppContext";

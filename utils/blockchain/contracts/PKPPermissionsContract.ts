@@ -4,6 +4,7 @@ import {
 	CHRONICLE_APP_CONFIG,
 	SupportedNetworks,
 	VESUVIUS_APP_CONFIG,
+	YELLOWSTONE_APP_CONFIG,
 } from "../../../app_config";
 import { getContract } from "./getContract";
 import {
@@ -41,8 +42,10 @@ export class PKPPermissionsContract {
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
 		const appConfig =
-			props?.network === "datil-dev" || props?.network === "datil-test"
+			props?.network === "datil-dev"
 				? VESUVIUS_APP_CONFIG
+				: props?.network === "datil-test"
+				? YELLOWSTONE_APP_CONFIG
 				: CHRONICLE_APP_CONFIG;
 
 		const config = {

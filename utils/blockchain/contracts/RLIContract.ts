@@ -3,6 +3,7 @@ import {
 	CHRONICLE_APP_CONFIG,
 	SupportedNetworks,
 	VESUVIUS_APP_CONFIG,
+	YELLOWSTONE_APP_CONFIG,
 } from "../../../app_config";
 import { asyncForEachReturn } from "../../utils";
 import {
@@ -45,10 +46,11 @@ export class RLIContract {
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
 		const appConfig =
-			props?.network === "datil-dev" || props?.network === "datil-test"
+			props?.network === "datil-dev"
 				? VESUVIUS_APP_CONFIG
+				: props?.network === "datil-test"
+				? YELLOWSTONE_APP_CONFIG
 				: CHRONICLE_APP_CONFIG;
-
 		const config = {
 			network: props?.network ?? appConfig.NETWORK_NAME,
 			signer: props?.signer,
