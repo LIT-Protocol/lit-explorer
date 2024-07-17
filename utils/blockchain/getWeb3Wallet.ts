@@ -5,6 +5,7 @@ import {
 	CHRONICLE_APP_CONFIG,
 	YELLOWSTONE_APP_CONFIG,
 } from "../../app_config";
+import { METAMASK_CHAIN_INFO_BY_NETWORK } from "@lit-protocol/constants";
 
 interface Web3WalletProps {
 	wallet: any;
@@ -27,26 +28,32 @@ const getWeb3Wallet = async (
 
 	console.warn("web3Provider:", web3Provider);
 
-	const appConfig =
-		network === "datil-dev"
-			? VESUVIUS_APP_CONFIG
-			: network === "datil-test"
-			? YELLOWSTONE_APP_CONFIG
-			: CHRONICLE_APP_CONFIG;
-
 	if (!web3Provider) {
 		alert("Please install web3 wallet like Metamask/Brave.");
 		return defaultProps;
 	}
 
 	try {
+		console.log("11 TESTING!");
 		await web3Provider.send("wallet_switchEthereumChain", [
-			{ chainId: appConfig.NETWORK.params.chainId },
+			{
+				chainId: `0x${METAMASK_CHAIN_INFO_BY_NETWORK[network].chainId
+					.toString(16)
+					.replace(/^0+/, "")}`,
+			},
 		]);
 	} catch (e) {
+
+		let chainInfo = METAMASK_CHAIN_INFO_BY_NETWORK[network];
+
+		// @ts-ignore
+		chainInfo.chainId = `0x${METAMASK_CHAIN_INFO_BY_NETWORK[network].chainId
+					.toString(16)
+					.replace(/^0+/, "")}`
+
 		await web3Provider.request({
 			method: "wallet_addEthereumChain",
-			params: [appConfig.NETWORK.params],
+			params: [METAMASK_CHAIN_INFO_BY_NETWORK[network]],
 		});
 	}
 

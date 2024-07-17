@@ -33,7 +33,7 @@ export const LitChain = {
 	chronicle: {
 		params: {
 			id: 175177,
-			chainId: "0x2AC49",
+			chainId: "0x2ac49",
 			chainName: "Chronicle - Lit Protocol Testnet",
 			network: "chronicle",
 			nativeCurrency: {
@@ -53,20 +53,21 @@ export const LitChain = {
 	},
 	datilDev: {
 		params: {
-			id: 2311,
-			chainId: "0x907",
-			chainName: "Vesuvius - Lit Protocol",
 			network: "datil-dev",
+			id: LIT_CHAINS["chronicleVesuviusTestnet"].chainId,
+			chainId: LIT_CHAINS["chronicleVesuviusTestnet"].chainId,
+			chainName: LIT_CHAINS["chronicleVesuviusTestnet"].name,
 			nativeCurrency: {
-				name: "tstLPX",
-				symbol: "tstLPX",
-				decimals: 18,
+				name: LIT_CHAINS["chronicleVesuviusTestnet"].symbol,
+				symbol: LIT_CHAINS["chronicleVesuviusTestnet"].symbol,
+				decimals: LIT_CHAINS["chronicleVesuviusTestnet"].decimals,
 			},
-			rpcUrls: ["https://vesuvius-rpc.litprotocol.com"],
+			rpcUrls: LIT_CHAINS["chronicleVesuviusTestnet"].rpcUrls,
 			blockExplorerUrls: [
 				{
-					name: "Vesuvius Explorer",
-					url: "https://vesuvius-explorer.litprotocol.com",
+					name: LIT_CHAINS["chronicleVesuviusTestnet"].name,
+					url: LIT_CHAINS["chronicleVesuviusTestnet"]
+						.blockExplorerUrls[0],
 				},
 			],
 		},
@@ -74,10 +75,10 @@ export const LitChain = {
 	},
 	datilTest: {
 		params: {
-			id: LIT_CHAINS["chronicleYellowstoneTestnet"].chainId,
-			chainId: "0x2AC54",
-			chainName: LIT_CHAINS["chronicleYellowstoneTestnet"].name,
 			network: "datil-test",
+			id: LIT_CHAINS["chronicleYellowstoneTestnet"].chainId,
+			chainId: LIT_CHAINS["chronicleYellowstoneTestnet"].chainId,
+			chainName: LIT_CHAINS["chronicleYellowstoneTestnet"].name,
 			nativeCurrency: {
 				name: LIT_CHAINS["chronicleYellowstoneTestnet"].symbol,
 				symbol: LIT_CHAINS["chronicleYellowstoneTestnet"].symbol,
@@ -86,7 +87,7 @@ export const LitChain = {
 			rpcUrls: LIT_CHAINS["chronicleYellowstoneTestnet"].rpcUrls,
 			blockExplorerUrls: [
 				{
-					name: "Chronicle Yellowstone Explorer",
+					name: LIT_CHAINS["chronicleYellowstoneTestnet"].name,
 					url: LIT_CHAINS["chronicleYellowstoneTestnet"]
 						.blockExplorerUrls[0],
 				},
@@ -157,7 +158,10 @@ interface ContractConfig {
 export interface AppConfig {
 	EXPLORER: string;
 	NETWORK_NAME: string;
-	NETWORK: typeof LitChain.datilDev | typeof LitChain.chronicle;
+	NETWORK:
+		| typeof LitChain.datilDev
+		| typeof LitChain.datilTest
+		| typeof LitChain.chronicle;
 	NETWORK_LABEL: {
 		ENABLED: boolean;
 		NAME: string;
