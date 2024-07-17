@@ -1,5 +1,9 @@
 import { Contract, ContractInterface, ethers, Signer, Wallet } from "ethers";
-import { VESUVIUS_APP_CONFIG, CHRONICLE_APP_CONFIG } from "../../../app_config";
+import {
+	VESUVIUS_APP_CONFIG,
+	CHRONICLE_APP_CONFIG,
+	YELLOWSTONE_APP_CONFIG,
+} from "../../../app_config";
 
 /**
  *
@@ -13,7 +17,11 @@ export const getSigner = async (network: string): Promise<Signer> => {
 	console.log("[getSigner] network:", network);
 
 	const appConfig =
-		(network === "datil-dev" || network === "datil-test") ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
+		network === "datil-dev"
+			? VESUVIUS_APP_CONFIG
+			: network === "datil-test"
+			? YELLOWSTONE_APP_CONFIG
+			: CHRONICLE_APP_CONFIG;
 
 	let signer: Signer;
 
@@ -38,7 +46,11 @@ export const getContractFromAppConfig = (network: string, address: string) => {
 	const contracts: any = [];
 
 	const appConfig =
-		(network === "datil-dev" || network === "datil-test") ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
+		network === "datil-dev"
+			? VESUVIUS_APP_CONFIG
+			: network === "datil-test"
+			? YELLOWSTONE_APP_CONFIG
+			: CHRONICLE_APP_CONFIG;
 
 	Object.entries(appConfig).forEach((e) => {
 		const item: any = e[1];

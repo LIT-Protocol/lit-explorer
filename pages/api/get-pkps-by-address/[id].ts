@@ -1,16 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { VESUVIUS_APP_CONFIG, CHRONICLE_APP_CONFIG } from "../../../app_config";
+import {
+	VESUVIUS_APP_CONFIG,
+	YELLOWSTONE_APP_CONFIG,
+	CHRONICLE_APP_CONFIG,
+} from "../../../app_config";
 import { RouterContract } from "../../../utils/blockchain/contracts/RouterContract";
 import { decimalTohex, pub2Addr } from "../../../utils/converter";
 import { asyncForEach } from "../../../utils/utils";
 import { LitContracts } from "@lit-protocol/contracts-sdk";
 
-// const DATIL_DEV = "https://staging.apis.getlit.dev/datil-dev/addresses";
+// const DATIL_DEV = "https://apis.getlit.dev/datil-dev/addresses";
 const DATIL_DEV_PKPNFT = "0x5526d5309Bb6caa560261aB37c1C28cC2ebe33c4";
 
-// const DATIL_TEST = "https://staging.apis.getlit.dev/datil-test/addresses";
-const DATIL_TEST_PKPNFT = "0xFEec163a7a82DBBb808c6A58cd1E84d08Df6CBa7";
+// const DATIL_TEST = "https://apis.getlit.dev/datil-test/addresses";
+const DATIL_TEST_PKPNFT = "0x6a0f439f064B7167A8Ea6B22AcC07ae5360ee0d1";
 
 type Data = {
 	id?: string;
@@ -57,15 +61,21 @@ export default async function handler(
 	let pkps;
 
 	if (network === "datil-dev" || network === "datil-test") {
-		const url = `https://vesuvius-explorer.litprotocol.com/api/v2/addresses/${id}/token-transfers`;
+		let url: string = "";
 
 		let PKPNFTAddress: string | undefined = undefined;
 
 		if (network === "datil-dev") {
+			url = `https://vesuvius-explorer.litprotocol.com/api/v2/addresses/${id}/token-transfers`;
 			PKPNFTAddress = DATIL_DEV_PKPNFT;
 		}
 		if (network === "datil-test") {
+			url = `https://yellowstone-explorer.litprotocol.com/api/v2/addresses/${id}/token-transfers`;
 			PKPNFTAddress = DATIL_TEST_PKPNFT;
+		}
+
+		if (url === "") {
+			throw new Error("URL cannot be empty");
 		}
 
 		if (!PKPNFTAddress) {

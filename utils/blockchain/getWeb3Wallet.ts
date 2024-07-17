@@ -1,6 +1,10 @@
 import { ethers } from "ethers";
 import { Signer } from "ethers";
-import { VESUVIUS_APP_CONFIG, CHRONICLE_APP_CONFIG } from "../../app_config";
+import {
+	VESUVIUS_APP_CONFIG,
+	CHRONICLE_APP_CONFIG,
+	YELLOWSTONE_APP_CONFIG,
+} from "../../app_config";
 
 interface Web3WalletProps {
 	wallet: any;
@@ -24,7 +28,11 @@ const getWeb3Wallet = async (
 	console.warn("web3Provider:", web3Provider);
 
 	const appConfig =
-		(network === "datil-dev" || network === "datil-test") ? VESUVIUS_APP_CONFIG : CHRONICLE_APP_CONFIG;
+		network === "datil-dev"
+			? VESUVIUS_APP_CONFIG
+			: network === "datil-test"
+			? YELLOWSTONE_APP_CONFIG
+			: CHRONICLE_APP_CONFIG;
 
 	if (!web3Provider) {
 		alert("Please install web3 wallet like Metamask/Brave.");
