@@ -95,6 +95,28 @@ export const LitChain = {
 		},
 		api: "https://yellowstone-explorer.litprotocol.com/api/v2/",
 	},
+	datil: {
+		params: {
+			network: "datil",
+			id: LIT_CHAINS["chronicleYellowstoneTestnet"].chainId,
+			chainId: LIT_CHAINS["chronicleYellowstoneTestnet"].chainId,
+			chainName: LIT_CHAINS["chronicleYellowstoneTestnet"].name,
+			nativeCurrency: {
+				name: LIT_CHAINS["chronicleYellowstoneTestnet"].symbol,
+				symbol: LIT_CHAINS["chronicleYellowstoneTestnet"].symbol,
+				decimals: LIT_CHAINS["chronicleYellowstoneTestnet"].decimals,
+			},
+			rpcUrls: LIT_CHAINS["chronicleYellowstoneTestnet"].rpcUrls,
+			blockExplorerUrls: [
+				{
+					name: LIT_CHAINS["chronicleYellowstoneTestnet"].name,
+					url: LIT_CHAINS["chronicleYellowstoneTestnet"]
+						.blockExplorerUrls[0],
+				},
+			],
+		},
+		api: "https://yellowstone-explorer.litprotocol.com/api/v2/",
+	},
 };
 
 export enum SupportedNetworks {

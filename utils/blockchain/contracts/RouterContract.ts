@@ -13,6 +13,7 @@ import {
 	IPFSHash,
 	parseMultihashContractResponse,
 } from "../../ipfs/ipfsHashConverter";
+import { networkConfigMap } from "./utils";
 
 /**
  * (CLASS) Entry point of accessing the smart contract functionalities
@@ -36,12 +37,7 @@ export class RouterContract {
 	 * @return { void }
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
-		const appConfig =
-			props?.network === "datil-dev"
-				? VESUVIUS_APP_CONFIG
-				: props?.network === "datil-test"
-				? YELLOWSTONE_APP_CONFIG
-				: CHRONICLE_APP_CONFIG;
+		const appConfig = networkConfigMap[props?.network!];
 
 		const config = {
 			network: props?.network ?? appConfig.NETWORK_NAME,

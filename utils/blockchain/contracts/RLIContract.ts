@@ -17,6 +17,7 @@ import {
 import { getContract } from "./getContract";
 import { Either } from "monet";
 import { ContractProps } from "./ContractI";
+import { networkConfigMap } from "./utils";
 
 interface RLICapacity {
 	requestsPerMillisecond: number;
@@ -45,12 +46,7 @@ export class RLIContract {
 	 * @return { void }
 	 */
 	connect = async (props?: ContractProps): Promise<void> => {
-		const appConfig =
-			props?.network === "datil-dev"
-				? VESUVIUS_APP_CONFIG
-				: props?.network === "datil-test"
-				? YELLOWSTONE_APP_CONFIG
-				: CHRONICLE_APP_CONFIG;
+		const appConfig = networkConfigMap[props?.network!];
 		const config = {
 			network: props?.network ?? appConfig.NETWORK_NAME,
 			signer: props?.signer,

@@ -19,6 +19,7 @@
 		"@emotion/react": "^11.9.3",
 		"@emotion/styled": "^11.9.3",
 		"@lit-protocol/constants": "^6.3.0-alpha.1",
+		"@lit-protocol/contracts": "^0.0.33",
 		"@lit-protocol/contracts-sdk": "^6.3.0-alpha.1",
 		"@monaco-editor/react": "^4.4.5",
 		"@mui/base": "^5.0.0-beta.34",
